@@ -9,7 +9,9 @@ const apis = [
 	},
 	{
 		name: 'kubectl:download',
-		action: kubectl.download
+		action: async (_) => {
+			return (await kubectl.download());
+		}
 	},
 	{
 		name: 'kubectl:get',

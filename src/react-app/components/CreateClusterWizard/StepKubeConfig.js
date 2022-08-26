@@ -34,7 +34,7 @@ export default function StepKubeConfig(props) {
 				snack('kubectl çalıştırılıyor...', { variant: 'info', autoHideDuration: 2000 });
 				try {
 					if (!(await window.kubectl.check())) {
-						const downloadSnack = snack('kubectl bulunamadı! İndirme işlemi başlatılıyor...', { variant: 'info', persist: true });
+						const downloadSnack = snack('kubectl bulunamadı! İndiriliyor...', { variant: 'info', persist: true });
 						// TODO: snackbar yükleniyor tasarımında olacak.
 						if (!(await window.kubectl.download()));
 						{
