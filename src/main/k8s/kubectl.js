@@ -1,8 +1,7 @@
 import { existsSync, mkdirSync, createWriteStream, chmodSync } from 'fs';
-import { env, cwd, platform } from 'process';
+import { cwd, platform } from 'process';
 import { get as _get } from 'request';
-import cp from 'child_process';
-import logger from '../logger';
+import findInPath from '../utils/findInPath';
 
 /**
  * Kullanılabilir bir kubectl aracının olup olmadığını döndürür.
@@ -14,22 +13,16 @@ export function check() {
 }
 
 /**
- * Kullanılabilecek kubectl çalıştırılaiblir dosyasının yolunu
+ * Kullanılabilecek kubectl çalıştırılabilir dosyasının yolunu
  * döndürür.
  * 
  * @return {string}
  */
 export function getPath() {
-	// TODO: kubectl konumu yapılandırma olarak saklanacak.
-	let path = '';
-	let paths = env.PATH?.split(':');
-	for (let p of paths)
-	{
-		path = `${p}/kubectl`;
-		if (existsSync(path))
-			return (path);
-	}
-	path = `${cwd()}/bin/kubectl`;
+	let path = findInPath('kubectl');
+	if (path)
+		return (path);
+	path = `${cwd()}/bin/kubectl`; // TODO: kubectl konumu yapılandırma olarak saklanacak.
 	if (existsSync(path))
 		return (path);
 	return (undefined);
