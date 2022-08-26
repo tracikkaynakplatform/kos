@@ -31,19 +31,19 @@ export default function StepKubeConfig(props) {
 			onNextClick={async () => {
 				setTextFieldEnabled(false);
 				setButtonsEnabled(false);
-				snack('kubectl çalıştırılıyor...', { variant: 'info', autoHideDuration: 2000 });
 				try {
 					if (!(await window.kubectl.check())) {
-						const downloadSnack = snack('kubectl bulunamadı! İndirme işlemi başlatılıyor...', { variant: 'info', persist: true });
+						const downloadSnack = snack('kubectl bulunamadı! İndiriliyor...', { variant: 'info', persist: true });
 						// TODO: snackbar yükleniyor tasarımında olacak.
-						if (!(await window.kubectl.download()));
-						{
+						const isDownloaded = await window.kubectl.download();
+						if (!isDownloaded) {
 							closeSnack(downloadSnack);
 							throw new Error('kubectl indirme işlemi başarısız!');
 						}
 						closeSnack(downloadSnack);
 					}
 
+					snack('kubectl çalıştırılıyor...', { variant: 'info', autoHideDuration: 2000 });
 					if (!(await window.kubectl.get('namespace', kubeConfig)))
 						throw new Error('Küme ile bağlantı kurulamadı!');
 					snack('Küme ile bağlantı sağlandı', { variant: 'success', autoHideDuration: 2000 });
