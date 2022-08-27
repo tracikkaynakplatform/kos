@@ -3,6 +3,7 @@ import config from '../k8s/KubeConfig';
 import kubectl from '../services/Kubectl';
 
 const apis = [
+	// Kubectl Routes
 	{
 		name: 'kubectl:check',
 		action: () => kubectl.check(),
@@ -34,6 +35,7 @@ const apis = [
 		}
 	},
 
+	// Provider Routes
 	{
 		name: 'providers:getProviders',
 		action: (_, kubeConfig) => {
