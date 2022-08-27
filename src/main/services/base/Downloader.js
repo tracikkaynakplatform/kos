@@ -1,6 +1,7 @@
 import { get as _get } from 'request';
-import { createWriteStream, existsSync } from "fs";
+import { existsSync } from "fs";
 import { cwd } from "process";
+import downloadFile from "../../utils/download-file";
 
 class Downloader {
 
@@ -45,10 +46,7 @@ class Downloader {
 	 */
 	async download() {
 		const data = await this.getOsObject();
-		_get(data.browser_download_url, (error, response, body) => {
-			response.pipe(createWriteStream(this.path));
-		});
-		return true;
+		return downloadFile(data.browser_download_url, this.path);
 	}
 
 }

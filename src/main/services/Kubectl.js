@@ -1,7 +1,7 @@
 import BaseDownloader from './base/Downloader';
-import { cwd, platform } from "process";
+import { cwd } from "process";
 import { get as _get } from 'request';
-import { createWriteStream } from "fs";
+import downloadFile from "../utils/download-file";
 
 class Kubectl extends BaseDownloader {
 	/**
@@ -51,11 +51,8 @@ class Kubectl extends BaseDownloader {
 	 * @returns {Promise<boolean>}
 	 */
 	async download() {
-		this.getDownloadUrl()
-		_get(this.url, (error, response, body) => {
-			response.pipe(createWriteStream(this.path));
-		});
-		return true;
+		this.getDownloadUrl();
+		return await downloadFile(this.url, this.path);
 	}
 }
 
