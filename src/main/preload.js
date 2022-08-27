@@ -10,3 +10,7 @@ contextBridge.exposeInMainWorld('kubectl', {
 contextBridge.exposeInMainWorld('kubeConfig', {
 	loadFromDefault: () => ipcRenderer.invoke('kubeConfig:loadFromDefault')
 })
+
+contextBridge.exposeInMainWorld('providers', {
+	getProviders: (kubeConfig) => ipcRenderer.invoke('providers:getProviders', kubeConfig)
+});
