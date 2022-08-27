@@ -85,7 +85,8 @@
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.10.0",
+    "@mui/material": "^5.10.2",
+    "@mui/styled-engine-sc": "^5.10.1",
     "apexcharts": "^3.35.5",
     "electron-squirrel-startup": "^1.0.0",
     "js-yaml": "^4.1.0",
@@ -95,6 +96,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
     "react-step-wizard": "^5.3.11",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "styled-components": "^5.3.5"
   }
 }
