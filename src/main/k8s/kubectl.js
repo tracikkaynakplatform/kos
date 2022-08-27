@@ -1,8 +1,8 @@
-import { existsSync, mkdirSync, createWriteStream, chmodSync } from 'fs';
-import { env, cwd, platform } from 'process';
+import { existsSync, mkdirSync, chmodSync } from 'fs';
+import { cwd, platform } from 'process';
 import { get as _get } from 'request';
-import cp from 'child_process';
-import logger from '../logger';
+import downloadFile from '../utils/downloadFile';
+import findInPath from '../utils/findInPath';
 
 /**
  * Kullanılabilir bir kubectl aracının olup olmadığını döndürür.
@@ -14,22 +14,16 @@ export function check() {
 }
 
 /**
- * Kullanılabilecek kubectl çalıştırılaiblir dosyasının yolunu
+ * Kullanılabilecek kubectl çalıştırılabilir dosyasının yolunu
  * döndürür.
  * 
  * @return {string}
  */
 export function getPath() {
-	// TODO: kubectl konumu yapılandırma olarak saklanacak.
-	let path = '';
-	let paths = env.PATH?.split(':');
-	for (let p of paths)
-	{
-		path = `${p}/kubectl`;
-		if (existsSync(path))
-			return (path);
-	}
-	path = `${cwd()}/bin/kubectl`;
+	let path = findInPath('kubectl');
+	if (path)
+		return (path);
+	path = `${cwd()}/bin/kubectl`; // TODO: kubectl konumu yapılandırma olarak saklanacak.
 	if (existsSync(path))
 		return (path);
 	return (undefined);
@@ -40,12 +34,12 @@ export function getPath() {
  * 
  * @return {Promise<string>}
  */
-export async function latestVersion() {
-	return await new Promise((resolve, reject) => {
+export function latestVersion() {
+	return new Promise((resolve, reject) => {
 		_get('https://dl.k8s.io/release/stable.txt', function (error, response, body) {
 			if (!error && response.statusCode == 200)
 				resolve(body);
-			throw error;
+			reject(error);
 		});
 	});
 }
@@ -57,34 +51,29 @@ export async function latestVersion() {
  * @return {Promise<boolean>}
  */
 export async function download() {
-	return await new Promise(async (resolve, reject) => {
-		let rootPath = `${cwd()}/bin`;
-		let targetFile = `${rootPath}/kubectl`; // TODO: uygulama dizinini bulan bir fonksiyon yazılacak.
-		let version = await latestVersion();
-		let url;
-		
-		if (!existsSync(rootPath))
-			mkdirSync(rootPath);
-		switch (platform) {
-			case 'linux':
-			case 'darwin':
-				url = `https://dl.k8s.io/release/${version}/bin/${platform}/amd64/kubectl`;
-				break;
-			case 'win32':
-				url = `https://dl.k8s.io/release/${version}/bin/windows/amd64/kubectl.exe`;
-				break;
-		}
-		const stream = createWriteStream(targetFile);
-		const request = _get(url);
+	let rootPath = `${cwd()}/bin`;
+	let targetFile = `${rootPath}/kubectl`; // TODO: uygulama dizinini bulan bir fonksiyon yazılacak.
+	let version = await latestVersion();
+	let url;
 
-		stream.on('finish', () => {
-			chmodSync(targetFile, 0o777);
-			resolve(true)
-		});
-		request.on('error', (err) => { throw err; });
-		stream.on('error', (err) => { throw err; });
-		request.pipe(stream);
-	});
+	if (!existsSync(rootPath))
+		mkdirSync(rootPath);
+	switch (platform) {
+		case 'linux':
+		case 'darwin':
+			url = `https://dl.k8s.io/release/${version}/bin/${platform}/amd64/kubectl`;
+			break;
+		case 'win32':
+			url = `https://dl.k8s.io/release/${version}/bin/windows/amd64/kubectl.exe`;
+			break;
+	}
+	if (await downloadFile(url, targetFile))
+	{
+		chmodSync(targetFile, 0o777);
+		// TODO: kubectl dosyasını doğrula
+		return (true);
+	}
+	return (false);
 }
 
 export default {
