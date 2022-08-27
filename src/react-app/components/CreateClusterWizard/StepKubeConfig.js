@@ -7,12 +7,14 @@ import { useState, useEffect } from "react";
 import { translate } from "../../locales";
 import React from 'react';
 import Wrapper from './Wrapper';
+import { useWizard } from '.';
 import { Monitor } from '../PieChart';
 
 export default function StepKubeConfig(props) {
 	const [kubeConfig, setKubeConfig] = useState('');
 	const [textFieldEnabled, setTextFieldEnabled] = useState(true);
 	const [buttonsEnabled, setButtonsEnabled] = useState(true);
+	const wizard = useWizard();
 	const snack = useSnackbar().enqueueSnackbar;
 	const closeSnack = useSnackbar().closeSnackbar;
 	const _next = props.nextStep;
@@ -47,6 +49,10 @@ export default function StepKubeConfig(props) {
 					if (!(await window.kubectl.get('namespace', kubeConfig)))
 						throw new Error('Küme ile bağlantı kurulamadı!');
 					snack('Küme ile bağlantı sağlandı', { variant: 'success', autoHideDuration: 2000 });
+					wizard.setData({
+						...wizard.data,
+						config: kubeConfig
+					});
 					_next();
 				}
 				catch (err) {
