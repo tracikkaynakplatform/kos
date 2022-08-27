@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import KubeConfig from '../k8s/kubeConfig';
+import config from '../k8s/kubeConfig';
 import kubectl from '../k8s/kubectl';
 
 const apis = [
@@ -16,7 +16,6 @@ const apis = [
 	{
 		name: 'kubectl:get',
 		action: (_, resourceType, kubeConfig) => {
-			let config = new KubeConfig();
 			config.loadFromString(kubeConfig);
 			return (config.get(resourceType));
 		}
@@ -24,7 +23,6 @@ const apis = [
 	{
 		name: 'kubeConfig:loadFromDefault',
 		action: () => {
-			let config = new KubeConfig();
 			config.loadFromDefault();
 			return (config.config);
 		}

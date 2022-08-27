@@ -11,7 +11,7 @@ class KubeConfig {
 	/**
 	 * kubectl'in konumunu döndürür. Eğer kullanılabilir bir kubectl
 	 * mevcut değilse Error fırlatır.
-	 *  
+	 *
 	 * @throws {Error}
 	 * @returns {string}
 	 */
@@ -24,8 +24,8 @@ class KubeConfig {
 
 	/**
 	 * kubectl'i çalıştırır ve çıktısını döndürür.
-	 * 
-	 * @param  {...any} args kubectl'e geçecek argümanlar. 
+	 *
+	 * @param  {...any} args kubectl'e geçecek argümanlar.
 	 * @returns {string}
 	 */
 	execKube(...args) {
@@ -45,7 +45,7 @@ class KubeConfig {
 	 */
 	loadFromDefault() {
 		let path = `${env.HOME}/.kube/config`;
-	
+
 		if (env.KUBECONFIG)
 			path = env.KUBECONFIG;
 		this.loadFromFile(path);
@@ -53,8 +53,8 @@ class KubeConfig {
 
 	/**
 	 * Kubeconfig'i dosyadan yükler.
-	 * 
-	 * @param {string} path Kubeconfig yolu. 
+	 *
+	 * @param {string} path Kubeconfig yolu.
 	 */
 	loadFromFile(path) {
 		this.config = fs.readFileSync(path).toString();
@@ -62,8 +62,8 @@ class KubeConfig {
 
 	/**
 	 * Kubeconfig'i string olarak alır.
-	 * 
-	 * @param {string} str Kubeconfig içeriği. 
+	 *
+	 * @param {string} str Kubeconfig içeriği.
 	 */
 	loadFromString(str) {
 		this.config = str;
@@ -72,7 +72,7 @@ class KubeConfig {
 	/**
 	 * kubectl get [resourceType] komutunu çalıştırır ve çıktısını
 	 * döndürür.
-	 * 
+	 *
 	 * @param {string} resourceType İstenen kaynak tipini belirtir.
 	 * @param {string} outputType Çıktının tipini belirtir. json veya yaml olabilir.
 	 * @returns {object} Nesne olarak çıktıyı döndürür.
@@ -82,4 +82,4 @@ class KubeConfig {
 	}
 }
 
-export default KubeConfig
+export default new KubeConfig();
