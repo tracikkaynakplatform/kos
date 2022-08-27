@@ -77,9 +77,9 @@ class KubeConfig {
 	 * @param {string} outputType Çıktının tipini belirtir. json veya yaml olabilir.
 	 * @returns {object} Nesne olarak çıktıyı döndürür.
 	 */
-	get(resourceType) {
-		return (JSON.parse(this.execKube('get', resourceType, '-o', 'json')));
+	get(resourceType, namespace='') {
+		return (JSON.parse(this.execKube('get', resourceType, namespace, '-o', 'json')));
 	}
 }
 
-export default KubeConfig
+export default new KubeConfig();
