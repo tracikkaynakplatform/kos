@@ -7,32 +7,47 @@ import {
 	Box
 } from '@mui/material';
 import { useSnackbar } from "notistack";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { translate } from '../../locales';
 import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
 import StepKindProviderConfig from "./StepKindProviderConfig";
 import React from 'react';
 import Wrapper from './Wrapper';
+import { useWizard } from '.';
 
 
 export default function StepSelectProvider(props) {
 	const snack = useSnackbar().enqueueSnackbar;
-	const providers = [
-		{
-			key: 'digitalocean',
-			step: <StepDigitalOceanSSHkey />,
-			name: 'DigitalOcean'
-		},
-		{
-			key: 'kind',
-			step: <StepKindProviderConfig />,
-			name: 'Kind - Docker'
-		}
-	]
+	const [providers, setProviders] = useState([]); 
 	const [provider, setProvider] = useState('');
+	const wizard = useWizard();
 	// const _next = props.nextStep;
 	const _back = props.previousStep;
 	const _goto = props.goToNamedStep;
+
+	useEffect(() => {
+		(async () =>{
+			if (props.currentStep === 3) {
+				let supportedProviders = await window.providers.getProviders(wizard.data.config);
+				setProviders(supportedProviders.map(p => {
+					switch (p) {
+						case 'docker':
+							return {
+								key: 'kind',
+								step: <StepKindProviderConfig />,
+								name: 'Kind - Docker'
+							};
+						case 'digitalocean':
+							return {
+								key: 'digitalocean',
+								step: <StepDigitalOceanSSHkey />,
+								name: 'DigitalOcean'
+							};
+					}
+				}));
+			}
+		})();
+	}, [wizard.data]);
 
 	return (
 		<Wrapper onNextClick={() => {
