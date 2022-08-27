@@ -1,4 +1,4 @@
-import BaseDownloader from './base/downloader';
+import BaseDownloader from './base/Downloader';
 
 class Clusterctl extends BaseDownloader {
 	/**

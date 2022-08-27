@@ -1,4 +1,4 @@
-import BaseDownloader from './base/downloader';
+import BaseDownloader from './base/Downloader';
 import { cwd, platform } from "process";
 import { get as _get } from 'request';
 import { createWriteStream } from "fs";

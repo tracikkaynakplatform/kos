@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron';
-import config from '../k8s/kubeConfig';
+import config from '../k8s/KubeConfig';
 import kubectl from '../k8s/kubectl';
 
 const apis = [
