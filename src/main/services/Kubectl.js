@@ -2,6 +2,7 @@ import BaseDownloader from './base/Downloader';
 import { cwd } from "process";
 import { get as _get } from 'request';
 import downloadFile from "../utils/download-file";
+import { chmodSync } from 'fs';
 
 class Kubectl extends BaseDownloader {
 	/**
@@ -11,7 +12,7 @@ class Kubectl extends BaseDownloader {
 	 * @param {string} path
 	 */
 	constructor() {
-		const url = 'https://api.github.com/repos/kubernetes/kubectl/tags/latest';
+		const url = 'https://dl.k8s.io/release/';
 		const name = 'kubectl';
 		const os = process.platform;
 		const path = `${cwd()}/bin/${name}`;
@@ -24,10 +25,14 @@ class Kubectl extends BaseDownloader {
 	 * @returns {Promise<*>}
 	 */
 	async getVersion() {
-		await _get(this.url, (error, response, body) => {
-			this.version = body
+		return new Promise((resolve, reject) => {
+			_get('https://dl.k8s.io/release/stable.txt', (error, response, body) => {
+				if (error)
+					reject(error);
+				this.version = body;
+				resolve(true);
+			});
 		});
-		return this.version;
 	}
 
 	/**
@@ -35,7 +40,7 @@ class Kubectl extends BaseDownloader {
 	 * @returns {Promise<void>}
 	 */
 	async getDownloadUrl() {
-		this.getVersion();
+		await this.getVersion();
 		switch (this.os) {
 			case 'darwin' || 'linux':
 				this.url = `https://dl.k8s.io/release/${this.version}/bin/${this.os}/amd64/kubectl`;
@@ -48,12 +53,12 @@ class Kubectl extends BaseDownloader {
 
 	/**
 	 * Son sürüm ${this.url} indirir ve ./bin/${this.url} dizinine kayıt eder.
-	 * @returns {Promise<boolean>}
 	 */
 	async download() {
-		this.getDownloadUrl();
-		return await downloadFile(this.url, this.path);
+		await this.getDownloadUrl();
+		await downloadFile(this.url, this.path);
+		chmodSync(this.path, 0o777);
 	}
 }
 
-module.exports = new Kubectl();
+export default new Kubectl();

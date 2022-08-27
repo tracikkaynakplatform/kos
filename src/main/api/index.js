@@ -1,16 +1,22 @@
 import { ipcMain } from 'electron';
 import config from '../k8s/KubeConfig';
-import kubectl from '../k8s/kubectl';
+import kubectl from '../services/Kubectl';
 
 const apis = [
 	{
 		name: 'kubectl:check',
-		action: kubectl.check,
+		action: () => kubectl.check(),
 	},
 	{
 		name: 'kubectl:download',
 		action: async (_) => {
-			return (await kubectl.download());
+			try {
+				await kubectl.download();
+				return (true);
+			}
+			catch (err) {
+				return (false);
+			}
 		}
 	},
 	{
@@ -40,10 +46,10 @@ const apis = [
 				switch (i.metadata.namespace) {
 					case 'capd-system':
 						providers.push('docker');
-						break ;
+						break;
 					case 'capdo-system':
 						providers.push('digitalocean');
-						break ;
+						break;
 				}
 			}
 			return (providers);

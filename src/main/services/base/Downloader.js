@@ -16,7 +16,7 @@ class Downloader {
 	 * Kullanılabilecek ${this.name} çalıştırılabilir dosyasının yolunu döndürür.
 	 * @returns {Promise<void>}
 	 */
-	async check() {
+	check() {
 		const path = `${cwd()}/bin/${this.name}`;
 		if (existsSync(path)) {
 			return path;
@@ -31,11 +31,16 @@ class Downloader {
 	 * @returns {Promise<object>}
 	 */
 	async getOsObject() {
-		_get(this.url, (error, response, body) => {
-			response.assets.filter(item => {
-				if (item.name.search(this.os) !== -1) {
-					return item;
-				}
+		return new Promise((resolve, reject) => {
+			_get(this.url, (error, response, body) => {
+				if (error)
+					reject(error);
+				response.assets.filter(item => {
+					if (item.name.search(this.os) !== -1) {
+						resolve(item);
+						return ;
+					}
+				});
 			});
 		});
 	}
@@ -46,9 +51,9 @@ class Downloader {
 	 */
 	async download() {
 		const data = await this.getOsObject();
-		return downloadFile(data.browser_download_url, this.path);
+		return await downloadFile(data.browser_download_url, this.path);
 	}
 
 }
 
-module.exports = Downloader;
+export default Downloader;

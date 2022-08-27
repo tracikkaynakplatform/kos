@@ -1,4 +1,4 @@
-import { getPath, check } from './kubectl';
+import Kubectl from '../services/Kubectl';
 import { env, cwd } from 'process';
 import { execSync } from 'child_process';
 import fs from 'fs';
@@ -16,7 +16,7 @@ class KubeConfig {
 	 * @returns {string}
 	 */
 	#checkKubectl() {
-		let path = getPath();
+		let path = Kubectl.check();
 		if (!!!path)
 			throw new Error('Kubectl bulunamadı');
 		return (path);
