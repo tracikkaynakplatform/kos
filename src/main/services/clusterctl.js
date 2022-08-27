@@ -11,3 +11,5 @@ class Clusterctl extends BaseDownloader {
         super(url, name);
     }
 }
+
+module.exports = new Clusterctl();
