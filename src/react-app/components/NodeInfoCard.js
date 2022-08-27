@@ -106,9 +106,6 @@ const Monitor = ({data}) => {
 }
 
 export default function BasicCard({graphData, nodeInfo}) {
-
-    console.log(nodeInfo)
-
     return (
         <Card sx={{
             display: 'flex',
