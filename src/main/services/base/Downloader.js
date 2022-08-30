@@ -1,6 +1,7 @@
 import { get as _get } from 'request';
 import { existsSync } from "fs";
 import { cwd } from "process";
+import findInPath from '../../utils/find-in-path';
 import downloadFile from "../../utils/download-file";
 
 class Downloader {
@@ -17,12 +18,13 @@ class Downloader {
 	 * @returns {Promise<void>}
 	 */
 	check() {
-		const path = `${cwd()}/bin/${this.name}`;
-		if (existsSync(path)) {
-			return path;
-		} else {
-			return undefined;
-		}
+		let path = findInPath(this.name);
+		if (existsSync(path))
+			return (path);
+
+		if (existsSync(this.path))
+			return (this.path);
+		return (undefined);
 	}
 
 
@@ -38,7 +40,7 @@ class Downloader {
 				response.assets.filter(item => {
 					if (item.name.search(this.os) !== -1) {
 						resolve(item);
-						return ;
+						return;
 					}
 				});
 			});
