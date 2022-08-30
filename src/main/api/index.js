@@ -1,18 +1,19 @@
 import { ipcMain } from 'electron';
-import config from '../k8s/KubeConfig';
-import kubectl from '../services/Kubectl';
+import kubeConfig from '../k8s/KubeConfig';
+import kindConfig, { KindSteps } from '../k8s/KindConfig';
+import kubectlService from '../services/Kubectl';
 
 const apis = [
-	// Kubectl Routes
+	// Kubectl API
 	{
 		name: 'kubectl:check',
-		action: () => kubectl.check(),
+		action: () => kubectlService.check(),
 	},
 	{
 		name: 'kubectl:download',
 		action: async (_) => {
 			try {
-				await kubectl.download();
+				await kubectlService.download();
 				return (true);
 			}
 			catch (err) {
@@ -23,26 +24,26 @@ const apis = [
 	{
 		name: 'kubectl:get',
 		action: (_, resourceType, kubeConfig) => {
-			config.loadFromString(kubeConfig);
-			return (config.get(resourceType));
+			kubeConfig.loadFromString(kubeConfig);
+			return (kubeConfig.get(resourceType));
 		}
 	},
 	{
 		name: 'kubeConfig:loadFromDefault',
 		action: () => {
-			config.loadFromDefault();
-			return (config.config);
+			kubeConfig.loadFromDefault();
+			return (kubeConfig.config);
 		}
 	},
 
-	// Provider Routes
+	// Provider API
 	{
 		name: 'providers:getProviders',
 		action: (_, kubeConfig) => {
-			config.loadFromString(kubeConfig);
+			kubeConfig.loadFromString(kubeConfig);
 
 			let providers = [];
-			let pods = config.get('pods', '-A');
+			let pods = kubeConfig.get('pods', '-A');
 
 			for (let i of pods.items) {
 				switch (i.metadata.namespace) {
@@ -57,6 +58,14 @@ const apis = [
 			return (providers);
 		}
 	},
+
+	// Kind API
+	{
+		name: 'kind:createCluster',
+		action: async (_, name) => {
+			await kindConfig.createCluster(name, (status) => console.log(status));
+		}
+	}
 ];
 
 export function initApis() {
