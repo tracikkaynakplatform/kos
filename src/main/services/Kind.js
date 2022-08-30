@@ -12,4 +12,4 @@ class Kind extends BaseDownloader {
 	}
 }
 
-module.exports = new Kind();
+export default new Kind();
