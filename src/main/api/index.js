@@ -1,7 +1,7 @@
 import { ipcMain } from "electron";
 import kubeConfig from "../k8s/KubeConfig";
 import kindConfig, { KindSteps } from "../k8s/KindConfig";
-import kubectlService from '../services/Kubectl';
+import clusterctlConfig from "../k8s/ClusterctlConfig";
 import kubectlService from "../services/Kubectl";
 
 const apis = [
@@ -36,6 +36,23 @@ const apis = [
 		},
 	},
 
+	// Clusterctl API
+	{
+		name: "clusterctl:generate",
+		action: async (_, config) => {
+			clusterctlConfig.setManagementClusterConfig(
+				config.managementConfig
+			);
+			console.log(
+				await clusterctlConfig.generateCluster(
+					config.name,
+					config.kubernetesVersion,
+					config.masterCount,
+					config.workerCount,
+					config.isDocker
+				)
+			);
+		},
 	},
 
 	// Provider API

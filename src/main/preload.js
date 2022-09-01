@@ -16,6 +16,6 @@ contextBridge.exposeInMainWorld("providers", {
 		ipcRenderer.invoke("providers:getProviders", kubeConfig),
 });
 
-contextBridge.exposeInMainWorld('kind', {
-	createCluster: (name) => ipcRenderer.invoke('kind:createCluster', name)
+contextBridge.exposeInMainWorld("clusterctl", {
+	generate: (config) => ipcRenderer.invoke("clusterctl:generate", config),
 });
