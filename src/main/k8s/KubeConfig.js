@@ -1,7 +1,7 @@
-import Kubectl from '../services/Kubectl';
-import { env, cwd } from 'process';
-import { execSync } from 'child_process';
-import fs from 'fs';
+import Kubectl from "../services/Kubectl";
+import { env, cwd } from "process";
+import { execSync } from "child_process";
+import fs from "fs";
 
 class KubeConfig {
 	constructor() {
@@ -11,30 +11,32 @@ class KubeConfig {
 	/**
 	 * kubectl'in konumunu döndürür. Eğer kullanılabilir bir kubectl
 	 * mevcut değilse Error fırlatır.
-	 *  
+	 *
 	 * @throws {Error}
 	 * @returns {string}
 	 */
 	#checkKubectl() {
 		let path = Kubectl.check();
-		if (!!!path)
-			throw new Error('Kubectl bulunamadı');
+		if (!!!path) throw new Error("kubectl bulunamadı");
+		return path;
 		return (path);
 	}
 
 	/**
 	 * kubectl'i çalıştırır ve çıktısını döndürür.
-	 * 
-	 * @param  {...any} args kubectl'e geçecek argümanlar. 
+	 *
+	 * @param  {...any} args kubectl'e geçecek argümanlar.
 	 * @returns {string}
 	 */
 	execKube(...args) {
 		// TODO: varolmayan dizin kontrolü
-		let kubeconfig = cwd() + '/config/kubeconfig';
+		let kubeconfig = cwd() + "/config/kubeconfig";
 		let path = this.#checkKubectl();
 
 		fs.writeFileSync(kubeconfig, this.config);
-		return (execSync(`${path} --kubeconfig ${kubeconfig} ${args.join(' ')}`).toString());
+		return execSync(
+			`${path} --kubeconfig ${kubeconfig} ${args.join(" ")}`
+		).toString();
 	}
 
 	/**
@@ -45,16 +47,16 @@ class KubeConfig {
 	 */
 	loadFromDefault() {
 		let path = `${env.HOME}/.kube/config`;
-	
-		if (env.KUBECONFIG)
+
+		if (env.KUBECONFIG) path = env.KUBECONFIG;
 			path = env.KUBECONFIG;
 		this.loadFromFile(path);
 	}
 
 	/**
 	 * Kubeconfig'i dosyadan yükler.
-	 * 
-	 * @param {string} path Kubeconfig yolu. 
+	 *
+	 * @param {string} path Kubeconfig yolu.
 	 */
 	loadFromFile(path) {
 		this.config = fs.readFileSync(path).toString();
@@ -62,8 +64,8 @@ class KubeConfig {
 
 	/**
 	 * Kubeconfig'i string olarak alır.
-	 * 
-	 * @param {string} str Kubeconfig içeriği. 
+	 *
+	 * @param {string} str Kubeconfig içeriği.
 	 */
 	loadFromString(str) {
 		this.config = str;
@@ -72,13 +74,15 @@ class KubeConfig {
 	/**
 	 * kubectl get [resourceType] komutunu çalıştırır ve çıktısını
 	 * döndürür.
-	 * 
+	 *
 	 * @param {string} resourceType İstenen kaynak tipini belirtir.
 	 * @param {string} outputType Çıktının tipini belirtir. json veya yaml olabilir.
 	 * @returns {object} Nesne olarak çıktıyı döndürür.
 	 */
-	get(resourceType, namespace='') {
-		return (JSON.parse(this.execKube('get', resourceType, namespace, '-o', 'json')));
+	get(resourceType, namespace = "") {
+		return JSON.parse(
+			this.execKube("get", resourceType, namespace, "-o", "json")
+		);
 	}
 }
 
