@@ -19,7 +19,6 @@ class KubeConfig {
 		let path = Kubectl.check();
 		if (!!!path) throw new Error("kubectl bulunamadı");
 		return path;
-		return (path);
 	}
 
 	/**
@@ -49,7 +48,6 @@ class KubeConfig {
 		let path = `${env.HOME}/.kube/config`;
 
 		if (env.KUBECONFIG) path = env.KUBECONFIG;
-			path = env.KUBECONFIG;
 		this.loadFromFile(path);
 	}
 
@@ -69,6 +67,12 @@ class KubeConfig {
 	 */
 	loadFromString(str) {
 		this.config = str;
+	}
+
+	apply(yamlContent) {
+		let yamlFile = cwd() + "/config/applyaml.yaml";
+		fs.writeFileSync(yamlFile, yamlContent);
+		return this.execKube("apply", "-f", yamlFile);
 	}
 
 	/**
