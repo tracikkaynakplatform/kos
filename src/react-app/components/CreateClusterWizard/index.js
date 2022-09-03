@@ -13,11 +13,17 @@ export const useWizard = () => useContext(WizardContext);
 function WizardProvider({ children }) {
 	const [data, setData] = useState({});
 
+	const updateData = (key, value) => {
+		let newData = Object.assign({}, data);
+		newData[key] = value;
+		setData(newData);
+	};
+
 	return (
 		<WizardContext.Provider
 			value={{
 				data,
-				setData,
+				updateData,
 			}}
 		>
 			{children}

@@ -52,10 +52,7 @@ export default function StepKubeConfig(props) {
 						variant: "success",
 						autoHideDuration: 2000,
 					});
-					wizard.setData({
-						...wizard.data,
-						config: kubeconfigData,
-					});
+					wizard.updateData("config", kubeconfigData);
 					_next();
 				} catch (err) {
 					snack(err.message, {
