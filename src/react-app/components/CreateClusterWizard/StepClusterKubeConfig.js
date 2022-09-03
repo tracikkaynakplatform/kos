@@ -19,9 +19,19 @@ export default function StepClusterKubeConfig(props) {
 
 	return (
 		<Wrapper
+			stepIndex={props.stepIndex}
 			disableBack={!buttonsEnabled}
 			disableNext={!buttonsEnabled}
-			onNextClick={async () => {}}
+			onLoad={async () => {
+				try {
+					setKubeconfigData(await kubeConfig.defaultConfig());
+				} catch (err) {}
+			}}
+			onNextClick={async () => {
+				await kubectl.setConfig(kubeconfigData);
+				wizard.updateData("config", kubeconfigData);
+				_goto("connectingCluster");
+			}}
 			onBackClick={() => {
 				_goto("operation");
 			}}

@@ -22,7 +22,9 @@ export default function StepManagementCluster(props) {
 			disableBack={!buttonsEnabled}
 			disableNext={!buttonsEnabled}
 			onLoad={async () => {
-				setKubeconfigData(await kubeConfig.defaultConfig());
+				try {
+					setKubeconfigData(await kubeConfig.defaultConfig());
+				} catch (err) {}
 			}}
 			onNextClick={async () => {
 				setTextFieldEnabled(false);
