@@ -94,3 +94,5 @@ config/kubeconfig
 bin/kubectl
 bin/clusterctl
 bin/kind
+.kube
+.cluster-api
