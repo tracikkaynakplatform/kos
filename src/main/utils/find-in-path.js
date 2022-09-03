@@ -1,24 +1,33 @@
-import { env } from 'process';
-import { existsSync } from 'fs';
+import { env } from "process";
+import { access, constants } from "fs";
+
+async function checkExists(path) {
+	return new Promise((res, rej) => {
+		access(path, constants.F_OK, (err) => {
+			if (!err) return res(path);
+			return rej(err);
+		});
+	});
+}
 
 /**
  * PATH çevre değişkeni içerisinde fileName isimli bir
  * dosya olup olmadığını bulur. Eğer dosya mevcut ise
  * yolu, aksi durumda ise undefined döndürü.
- * 
+ *
  * @param {string} fileName Dosya adı.
- * @returns {string} Dosyanın tam yolu.
+ * @returns {Promise<string>} Dosyanın tam yolu.
  */
-export default function findInPath(fileName) {
-	let path = '';
-	let paths = env.PATH?.split(':');
-	if (!paths)
-		return (undefined);
-	for (let p of paths)
-	{
+export default async function findInPath(fileName) {
+	let path = "";
+	let paths = env.PATH?.split(":");
+	if (!paths) throw new Error("PATH çevre değişkeni mevcut değil");
+	for (let p of paths) {
 		path = `${p}/${fileName}`;
-		if (existsSync(path))
-			return (path);
+		try {
+			await checkExists(path);
+			return path;
+		} catch (err) {}
 	}
-	return (undefined);
+	throw new Error("Dosya bulunamadı");
 }

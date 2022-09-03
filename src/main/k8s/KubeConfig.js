@@ -1,93 +1,145 @@
-import Kubectl from "../services/Kubectl";
+import { access, constants } from "fs";
 import { env, cwd } from "process";
-import { execSync } from "child_process";
 import fs from "fs";
 
-class KubeConfig {
-	constructor() {
-		this.config = undefined;
-	}
-
+export default class KubeConfig {
 	/**
-	 * kubectl'in konumunu döndürür. Eğer kullanılabilir bir kubectl
-	 * mevcut değilse Error fırlatır.
+	 * kubeconfig içeriğini temsil eden bir sınıf.
 	 *
-	 * @throws {Error}
-	 * @returns {string}
+	 * @constuctor
+	 * @param {string} config - kubeconfig içeriği.
 	 */
-	#checkKubectl() {
-		let path = Kubectl.check();
-		if (!!!path) throw new Error("kubectl bulunamadı");
-		return path;
+	constructor(config) {
+		this.config = config;
+		this.path = `${cwd()}/config/kc-${Date.now()}.yaml`;
 	}
 
 	/**
-	 * kubectl'i çalıştırır ve çıktısını döndürür.
+	 * Kullanılacak kubeconfig yolunu değiştirir.
 	 *
-	 * @param  {...any} args kubectl'e geçecek argümanlar.
-	 * @returns {string}
+	 * @throws {Error} - Yol değiştirme sırasında this.delete() ve this.write() çağırılır. Bir hata ile karşılaşırsa fırlatır.
+	 * @param {string} path - Yeni kubeconfig yolu.
+	 * @returns {Promise<void>}
 	 */
-	execKube(...args) {
-		// TODO: varolmayan dizin kontrolü
-		let kubeconfig = cwd() + "/config/kubeconfig";
-		let path = this.#checkKubectl();
-
-		fs.writeFileSync(kubeconfig, this.config);
-		return execSync(
-			`${path} --kubeconfig ${kubeconfig} ${args.join(" ")}`
-		).toString();
+	async changePath(path) {
+		return new Promise((resolve, reject) => {
+			access(this.path, F_OK, async (err) => {
+				try {
+					if (!err) await this.delete();
+					this.path = path;
+					await this.write();
+					resolve();
+				} catch (err) {
+					reject(err);
+				}
+			});
+		});
 	}
 
 	/**
-	 * KUBECONFIG çevre değişkeninde kayıtlı olan yoldaki dosyayı
-	 * kubeconfig dosyası olarak kullanır. Eğer KUBECONFIG çevre
-	 * değişkeni atanmamışsa, ~/.kube/config dosyasını kullanma-
-	 * yı dener.
+	 * kubeconfig içeriğini değiştirir ve {@var this.path} içine kayıt eder.
+	 *
+	 * @throws {Error} - {@function this.write()} metodu çağırılırken bir hata ile karşılaşırsa fırlatır.
+	 * @param {string} content - Yeni kubeconfig içeriği.
 	 */
-	loadFromDefault() {
+	async changeContent(content) {
+		this.config = content;
+		await this.write();
+	}
+
+	/**
+	 * {@var this.path} yolunda bulunan dosyayı okur ve içeriğini
+	 * {@var this.config}'e atar.
+	 *
+	 * @throws {ErrnoException} - Dosya okuma sırasında bir hata ile karşılaşırsa fırlatır.
+	 * @returns {Promise<string>} - config dosya içeriği.
+	 */
+	async load() {
+		return new Promise((resolve, reject) => {
+			fs.readFile(this.path, { encoding: "utf-8" }, (err, data) => {
+				if (err) reject(err);
+				this.config = data;
+				resolve(data);
+			});
+		});
+	}
+
+	/**
+	 * Kubeconfig içeriğini cwd() + '/config/kc-zamandamgasi.yaml'
+	 * olarak kayıt eder. Herhangi bir hata ile karşılaşılması
+	 * durumunda Error fırlatır.
+	 *
+	 * @throws {Error} - Yazma sırasında bir hata ile karşılaşırsa fırlatır.
+	 * @returns {Promise<void>}
+	 */
+	async write() {
+		return new Promise((resolve, reject) => {
+			fs.writeFile(this.path, this.config, (err) => {
+				if (err) return reject(err);
+				resolve();
+			});
+		});
+	}
+
+	/**
+	 * cwd() + '/config/kc-zamndamgasi.yaml' olarak kayıt
+	 * edilen config dosyasını siler. Herhangi bir hata
+	 * ile karşılaşılması durumunda Error fırlatır.
+	 *
+	 * @throws {Error} - Silme işlemi başarısız ise fırlatır.
+	 * @returns {Promise<void>}
+	 */
+	async delete() {
+		return new Promise((resolve, reject) => {
+			fs.unlink(this.path, (err) => {
+				if (err) return reject(err);
+				resolve();
+			});
+		});
+	}
+
+	/**
+	 * Varsayılan kubeconfig dosyasının içeriğini döndürür.
+	 *
+	 * @throws {Error} - Dosyayı okuma ile ilgili bir sorun oluşursa hata fırlatır.
+	 * @throws {Error} - Varsayılan kubeconfig dosyası yok ise hata fırlatır.
+	 * @returns {Promise<string>} - kubeconfig dosya içeriğini döndürür.
+	 */
+	static async defaultConfig() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let path = await KubeConfig.defaultConfigPath();
+				fs.readFile(path, { encoding: "utf-8" }, (err, data) => {
+					if (err) reject(err);
+					resolve(data);
+				});
+			} catch (err) {
+				reject(err);
+			}
+		});
+	}
+
+	/**
+	 * Sistemde kullanılabilir bir kubeconfig dosyası var ise
+	 * yolunu döndürür. Aksi durumlarda hata fırlatır.
+	 *
+	 * @throws {Error} - Varsayılan bir kubeconfig dosyası bulunamazsa fırlatılır.
+	 * @returns {Promise<string>} - kubeconfig dosyasının yolunu döndürür.
+	 */
+	static async defaultConfigPath() {
 		let path = `${env.HOME}/.kube/config`;
 
 		if (env.KUBECONFIG) path = env.KUBECONFIG;
-		this.loadFromFile(path);
-	}
-
-	/**
-	 * Kubeconfig'i dosyadan yükler.
-	 *
-	 * @param {string} path Kubeconfig yolu.
-	 */
-	loadFromFile(path) {
-		this.config = fs.readFileSync(path).toString();
-	}
-
-	/**
-	 * Kubeconfig'i string olarak alır.
-	 *
-	 * @param {string} str Kubeconfig içeriği.
-	 */
-	loadFromString(str) {
-		this.config = str;
-	}
-
-	apply(yamlContent) {
-		let yamlFile = cwd() + "/config/applyaml.yaml";
-		fs.writeFileSync(yamlFile, yamlContent);
-		return this.execKube("apply", "-f", yamlFile);
-	}
-
-	/**
-	 * kubectl get [resourceType] komutunu çalıştırır ve çıktısını
-	 * döndürür.
-	 *
-	 * @param {string} resourceType İstenen kaynak tipini belirtir.
-	 * @param {string} outputType Çıktının tipini belirtir. json veya yaml olabilir.
-	 * @returns {object} Nesne olarak çıktıyı döndürür.
-	 */
-	get(resourceType, namespace = "") {
-		return JSON.parse(
-			this.execKube("get", resourceType, namespace, "-o", "json")
-		);
+		return new Promise((resolve, reject) => {
+			access(path, constants.F_OK, (err) => {
+				if (err)
+					reject(
+						new Error(
+							"Kullanılabilir bir kubeconfig dosyası bulunamadı"
+						)
+					);
+				resolve(path);
+			});
+		});
 	}
 }
-
-export default new KubeConfig();

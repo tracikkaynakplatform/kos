@@ -7,7 +7,7 @@ import Wrapper from "./Wrapper";
 import { useWizard } from ".";
 
 export default function StepKubeConfig(props) {
-	const [kubeConfig, setKubeconfig] = useState("");
+	const [kubeconfigData, setKubeconfigData] = useState("");
 	const wizard = useWizard();
 	const [textFieldEnabled, setTextFieldEnabled] = useState(true);
 	const [buttonsEnabled, setButtonsEnabled] = useState(true);
@@ -18,7 +18,7 @@ export default function StepKubeConfig(props) {
 
 	useEffect(() => {
 		(async () => {
-			setKubeconfig(await window.kubeConfig.loadFromDefault());
+			setKubeconfigData(await kubeConfig.defaultConfig());
 		})();
 	}, []);
 
@@ -30,19 +30,15 @@ export default function StepKubeConfig(props) {
 				setTextFieldEnabled(false);
 				setButtonsEnabled(false);
 				try {
-					if (!(await window.kubectl.check())) {
+					try {
+						await kubectl.check();
+					} catch (err) {
 						const downloadSnack = snack(
-							"kubectl bulunamadı! İndiriliyor...",
+							"kubectl bulunamadı! İndiriliyor...", // TODO: snackbar yükleniyor tasarımında olacak.
 							{ variant: "info", persist: true }
 						);
-						// TODO: snackbar yükleniyor tasarımında olacak.
-						const isDownloaded = await window.kubectl.download();
-						if (!isDownloaded) {
-							closeSnack(downloadSnack);
-							throw new Error(
-								"kubectl indirme işlemi başarısız!"
-							);
-						}
+
+						await kubectl.download();
 						closeSnack(downloadSnack);
 					}
 
@@ -50,21 +46,21 @@ export default function StepKubeConfig(props) {
 						variant: "info",
 						autoHideDuration: 2000,
 					});
-					if (!(await window.kubectl.get("namespace", kubeConfig)))
-						throw new Error("Küme ile bağlantı kurulamadı!");
+					await kubectl.setConfig(kubeconfigData);
+					await kubectl.get("namespace", "json", "-A");
 					snack("Küme ile bağlantı sağlandı", {
 						variant: "success",
 						autoHideDuration: 2000,
 					});
 					wizard.setData({
 						...wizard.data,
-						config: kubeConfig,
+						config: kubeconfigData,
 					});
 					_next();
 				} catch (err) {
 					snack(err.message, {
 						variant: "error",
-						autoHideDuration: 2000,
+						autoHideDuration: 5000,
 					});
 				}
 				setTextFieldEnabled(true);
@@ -93,8 +89,8 @@ export default function StepKubeConfig(props) {
 			</Typography>
 			<TextField
 				disabled={!textFieldEnabled}
-				onChange={(e) => setKubeconfig(e.target.value)}
-				value={kubeConfig}
+				onChange={(e) => setKubeconfigData(e.target.value)}
+				value={kubeconfigData}
 				sx={{ mt: 2, mb: 2, width: "700px" }}
 				label={translate("kubeConfigContent")}
 				multiline

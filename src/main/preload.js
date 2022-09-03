@@ -1,14 +1,17 @@
-import { contextBridge, ipcMain, ipcRenderer } from "electron";
+import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("kubectl", {
 	check: () => ipcRenderer.invoke("kubectl:check"),
 	download: () => ipcRenderer.invoke("kubectl:download"),
-	get: (resourceType, kubeConfig) =>
-		ipcRenderer.invoke("kubectl:get", resourceType, kubeConfig),
+	setConfig: (content) => ipcRenderer.invoke("kubectl:setConfig", content),
+	getConfig: () => ipcRenderer.invoke("kubectl:getConfig", content),
+	setConfigPath: (path) => ipcRenderer.invoke("kubectl:setConfigPath", path),
+	getConfigPath: () => ipcRenderer.invoke("kubectl:getConfigPath", path),
+	get: (...args) => ipcRenderer.invoke("kubectl:get", ...args),
 });
 
 contextBridge.exposeInMainWorld("kubeConfig", {
-	loadFromDefault: () => ipcRenderer.invoke("kubeConfig:loadFromDefault"),
+	defaultConfig: () => ipcRenderer.invoke("kubeConfig:defaultConfig"),
 });
 
 contextBridge.exposeInMainWorld("providers", {
@@ -17,5 +20,26 @@ contextBridge.exposeInMainWorld("providers", {
 });
 
 contextBridge.exposeInMainWorld("clusterctl", {
-	generate: (config) => ipcRenderer.invoke("clusterctl:generate", config),
+	check: () => ipcRenderer.invoke("clusterctl:check"),
+	download: () => ipcRenderer.invoke("clusterctl:download"),
+	setConfig: (content) => ipcRenderer.invoke("clusterctl:setConfig", content),
+	getConfig: () => ipcRenderer.invoke("clusterctl:getConfig", content),
+	setConfigPath: (path) =>
+		ipcRenderer.invoke("clusterctl:setConfigPath", path),
+	getConfigPath: () => ipcRenderer.invoke("clusterctl:getConfigPath", path),
+	generateCluster: (
+		clusterName,
+		kubernetesVersion,
+		masterCount,
+		workerCount,
+		isDocker = false
+	) =>
+		ipcRenderer.invoke(
+			"clusterctl:generateCluster",
+			clusterName,
+			kubernetesVersion,
+			masterCount,
+			workerCount,
+			isDocker
+		),
 });

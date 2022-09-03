@@ -8,14 +8,16 @@ import {
 	TextField,
 } from "@mui/material";
 import { useState } from "react";
-// import { useSnackbar } from 'notistack';
+import { useSnackbar } from "notistack";
 import React from "react";
-
+import { useWizard } from ".";
 import { translate } from "../../locales";
 import Wrapper from "./Wrapper";
 
 export default function StepKindProviderConfig(props) {
-	// const snack = useSnackbar().enqueueSnackbar;
+	const snack = useSnackbar().enqueueSnackbar;
+	const closeSnack = useSnackbar().closeSnackbar;
+	const wizard = useWizard();
 	const [kubVersion, setKubVersion] = useState("");
 	const [masterCount, setMasterCount] = useState(1);
 	const [workerCount, setWorkerCount] = useState(1);
@@ -26,10 +28,43 @@ export default function StepKindProviderConfig(props) {
 
 	return (
 		<Wrapper
-			onNextClick={() => {
+			onNextClick={async () => {
 				// TODO: docker kurulu mu diye kontrol et (çevre değişkenleri ile olabilir) #electronjs
 				// TODO: clusterctl kurulu mu diye kontrol et (çevre değişkenleri ile olabilir) #electronjs
-				_next();
+				try {
+					await clusterctl.check();
+				} catch (err) {
+					const downloadSnack = snack(
+						"clusterctl bulunamadı! İndiriliyor...", // TODO: snackbar yükleniyor tasarımında olacak.
+						{ variant: "info", persist: true }
+					);
+
+					await clusterctl.download();
+					closeSnack(downloadSnack);
+				}
+				snack("clusterctl çalıştırılıyor...", {
+					variant: "info",
+					autoHideDuration: 2000,
+				});
+				await clusterctl.setConfig(wizard.data.config);
+				snack("Küme oluşturmak için yaml dosyası üretiliyor...", {
+					variant: "info",
+					autoHideDuration: 3000,
+				});
+				console.log(
+					await clusterctl.generateCluster(
+						clusterName,
+						kubVersion,
+						masterCount,
+						workerCount,
+						true
+					)
+				);
+				snack("YAML dosyası üretildi", {
+					variant: "success",
+					autoHideDuration: 2000,
+				});
+				//_next();
 			}}
 			onBackClick={() => {
 				_goto("selectProvider");
@@ -69,7 +104,7 @@ export default function StepKindProviderConfig(props) {
 						label={translate("kubernetesVersion")}
 						onChange={(e) => setKubVersion(e.target.value)}
 					>
-						{/* TODO: Github üzerinden Kubernetes sürüm bilgilerini çekilecek */}
+						{/* TODO: Kind'ın desteklediği Kubernetes sürümleri alınacak */}
 						<MenuItem value="1.24.0">1.24.0</MenuItem>
 						<MenuItem value="1.24.4">1.24.4</MenuItem>
 						<MenuItem value="1.23.10">1.23.10</MenuItem>
