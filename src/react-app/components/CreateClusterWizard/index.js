@@ -7,6 +7,8 @@ import StepSelectProvider from "./StepSelectProvider";
 import StepKindProviderConfig from "./StepKindProviderConfig";
 import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
 import StepDigitalOceanClusterConfig from "./StepDigitalOceanClusterConfig";
+import StepClusterKubeConfig from "./StepClusterKubeConfig";
+import StepConnectingCluster from "./StepConnectingCluster";
 
 const WizardContext = createContext({});
 export const useWizard = () => useContext(WizardContext);
@@ -54,7 +56,9 @@ function Content(props) {
 				stepName="digitalocean-clusterconfig"
 			/>
 
+			<StepClusterKubeConfig stepIndex={6} stepName="clusterKubeConfig" />
 
+			<StepConnectingCluster stepIndex={7} stepName="connectingCluster" />
 		</StepWizard>
 	);
 }

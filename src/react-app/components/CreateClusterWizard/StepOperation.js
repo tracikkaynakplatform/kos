@@ -9,23 +9,28 @@ export default function StepOperation(props) {
 	const snack = useSnackbar().enqueueSnackbar;
 	const [operation, setOperation] = useState("");
 	const _next = props.nextStep;
+	const _goto = props.goToNamedStep;
 	// const _back = props.previousStep;
 
 	return (
 		<Wrapper
 			disableBack
 			onNextClick={() => {
-				if (
-					operation === "newCluster" ||
-					operation === "existingCluster"
-				) {
-					_next();
+				if (operation === "newCluster") {
+					_goto("managementCluster");
+					return;
+				}
+				if (operation === "existingCluster") {
+					_goto("clusterKubeConfig");
 					return;
 				}
 				snack(translate("errSelectOperation"), {
 					variant: "error",
 					autoHideDuration: 2000,
 				});
+			}}
+			onBackClick={() => {
+				_goto("operation");
 			}}
 		>
 			<Typography
