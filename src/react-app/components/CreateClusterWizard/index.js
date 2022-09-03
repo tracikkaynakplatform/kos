@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React, { createContext, useContext, useState } from "react";
 import StepWizard from "react-step-wizard";
 import StepOperation from "./StepOperation";
-import StepKubeConfig from "./StepKubeConfig";
+import StepManagementCluster from "./StepManagementCluster";
 import StepSelectProvider from "./StepSelectProvider";
 import StepKindProviderConfig from "./StepKindProviderConfig";
 import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
@@ -12,6 +12,7 @@ const WizardContext = createContext({});
 export const useWizard = () => useContext(WizardContext);
 function WizardProvider({ children }) {
 	const [data, setData] = useState({});
+	const [stepIndex, setStepIndex] = useState({});
 
 	const updateData = (key, value) => {
 		let newData = Object.assign({}, data);
@@ -23,11 +24,38 @@ function WizardProvider({ children }) {
 		<WizardContext.Provider
 			value={{
 				data,
+				stepIndex,
+				setStepIndex,
 				updateData,
 			}}
 		>
 			{children}
 		</WizardContext.Provider>
+	);
+}
+
+function Content(props) {
+	const wizard = useWizard();
+	return (
+		<StepWizard
+			onStepChange={(stats) => {
+				wizard.setStepIndex(stats.activeStep - 1);
+			}}
+			transitions={{}}
+		>
+			<StepOperation stepIndex={0} stepName="operation" />
+
+			<StepManagementCluster stepIndex={1} stepName="managementCluster" />
+			<StepSelectProvider stepIndex={2} stepName="selectProvider" />
+			<StepKindProviderConfig stepIndex={3} stepName="kind" />
+			<StepDigitalOceanSSHkey stepIndex={4} stepName="digitalocean" />
+			<StepDigitalOceanClusterConfig
+				stepIndex={5}
+				stepName="digitalocean-clusterconfig"
+			/>
+
+
+		</StepWizard>
 	);
 }
 
@@ -43,14 +71,7 @@ export default function CreateClusterWizard(props) {
 			}}
 		>
 			<WizardProvider>
-				<StepWizard transitions={{}}>
-					<StepOperation />
-					<StepKubeConfig />
-					<StepSelectProvider stepName="selectProvider" />
-					<StepKindProviderConfig stepName="kind" />
-					<StepDigitalOceanSSHkey stepName="digitalocean" />
-					<StepDigitalOceanClusterConfig stepName="digitalocean-clusterconfig" />
-				</StepWizard>
+				<Content />
 			</WizardProvider>
 		</Box>
 	);

@@ -1,5 +1,6 @@
 import { Box, Button, Card } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
+import { useWizard } from ".";
 import { translate } from "../../locales";
 
 export default function Wrapper({
@@ -7,9 +8,15 @@ export default function Wrapper({
 	disableNext,
 	onBackClick,
 	onNextClick,
+	onLoad,
+	stepIndex,
 	sx,
 	...props
 }) {
+	const wizard = useWizard();
+	useEffect(() => {
+		if (wizard.stepIndex == stepIndex) onLoad?.();
+	}, [wizard.stepIndex]);
 	return (
 		<Card
 			sx={{

@@ -6,7 +6,7 @@ import React from "react";
 import Wrapper from "./Wrapper";
 import { useWizard } from ".";
 
-export default function StepKubeConfig(props) {
+export default function StepManagementCluster(props) {
 	const [kubeconfigData, setKubeconfigData] = useState("");
 	const wizard = useWizard();
 	const [textFieldEnabled, setTextFieldEnabled] = useState(true);
@@ -16,16 +16,14 @@ export default function StepKubeConfig(props) {
 	const _next = props.nextStep;
 	const _back = props.previousStep;
 
-	useEffect(() => {
-		(async () => {
-			setKubeconfigData(await kubeConfig.defaultConfig());
-		})();
-	}, []);
-
 	return (
 		<Wrapper
+			stepIndex={props.stepIndex}
 			disableBack={!buttonsEnabled}
 			disableNext={!buttonsEnabled}
+			onLoad={async () => {
+				setKubeconfigData(await kubeConfig.defaultConfig());
+			}}
 			onNextClick={async () => {
 				setTextFieldEnabled(false);
 				setButtonsEnabled(false);
