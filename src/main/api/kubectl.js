@@ -1,3 +1,4 @@
+import KubeConfig from "../k8s/KubeConfig";
 import Kubectl from "../services/Kubectl";
 
 export const kubectlService = new Kubectl();
@@ -11,7 +12,8 @@ async function download() {
 }
 
 async function setConfig(_, content) {
-	return await kubectlService.config.changeContent(content);
+	kubectlService.config = new KubeConfig(content);
+	await kubectlService.config.write();
 }
 
 async function setConfigPath(_, path) {

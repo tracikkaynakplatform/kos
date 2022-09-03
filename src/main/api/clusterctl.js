@@ -1,3 +1,4 @@
+import KubeConfig from "../k8s/KubeConfig";
 import Clusterctl from "../services/Clusterctl";
 
 export const clusterctlService = new Clusterctl();
@@ -11,7 +12,8 @@ async function download() {
 }
 
 async function setConfig(_, content) {
-	await clusterctlService.config.changeContent(content);
+	clusterctlService.config = new KubeConfig(content);
+	await clusterctlService.config.write();
 }
 
 async function setConfigPath(_, path) {
