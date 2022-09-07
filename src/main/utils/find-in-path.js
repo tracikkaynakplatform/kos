@@ -1,4 +1,4 @@
-import { env } from "process";
+import { env, platform } from "process";
 import { access, constants } from "fs";
 
 async function checkExists(path) {
@@ -20,7 +20,9 @@ async function checkExists(path) {
  */
 export default async function findInPath(fileName) {
 	let path = "";
-	let paths = env.PATH?.split(":");
+	let splitChar = ":";
+	if (platform == "win32") splitChar = ";";
+	let paths = env.PATH?.split(splitChar);
 	if (!paths) throw new Error("PATH çevre değişkeni mevcut değil");
 	for (let p of paths) {
 		path = `${p}/${fileName}`;
