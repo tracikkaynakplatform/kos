@@ -3,11 +3,12 @@ import { contextBridge, ipcRenderer } from "electron";
 contextBridge.exposeInMainWorld("kubectl", {
 	check: () => ipcRenderer.invoke("kubectl:check"),
 	download: () => ipcRenderer.invoke("kubectl:download"),
+	get: (...args) => ipcRenderer.invoke("kubectl:get", ...args),
+	apply: (...args) => ipcRenderer.invoke("kubectl:apply", ...args),
 	setConfig: (content) => ipcRenderer.invoke("kubectl:setConfig", content),
 	getConfig: () => ipcRenderer.invoke("kubectl:getConfig", content),
 	setConfigPath: (path) => ipcRenderer.invoke("kubectl:setConfigPath", path),
 	getConfigPath: () => ipcRenderer.invoke("kubectl:getConfigPath", path),
-	get: (...args) => ipcRenderer.invoke("kubectl:get", ...args),
 });
 
 contextBridge.exposeInMainWorld("kubeConfig", {

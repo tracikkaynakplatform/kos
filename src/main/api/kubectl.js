@@ -32,6 +32,10 @@ async function get(_, ...args) {
 	return await kubectlService.get(...args);
 }
 
+async function apply(_, ...args) {
+	return await kubectlService.apply(...args);
+}
+
 export default [
 	{
 		name: "kubectl:check",
@@ -60,5 +64,9 @@ export default [
 	{
 		name: "kubectl:setConfigPath",
 		action: setConfigPath,
+	},
+	{
+		name: "kubectl:apply",
+		action: apply,
 	},
 ];
