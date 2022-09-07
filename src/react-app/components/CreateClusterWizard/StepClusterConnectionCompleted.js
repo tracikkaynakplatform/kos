@@ -4,7 +4,7 @@ import { useState } from "react";
 import React from "react";
 import Wrapper from "./Wrapper";
 
-export default function StepAddClusterCompleted(props) {
+export default function StepClusterConnectionCompleted(props) {
 	// const snack = useSnackbar().enqueueSnackbar;
 	// const _next = props.nextStep;
 	// const _back = props.previousStep;

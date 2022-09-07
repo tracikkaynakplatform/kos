@@ -15,56 +15,22 @@ import { translate } from "../../locales";
 import Wrapper from "./Wrapper";
 
 export default function StepKindProviderConfig(props) {
-	const snack = useSnackbar().enqueueSnackbar;
-	const closeSnack = useSnackbar().closeSnackbar;
 	const wizard = useWizard();
 	const [kubVersion, setKubVersion] = useState("");
 	const [masterCount, setMasterCount] = useState(1);
 	const [workerCount, setWorkerCount] = useState(1);
 	const [clusterName, setClusterName] = useState("");
-	const _next = props.nextStep;
 	// const _back = props.previousStep;
 	const _goto = props.goToNamedStep;
 
 	return (
 		<Wrapper
 			onNextClick={async () => {
-				// TODO: docker kurulu mu diye kontrol et (çevre değişkenleri ile olabilir) #electronjs
-				// TODO: clusterctl kurulu mu diye kontrol et (çevre değişkenleri ile olabilir) #electronjs
-				try {
-					await clusterctl.check();
-				} catch (err) {
-					const downloadSnack = snack(
-						"clusterctl bulunamadı! İndiriliyor...", // TODO: snackbar yükleniyor tasarımında olacak.
-						{ variant: "info", persist: true }
-					);
-
-					await clusterctl.download();
-					closeSnack(downloadSnack);
-				}
-				snack("clusterctl çalıştırılıyor...", {
-					variant: "info",
-					autoHideDuration: 2000,
-				});
-				await clusterctl.setConfig(wizard.data.config);
-				snack("Küme oluşturmak için yaml dosyası üretiliyor...", {
-					variant: "info",
-					autoHideDuration: 3000,
-				});
-				console.log(
-					await clusterctl.generateCluster(
-						clusterName,
-						kubVersion,
-						masterCount,
-						workerCount,
-						true
-					)
-				);
-				snack("YAML dosyası üretildi", {
-					variant: "success",
-					autoHideDuration: 2000,
-				});
-				//_next();
+				await wizard.updateData("kubVersion", kubVersion);
+				await wizard.updateData("masterCount", masterCount);
+				await wizard.updateData("clusterName", clusterName);
+				await wizard.updateData("workerCount", workerCount);
+				_goto("kindCreateCluster");
 			}}
 			onBackClick={() => {
 				_goto("selectProvider");

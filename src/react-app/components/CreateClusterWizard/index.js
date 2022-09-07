@@ -9,7 +9,9 @@ import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
 import StepDigitalOceanClusterConfig from "./StepDigitalOceanClusterConfig";
 import StepClusterKubeConfig from "./StepClusterKubeConfig";
 import StepConnectingCluster from "./StepConnectingCluster";
-import StepAddClusterCompleted from "./StepAddClusterCompleted";
+import StepAddClusterCompleted from "./StepAddClusterComplete";
+import StepKindCreateCluster from "./StepKindCreateCluster";
+import StepClusterConnectionCompleted from "./StepClusterConnectionCompleted";
 
 const WizardContext = createContext({});
 export const useWizard = () => useContext(WizardContext);
@@ -17,10 +19,13 @@ function WizardProvider({ children }) {
 	const [data, setData] = useState({});
 	const [stepIndex, setStepIndex] = useState({});
 
-	const updateData = (key, value) => {
-		let newData = Object.assign({}, data);
+	const updateData = async (key, value) => {
+		let newData = {};
 		newData[key] = value;
-		setData(newData);
+		await setData((data) => ({
+			...data,
+			...newData,
+		}));
 	};
 
 	return (
@@ -61,9 +66,15 @@ function Content(props) {
 
 			<StepConnectingCluster stepIndex={7} stepName="connectingCluster" />
 
+			<StepKindCreateCluster stepIndex={8} stepName="kindCreateCluster" />
+
+			<StepClusterConnectionCompleted
+				stepIndex={9}
+				stepName="clusterConnectionCompleted"
+			/>
 			<StepAddClusterCompleted
-				stepIndex={8}
-				stepName="addClusterCompleted"
+				stepIndex={10}
+				stepName="addClusterComplete"
 			/>
 		</StepWizard>
 	);
