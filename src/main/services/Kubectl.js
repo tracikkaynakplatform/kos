@@ -2,7 +2,7 @@ import Downloader from "./base/Downloader";
 import { execFile } from "child_process";
 import { get as _get } from "request";
 import downloadFile from "../utils/download-file";
-import { chmod } from "fs";
+import { access, constants, chmod } from "fs";
 import KubeConfig from "../k8s/KubeConfig";
 
 export default class Kubectl extends Downloader {
@@ -14,6 +14,47 @@ export default class Kubectl extends Downloader {
 		super("https://dl.k8s.io/release/", "kubectl");
 		this.version = null;
 		this.config = null;
+	}
+
+	/**
+	 * Tüm kubectl çalıştırma işlemlerinde kullanabilmek için
+	 * argüman formatlayıcı.
+	 *
+	 * @param {string} outputType kubectl çıktı tipi.
+	 * @param  {...any} additionalArgs Argümanlar
+	 * @returns {string} Girilen parametlere göre kubectl verilebilecek argümanları döndürür.
+	 */
+	#createArgs(outputType, ...args) {
+		let argString = [];
+		argString.push(...args);
+		if (outputType === "json") argString.push(...["-o", "json"]);
+		return argString;
+	}
+
+	/**
+	 * kubectl çalıştırma işlemini gerçekleştirir.
+	 *
+	 * @param  {...any} args kubectl argümanları.
+	 * @throws {Error} kubectl bulunamaz ise fırlatır.
+	 * @returns {Promise<string>} kubectl çıktısını return eder.
+	 */
+	async #execKube(...args) {
+		let path = await this.check();
+
+		return new Promise((resolve, reject) => {
+			execFile(
+				path,
+				args,
+				{
+					env: { KUBECONFIG: this.config.path },
+					encoding: "utf-8",
+				},
+				(err, stdout, stderr) => {
+					if (err) reject(err);
+					resolve(stdout);
+				}
+			);
+		});
 	}
 
 	/**
@@ -67,36 +108,45 @@ export default class Kubectl extends Downloader {
 	/**
 	 * "kubectl get" eylemini gerçekleştirir.
 	 *
-	 * @throws {Error} - kubectl yok ise hata fırlatır.
-	 * @throws {Error} - kubectl'i çalıştırma ile ilgili bir sorun oluşursa hata fıraltır.
-	 * @returns {Promise<string>} - Çıktıyı döndürür.
+	 * @throws {Error} this.#execKube'de bir hata oluşursa fırlatır.
+	 * @returns {Promise<object>} - kubectl çıktısını (json formatında ise) nesne olarak döndürür. Aksi durumlarda Promise<string> döner.
 	 */
 	async get(resource, outputType = "json", ...additionalArgs) {
-		let path = await this.check();
-		const args = ["get", resource];
-
-		if (outputType == "json") args.push(...["-o", "json"]);
-		args.push(...additionalArgs);
-
-		return new Promise((resolve, reject) => {
-			execFile(
-				path,
-				args,
-				{
-					env: { KUBECONFIG: this.config.path },
-					encoding: "utf-8",
-				},
-				(err, stdout, stderr) => {
-					if (err) reject(err);
-					resolve(stdout);
-				}
-			);
-		});
+		let output = await this.#execKube(
+			...this.#createArgs(outputType, "get", resource, ...additionalArgs)
+		);
+		if (outputType === "json") return JSON.parse(output);
+		return output;
 	}
 
 	/**
+	 *	"kubectl apply" eylemini gerçekleştirir
 	 *
-	 * @param {string} file
+	 * @param {string} file Kümeye uygulanacak
+	 * @throws {Error} file bulunamaz ise fırlatır.
+	 * @throws {Error} this.#execKube'de bir hata oluşursa fırlatır.
+	 * @returns {Promise<object>} kubectl çıktısını (json formatında ise) nesne olarak döndürür. Aksi durumlarda Promise<string> döner.
 	 */
-	async apply(file) {}
+	async apply(file, outputType = "json", ...additionalArgs) {
+		return new Promise((resolve, reject) => {
+			access(file, constants.F_OK, async (err) => {
+				if (err) reject(err);
+				try {
+					let output = await this.#execKube(
+						...this.#createArgs(
+							outputType,
+							"apply",
+							"-f",
+							file,
+							...additionalArgs
+						)
+					);
+					if (outputType === "json") resolve(JSON.parse(output));
+					else resolve(output);
+				} catch (err) {
+					reject(err);
+				}
+			});
+		});
+	}
 }
