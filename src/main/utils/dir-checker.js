@@ -5,6 +5,9 @@ import { cwd } from "process";
 export const DIRS = {
 	config: "config",
 	bin: "bin",
+	clusters: "config/clusters",
+	managementClusters: "config/clusters/man-clusters",
+	workloadClusters: "config/clusters/workload",
 };
 
 /**
