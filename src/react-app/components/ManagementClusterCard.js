@@ -43,8 +43,7 @@ export default function ManagementClusterCard({
 				<Box
 					sx={{
 						display: "flex",
-						flexWrap: "normal",
-						overflow: "auto",
+						flexWrap: "wrap",
 						gap: "10px",
 					}}
 				>
@@ -70,8 +69,8 @@ export default function ManagementClusterCard({
 						<ProviderChip
 							key={i}
 							sx={{ mt: 0.5, mb: 0.5, ml: 0.3, mr: 0.3 }}
-							name={`cluster-${providerNames[x.type]}-${i}`}
-							logo={providerLogos[x.type]}
+							name={x.name}
+							logo={providerLogos[x.provider]}
 							href={x.href}
 						/>
 					))

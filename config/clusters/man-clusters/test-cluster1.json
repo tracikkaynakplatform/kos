@@ -1,15 +1,15 @@
 {
-	"name": "man-cluster-1",
+	"name": "test-cluster1",
 	"supportedProviders": [0, 2, 1],
 	"clusters": [
 		{
 			"name": "deneme-1cluster",
-			"config": "man-cluster-1_deneme-1cluster.kubeconfig",
+			"config": "test-cluster1_deneme-1cluster.kubeconfig",
 			"provider": 2
 		},
 		{
 			"name": "tester",
-			"config": "man-cluster-1_tester.kubeconfig",
+			"config": "test-cluster1_tester.kubeconfig",
 			"provider": 1
 		}
 	]

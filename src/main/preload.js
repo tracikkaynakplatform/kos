@@ -20,6 +20,11 @@ contextBridge.exposeInMainWorld("providers", {
 		ipcRenderer.invoke("providers:getProviders", kubeConfig),
 });
 
+contextBridge.exposeInMainWorld("clusterConfig", {
+	getManagementClusters: () =>
+		ipcRenderer.invoke("clusterConfig:getManagementClusters"),
+});
+
 contextBridge.exposeInMainWorld("clusterctl", {
 	check: () => ipcRenderer.invoke("clusterctl:check"),
 	download: () => ipcRenderer.invoke("clusterctl:download"),
