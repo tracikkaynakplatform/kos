@@ -52,9 +52,9 @@ export function Sidebar(props) {
 						label="Ana Sayfa"
 					/>
 					<SidebarListButton
-						to="/clusters"
+						to="/management-clusters"
 						icon={<StorageIcon />}
-						label="Kümeler"
+						label="Yönetim Kümeleri"
 					/>
 				</List>
 			</Box>
