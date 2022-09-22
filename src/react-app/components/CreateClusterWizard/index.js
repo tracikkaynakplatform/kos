@@ -1,49 +1,21 @@
+import React, { useEffect } from "react";
 import { Box } from "@mui/material";
-import React, { createContext, useContext, useState } from "react";
 import StepWizard from "react-step-wizard";
-import StepOperation from "./StepOperation";
-import StepManagementCluster from "./StepManagementCluster";
 import StepSelectProvider from "./StepSelectProvider";
 import StepKindProviderConfig from "./StepKindProviderConfig";
 import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
 import StepDigitalOceanClusterConfig from "./StepDigitalOceanClusterConfig";
-import StepClusterKubeConfig from "./StepClusterKubeConfig";
-import StepConnectingCluster from "./StepConnectingCluster";
 import StepAddClusterCompleted from "./StepAddClusterComplete";
 import StepKindCreateCluster from "./StepKindCreateCluster";
-import StepClusterConnectionCompleted from "./StepClusterConnectionCompleted";
+import { useWizard, WizardProvider } from "../../hooks/useWizard";
 
-const WizardContext = createContext({});
-export const useWizard = () => useContext(WizardContext);
-function WizardProvider({ children }) {
-	const [data, setData] = useState({});
-	const [stepIndex, setStepIndex] = useState({});
-
-	const updateData = async (key, value) => {
-		let newData = {};
-		newData[key] = value;
-		await setData((data) => ({
-			...data,
-			...newData,
-		}));
-	};
-
-	return (
-		<WizardContext.Provider
-			value={{
-				data,
-				stepIndex,
-				setStepIndex,
-				updateData,
-			}}
-		>
-			{children}
-		</WizardContext.Provider>
-	);
-}
-
-function Content(props) {
+function Content({ manClusterName, onFinish }) {
 	const wizard = useWizard();
+
+	useEffect(() => {
+		wizard.setStepIndex(0);
+	}, []);
+
 	return (
 		<StepWizard
 			onStepChange={(stats) => {
@@ -51,36 +23,39 @@ function Content(props) {
 			}}
 			transitions={{}}
 		>
-			<StepOperation stepIndex={0} stepName="operation" />
+			<StepSelectProvider
+				manClusterName={manClusterName}
+				stepIndex={0}
+				stepName="selectProvider"
+			/>
 
-			<StepManagementCluster stepIndex={1} stepName="managementCluster" />
-			<StepSelectProvider stepIndex={2} stepName="selectProvider" />
-			<StepKindProviderConfig stepIndex={3} stepName="kind" />
-			<StepDigitalOceanSSHkey stepIndex={4} stepName="digitalocean" />
+			{/* Kind */}
+			<StepKindProviderConfig
+				stepIndex={1}
+				stepName="kindProviderConfig"
+			/>
+			<StepKindCreateCluster stepIndex={2} stepName="kindCreateCluster" />
+
+			{/* DigitalOcean */}
+			<StepDigitalOceanSSHkey
+				stepIndex={3}
+				stepName="digitalOceanSSHkey"
+			/>
 			<StepDigitalOceanClusterConfig
-				stepIndex={5}
-				stepName="digitalocean-clusterconfig"
+				stepIndex={4}
+				stepName="digitalOceanClusterConfig"
 			/>
 
-			<StepClusterKubeConfig stepIndex={6} stepName="clusterKubeConfig" />
-
-			<StepConnectingCluster stepIndex={7} stepName="connectingCluster" />
-
-			<StepKindCreateCluster stepIndex={8} stepName="kindCreateCluster" />
-
-			<StepClusterConnectionCompleted
-				stepIndex={9}
-				stepName="clusterConnectionCompleted"
-			/>
 			<StepAddClusterCompleted
-				stepIndex={10}
+				stepIndex={5}
 				stepName="addClusterComplete"
+				onFinish={onFinish}
 			/>
 		</StepWizard>
 	);
 }
 
-export default function CreateClusterWizard(props) {
+export default function CreateClusterWizard({ manClusterName, onFinish }) {
 	return (
 		<Box
 			sx={{
@@ -92,7 +67,7 @@ export default function CreateClusterWizard(props) {
 			}}
 		>
 			<WizardProvider>
-				<Content />
+				<Content manClusterName={manClusterName} onFinish={onFinish} />
 			</WizardProvider>
 		</Box>
 	);

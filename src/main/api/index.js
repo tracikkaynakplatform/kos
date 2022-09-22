@@ -1,18 +1,35 @@
 import { ipcMain } from "electron";
-import clusterctlAPIs from "./clusterctl";
 import kubeConfigAPIs from "./kubeConfig";
-import kubectlAPIs from "./kubectl";
-import providersAPIs from "./providers";
 import clusterConfigAPIs from "./clusterConfig";
+import clusterctlAPIs from "./clusterctl";
+import kubectlAPIs from "./kubectl";
 
-const apis = [
-	...clusterctlAPIs,
-	...kubeConfigAPIs,
-	...kubectlAPIs,
-	...providersAPIs,
-	...clusterConfigAPIs,
+export const apis = [
+	{
+		namespace: "kubeConfig",
+		apis: kubeConfigAPIs,
+	},
+	{
+		namespace: "clusterConfig",
+		apis: clusterConfigAPIs,
+	},
+	{
+		namespace: "kubectl",
+		apis: kubectlAPIs,
+	},
+	{
+		namespace: "clusterctl",
+		apis: clusterctlAPIs,
+	},
 ];
 
 export function initApis() {
-	apis.map((api) => ipcMain.handle(api.name, api.action));
+	apis.map((apiGroup) => {
+		apiGroup.apis.map((api) =>
+			ipcMain.handle(
+				`${apiGroup.namespace}:${api.name}`,
+				async (_, args) => await api(...args)
+			)
+		);
+	});
 }

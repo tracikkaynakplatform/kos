@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
 import ManagementClusterCard from "../components/ManagementClusterCard";
-import { PROVIDER_TYPE } from "../providers";
-import { Box, Button, Fab, TextField } from "@mui/material";
-import { Search } from "@mui/icons-material";
+import { Box, Fab, TextField } from "@mui/material";
+import { Add, Search } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 export default function ManagementClusters(props) {
+	const nav = useNavigate();
 	const [clusters, setClusters] = useState([]);
 
 	useEffect(() => {
@@ -16,6 +17,20 @@ export default function ManagementClusters(props) {
 
 	return (
 		<DashboardLayout>
+			<Fab
+				color="primary"
+				sx={{
+					margin: 0,
+					top: "auto",
+					right: 20,
+					bottom: 20,
+					left: "auto",
+					position: "fixed",
+				}}
+				onClick={() => nav("/add-cluster")}
+			>
+				<Add />
+			</Fab>
 			<Box
 				sx={{
 					display: "flex",
@@ -56,7 +71,11 @@ export default function ManagementClusters(props) {
 					}}
 				>
 					{clusters.map((x, i) => (
-						<ManagementClusterCard key={i} {...x} />
+						<ManagementClusterCard
+							key={i}
+							href={`/cluster/${x.name}`}
+							{...x}
+						/>
 					))}
 				</Box>
 			</Box>

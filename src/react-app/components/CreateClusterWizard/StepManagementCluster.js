@@ -3,8 +3,8 @@ import { useSnackbar } from "notistack";
 import { useState, useEffect } from "react";
 import { translate } from "../../locales";
 import React from "react";
-import Wrapper from "./Wrapper";
-import { useWizard } from ".";
+import Wrapper from "../StepWizardWrapper";
+import { useWizard } from "../../hooks/useWizard";
 
 export default function StepManagementCluster(props) {
 	const [kubeconfigData, setKubeconfigData] = useState("");

@@ -8,11 +8,10 @@ import {
 	TextField,
 } from "@mui/material";
 import { useState } from "react";
-import { useSnackbar } from "notistack";
 import React from "react";
-import { useWizard } from ".";
+import { useWizard } from "../../hooks/useWizard";
 import { translate } from "../../locales";
-import Wrapper from "./Wrapper";
+import Wrapper from "../StepWizardWrapper";
 
 export default function StepKindProviderConfig(props) {
 	const wizard = useWizard();
@@ -20,12 +19,12 @@ export default function StepKindProviderConfig(props) {
 	const [masterCount, setMasterCount] = useState(1);
 	const [workerCount, setWorkerCount] = useState(1);
 	const [clusterName, setClusterName] = useState("");
-	// const _back = props.previousStep;
 	const _goto = props.goToNamedStep;
 
 	return (
 		<Wrapper
 			onNextClick={async () => {
+				// TODO: Girdi doğrulama
 				await wizard.updateData("kubVersion", kubVersion);
 				await wizard.updateData("masterCount", masterCount);
 				await wizard.updateData("clusterName", clusterName);

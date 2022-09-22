@@ -3,14 +3,13 @@ import { Card, Typography, Box, Divider, Link as MUILink } from "@mui/material";
 import ProviderChip from "./ProviderChip";
 import { providerNames } from "../providers/provider-names";
 import { providerLogos } from "../providers/provider-logos";
+import { Link } from "react-router-dom";
 
 export default function ManagementClusterCard({
 	name,
-	provider,
 	clusters,
 	href,
 	supportedProviders,
-	...props
 }) {
 	return (
 		<Card
@@ -21,7 +20,7 @@ export default function ManagementClusterCard({
 				height: "300px",
 			}}
 		>
-			<MUILink m={2} underline="hover" href={href ?? "#"}>
+			<MUILink component={Link} to={href} m={2} underline="hover">
 				<Typography
 					sx={{
 						fontSize: "20px",

@@ -5,25 +5,26 @@ import downloadFile from "../utils/download-file";
 import { access, constants, chmod } from "fs";
 import KubeConfig from "../k8s/KubeConfig";
 
+/**
+ * kubectl ile işlem yapmaya yarayan sınıf.
+ */
 export default class Kubectl extends Downloader {
-	/**
-	 * kubectl ile işlem yapmaya yarayan sınıf.
-	 * @constructor
-	 */
 	constructor() {
 		super("https://dl.k8s.io/release/", "kubectl");
+
+		/**
+		 * @type {string}
+		 * @public
+		 */
 		this.version = null;
-		this.config = null;
+
+		/**
+		 * @type {KubeConfig}
+		 * @public
+		 */
+		this.config = new KubeConfig();
 	}
 
-	/**
-	 * Tüm kubectl çalıştırma işlemlerinde kullanabilmek için
-	 * argüman formatlayıcı.
-	 *
-	 * @param {string} outputType kubectl çıktı tipi.
-	 * @param  {...any} additionalArgs Argümanlar
-	 * @returns {string} Girilen parametlere göre kubectl verilebilecek argümanları döndürür.
-	 */
 	#createArgs(outputType, ...args) {
 		let argString = [];
 		argString.push(...args);
@@ -31,13 +32,6 @@ export default class Kubectl extends Downloader {
 		return argString;
 	}
 
-	/**
-	 * kubectl çalıştırma işlemini gerçekleştirir.
-	 *
-	 * @param  {...any} args kubectl argümanları.
-	 * @throws {Error} kubectl bulunamaz ise fırlatır.
-	 * @returns {Promise<string>} kubectl çıktısını return eder.
-	 */
 	async #execKube(...args) {
 		let path = await this.check();
 
@@ -105,12 +99,10 @@ export default class Kubectl extends Downloader {
 		});
 	}
 
-	/**
-	 * "kubectl get" eylemini gerçekleştirir.
-	 *
-	 * @throws {Error} this.#execKube'de bir hata oluşursa fırlatır.
-	 * @returns {Promise<object>} - kubectl çıktısını (json formatında ise) nesne olarak döndürür. Aksi durumlarda Promise<string> döner.
-	 */
+	async currentContext() {
+		return (await this.#execKube("config", "current-context")).trim();
+	}
+
 	async get(resource, outputType = "json", ...additionalArgs) {
 		let output = await this.#execKube(
 			...this.#createArgs(outputType, "get", resource, ...additionalArgs)
@@ -119,14 +111,6 @@ export default class Kubectl extends Downloader {
 		return output;
 	}
 
-	/**
-	 *	"kubectl apply" eylemini gerçekleştirir
-	 *
-	 * @param {string} file Kümeye uygulanacak
-	 * @throws {Error} file bulunamaz ise fırlatır.
-	 * @throws {Error} this.#execKube'de bir hata oluşursa fırlatır.
-	 * @returns {Promise<object>} kubectl çıktısını (json formatında ise) nesne olarak döndürür. Aksi durumlarda Promise<string> döner.
-	 */
 	async apply(file, outputType = "json", ...additionalArgs) {
 		return new Promise((resolve, reject) => {
 			access(file, constants.F_OK, async (err) => {

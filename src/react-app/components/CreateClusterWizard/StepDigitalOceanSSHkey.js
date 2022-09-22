@@ -3,7 +3,7 @@ import { useState } from "react";
 // import { useSnackbar } from 'notistack';
 import React from "react";
 import { translate } from "../../locales";
-import Wrapper from "./Wrapper";
+import Wrapper from "../StepWizardWrapper";
 
 export default function StepDigitalOceanSSHkey(props) {
 	// const snack = useSnackbar().enqueueSnackbar;

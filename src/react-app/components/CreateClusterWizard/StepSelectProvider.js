@@ -12,48 +12,44 @@ import { translate } from "../../locales";
 import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
 import StepKindProviderConfig from "./StepKindProviderConfig";
 import React from "react";
-import Wrapper from "./Wrapper";
-import { useWizard } from ".";
+import Wrapper from "../StepWizardWrapper";
+import { useWizard } from "../../hooks/useWizard";
+import { PROVIDER_TYPE } from "../../../main/providers";
 
 export default function StepSelectProvider(props) {
 	const snack = useSnackbar().enqueueSnackbar;
 	const [providers, setProviders] = useState([]);
 	const [provider, setProvider] = useState("");
 	const wizard = useWizard();
-	// const _next = props.nextStep;
-	const _back = props.previousStep;
 	const _goto = props.goToNamedStep;
 
-	useEffect(() => {
-		(async () => {
-			if (props.currentStep === 3) {
-				let supportedProviders = await window.providers.getProviders(
-					wizard.data.config
+	return (
+		<Wrapper
+			stepIndex={props.stepIndex}
+			onLoad={async () => {
+				let config = await kubeConfig.loadManagementConfig(
+					props.manClusterName
 				);
+				await wizard.updateData("config", config);
+				let supportedProviders =
+					await clusterConfig.getSupportedProviders(config);
 				setProviders(
 					supportedProviders.map((p) => {
 						switch (p) {
-							case "docker":
+							case PROVIDER_TYPE.DOCKER:
 								return {
-									key: "kind",
-									step: <StepKindProviderConfig />,
+									key: "kindProviderConfig",
 									name: "Kind - Docker",
 								};
-							case "digitalocean":
+							case PROVIDER_TYPE.DIGITAL_OCEAN:
 								return {
-									key: "digitalocean",
-									step: <StepDigitalOceanSSHkey />,
+									key: "digitalOceanSSHkey",
 									name: "DigitalOcean",
 								};
 						}
 					})
 				);
-			}
-		})();
-	}, [wizard.data]);
-
-	return (
-		<Wrapper
+			}}
 			onNextClick={() => {
 				if (!!provider) {
 					_goto(provider);
@@ -64,9 +60,7 @@ export default function StepSelectProvider(props) {
 					autoHideDuration: 2000,
 				});
 			}}
-			onBackClick={() => {
-				_back();
-			}}
+			disableBack
 		>
 			<Typography
 				sx={{
@@ -98,8 +92,8 @@ export default function StepSelectProvider(props) {
 						label={translate("provider")}
 						onChange={(e) => setProvider(e.target.value)}
 					>
-						{providers.map((x) => (
-							<MenuItem value={x.key} key={x.key}>
+						{providers.map((x, i) => (
+							<MenuItem value={x.key} key={i}>
 								{x.name}
 							</MenuItem>
 						))}

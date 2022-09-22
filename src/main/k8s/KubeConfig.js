@@ -3,31 +3,18 @@ import { env, cwd } from "process";
 import fs from "fs";
 
 export default class KubeConfig {
-	/**
-	 * kubeconfig içeriğini temsil eden bir sınıf.
-	 *
-	 * @constuctor
-	 * @param {string} config - kubeconfig içeriği.
-	 */
-	constructor(config) {
-		this.config = config;
+	constructor() {
+		this.config = "";
 		this.path = `${cwd()}/config/kc-${Date.now()}.yaml`;
 	}
 
-	/**
-	 * Kullanılacak kubeconfig yolunu değiştirir.
-	 *
-	 * @throws {Error} - Yol değiştirme sırasında this.delete() ve this.write() çağırılır. Bir hata ile karşılaşırsa fırlatır.
-	 * @param {string} path - Yeni kubeconfig yolu.
-	 * @returns {Promise<void>}
-	 */
 	async changePath(path) {
 		return new Promise((resolve, reject) => {
-			access(this.path, F_OK, async (err) => {
+			access(this.path, constants.F_OK, async (err) => {
 				try {
 					if (!err) await this.delete();
 					this.path = path;
-					await this.write();
+					await this.load();
 					resolve();
 				} catch (err) {
 					reject(err);
@@ -36,24 +23,11 @@ export default class KubeConfig {
 		});
 	}
 
-	/**
-	 * kubeconfig içeriğini değiştirir ve {@var this.path} içine kayıt eder.
-	 *
-	 * @throws {Error} - {@function this.write()} metodu çağırılırken bir hata ile karşılaşırsa fırlatır.
-	 * @param {string} content - Yeni kubeconfig içeriği.
-	 */
 	async changeContent(content) {
 		this.config = content;
 		await this.write();
 	}
 
-	/**
-	 * {@var this.path} yolunda bulunan dosyayı okur ve içeriğini
-	 * {@var this.config}'e atar.
-	 *
-	 * @throws {ErrnoException} - Dosya okuma sırasında bir hata ile karşılaşırsa fırlatır.
-	 * @returns {Promise<string>} - config dosya içeriği.
-	 */
 	async load() {
 		return new Promise((resolve, reject) => {
 			fs.readFile(this.path, { encoding: "utf-8" }, (err, data) => {
@@ -64,14 +38,6 @@ export default class KubeConfig {
 		});
 	}
 
-	/**
-	 * Kubeconfig içeriğini cwd() + '/config/kc-zamandamgasi.yaml'
-	 * olarak kayıt eder. Herhangi bir hata ile karşılaşılması
-	 * durumunda Error fırlatır.
-	 *
-	 * @throws {Error} - Yazma sırasında bir hata ile karşılaşırsa fırlatır.
-	 * @returns {Promise<void>}
-	 */
 	async write() {
 		return new Promise((resolve, reject) => {
 			fs.writeFile(this.path, this.config, (err) => {
@@ -81,14 +47,6 @@ export default class KubeConfig {
 		});
 	}
 
-	/**
-	 * cwd() + '/config/kc-zamndamgasi.yaml' olarak kayıt
-	 * edilen config dosyasını siler. Herhangi bir hata
-	 * ile karşılaşılması durumunda Error fırlatır.
-	 *
-	 * @throws {Error} - Silme işlemi başarısız ise fırlatır.
-	 * @returns {Promise<void>}
-	 */
 	async delete() {
 		return new Promise((resolve, reject) => {
 			fs.unlink(this.path, (err) => {
@@ -98,13 +56,24 @@ export default class KubeConfig {
 		});
 	}
 
-	/**
-	 * Varsayılan kubeconfig dosyasının içeriğini döndürür.
-	 *
-	 * @throws {Error} - Dosyayı okuma ile ilgili bir sorun oluşursa hata fırlatır.
-	 * @throws {Error} - Varsayılan kubeconfig dosyası yok ise hata fırlatır.
-	 * @returns {Promise<string>} - kubeconfig dosya içeriğini döndürür.
-	 */
+	static async tempConfig(config, content, operation) {
+		return new Promise(async (resolve, reject) => {
+			let err = null;
+			await config.changeContent(content);
+			try {
+				await operation();
+			} catch (_err) {
+				err = _err;
+			} finally {
+				try {
+					await config.delete();
+				} catch (_) {}
+				if (err) reject(err);
+				resolve();
+			}
+		});
+	}
+
 	static async defaultConfig() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -119,13 +88,6 @@ export default class KubeConfig {
 		});
 	}
 
-	/**
-	 * Sistemde kullanılabilir bir kubeconfig dosyası var ise
-	 * yolunu döndürür. Aksi durumlarda hata fırlatır.
-	 *
-	 * @throws {Error} - Varsayılan bir kubeconfig dosyası bulunamazsa fırlatılır.
-	 * @returns {Promise<string>} - kubeconfig dosyasının yolunu döndürür.
-	 */
 	static async defaultConfigPath() {
 		let path = `${env.HOME}/.kube/config`;
 

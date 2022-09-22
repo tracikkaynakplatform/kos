@@ -1,9 +1,9 @@
-import { Typography, CircularProgress, Box, TextField } from "@mui/material";
+import { Typography, CircularProgress, Box } from "@mui/material";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 import React from "react";
-import Wrapper from "./Wrapper";
-import { useWizard } from ".";
+import Wrapper from "../StepWizardWrapper";
+import { useWizard } from "../../hooks/useWizard";
 
 export default function StepKindCreateCluster(props) {
 	const snack = useSnackbar().enqueueSnackbar;
@@ -18,34 +18,29 @@ export default function StepKindCreateCluster(props) {
 			disableBack
 			onLoad={async () => {
 				try {
-					try {
-						await clusterctl.check();
-					} catch (err) {
-						setInfoText("clusterctl bulunamadı! İndiriliyor...");
-						await clusterctl.download();
-					}
-					await clusterctl.setConfig(wizard.data.config);
 					setInfoText(
 						"Küme oluşturmak için yaml dosyası üretiliyor... (clsuterctl generate)"
 					);
-					let yamlPath = await clusterctl.generateCluster(
+					let yaml = await clusterctl.generateCluster(
+						wizard.data.config,
 						wizard.data.clusterName,
 						wizard.data.kubVersion,
 						wizard.data.masterCount,
 						wizard.data.workerCount,
-						true
+						true,
+						"docker"
 					);
 					setInfoText(
 						"YAML dosyası yönetim kümesine uygulanıyor (kubectl apply)"
 					);
-					await kubectl.apply(yamlPath);
+					await kubectl.apply(wizard.data.config, yaml);
 					_goto("addClusterComplete");
 				} catch (err) {
 					snack(err.message, {
 						variant: "error",
 						autoHideDuration: 5000,
 					});
-					_goto("kind");
+					_goto("kindProviderConfig");
 				}
 			}}
 		>

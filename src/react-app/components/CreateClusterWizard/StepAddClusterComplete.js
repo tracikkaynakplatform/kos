@@ -1,24 +1,15 @@
-import { Typography, CircularProgress, Box, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useSnackbar } from "notistack";
 import React from "react";
-import { translate } from "../../locales";
-import Wrapper from "./Wrapper";
-import { useWizard } from ".";
+import { Typography, Box } from "@mui/material";
+import Wrapper from "../StepWizardWrapper";
 
-export default function StepAddClusterComplete(props) {
-	//const snack = useSnackbar().enqueueSnackbar;
-	const wizard = useWizard();
-	// const _next = props.nextStep;
-	// const _back = props.previousStep;
-	const _goto = props.goToNamedStep;
-
+export default function StepAddClusterComplete({ onFinish, stepIndex }) {
 	return (
 		<Wrapper
-			stepIndex={props.stepIndex}
-			disableNext
+			stepIndex={stepIndex}
+			onNextClick={() => {
+				onFinish();
+			}}
 			disableBack
-			onLoad={async () => {}}
 		>
 			<Typography
 				sx={{

@@ -1,72 +1,40 @@
 import KubeConfig from "../k8s/KubeConfig";
 import Kubectl from "../services/Kubectl";
 
-export const kubectlService = new Kubectl();
+export async function get(config, ...args) {
+	let result = null;
+	let kctl = new Kubectl();
 
-async function check() {
-	return await kubectlService.check();
+	await KubeConfig.tempConfig(kctl.config, config, async () => {
+		result = await kctl.get(...args);
+	});
+	return result;
 }
 
-async function download() {
-	return await kubectlService.download();
+export async function apply(config, yaml, ...args) {
+	return new Promise(async (resolve, reject) => {
+		let kctl = new Kubectl();
+		try {
+			await KubeConfig.tempConfig(kctl.config, config, async () => {
+				let yamlFile = new KubeConfig(); // TODO: tempfile sınıfı oluşturulacak.
+				await KubeConfig.tempConfig(yamlFile, yaml, async () => {
+					resolve(await kctl.apply(yamlFile.path, ...args));
+				});
+			});
+		} catch (err) {
+			reject(err);
+		}
+	});
 }
 
-async function setConfig(_, content) {
-	kubectlService.config = new KubeConfig(content);
-	await kubectlService.config.write();
+export async function currentContext(config) {
+	let result = null;
+	let kctl = new Kubectl();
+
+	await KubeConfig.tempConfig(kctl.config, config, async () => {
+		result = await kctl.currentContext();
+	});
+	return result;
 }
 
-async function setConfigPath(_, path) {
-	return await kubectlService.config.changePath(path);
-}
-
-async function getConfig() {
-	return kubectlService.config.config;
-}
-
-async function getConifgPath() {
-	return kubectlService.config.path;
-}
-
-async function get(_, ...args) {
-	return await kubectlService.get(...args);
-}
-
-async function apply(_, ...args) {
-	return await kubectlService.apply(...args);
-}
-
-export default [
-	{
-		name: "kubectl:check",
-		action: check,
-	},
-	{
-		name: "kubectl:download",
-		action: download,
-	},
-	{
-		name: "kubectl:setConfig",
-		action: setConfig,
-	},
-	{
-		name: "kubectl:get",
-		action: get,
-	},
-	{
-		name: "kubectl:getConfig",
-		action: getConfig,
-	},
-	{
-		name: "kubectl:getConifgPath",
-		action: getConifgPath,
-	},
-	{
-		name: "kubectl:setConfigPath",
-		action: setConfigPath,
-	},
-	{
-		name: "kubectl:apply",
-		action: apply,
-	},
-];
+export default [get, currentContext, apply];
