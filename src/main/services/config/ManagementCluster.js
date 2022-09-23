@@ -62,6 +62,9 @@ export default class ManagementCluster {
 						case "DOCluster":
 							provider = PROVIDER_TYPE.DIGITAL_OCEAN;
 							break;
+						case "AWSCluster":
+							provider = PROVIDER_TYPE.AWS;
+							break;
 					}
 					result.push({
 						name: i.metadata.name,
@@ -89,6 +92,9 @@ export default class ManagementCluster {
 							break;
 						case "capdo-system":
 							providers.push(PROVIDER_TYPE.DIGITAL_OCEAN);
+							break;
+						case "capa-system":
+							providers.push(PROVIDER_TYPE.AWS);
 							break;
 					}
 				}

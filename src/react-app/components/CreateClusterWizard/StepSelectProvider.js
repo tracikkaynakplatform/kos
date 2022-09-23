@@ -46,6 +46,11 @@ export default function StepSelectProvider(props) {
 									key: "digitalOceanSSHkey",
 									name: "DigitalOcean",
 								};
+							case PROVIDER_TYPE.AWS:
+								return {
+									name: "AWS - Amazon Web Services",
+									key: "awsProviderConfig",
+								};
 						}
 					})
 				);
