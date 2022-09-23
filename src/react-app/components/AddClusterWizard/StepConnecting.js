@@ -35,9 +35,6 @@ export default function StepConnecting(props) {
 							"Desteklenen altyapı sağlayıcıları bulunamadı!\nKümenin bir yönetim kümesi olduğundan emin olun."
 						);
 
-					setInfoText("Yönetim kümesi kayıt ediliyor...");
-					await clusterConfig.saveManagementCluster(manName);
-
 					setInfoText(
 						"Yönetim kümesi kubeconfig dosyası kayıt ediliyor..."
 					);

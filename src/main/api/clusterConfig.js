@@ -33,29 +33,4 @@ export async function getSupportedProviders(managementClusterConfig) {
 	return manCluster.supportedProviders;
 }
 
-export async function saveManagementCluster(name) {
-	return new Promise(async (resolve, reject) => {
-		const jsonPath = `${await dirCheck(
-			DIRS.managementClusters
-		)}/${name}.json`;
-
-		fs.writeFile(
-			jsonPath,
-			await JSON.stringify({
-				name,
-				config: `${name}.kubeconfig`,
-			}),
-			(err) => {
-				if (err) return reject(err);
-				resolve();
-			}
-		);
-	});
-}
-
-export default [
-	getManagementClusters,
-	getSupportedProviders,
-	saveManagementCluster,
-	getClusters,
-];
+export default [getManagementClusters, getSupportedProviders, getClusters];
