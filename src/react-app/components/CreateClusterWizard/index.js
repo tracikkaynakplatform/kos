@@ -9,7 +9,7 @@ import StepAddClusterCompleted from "./StepAddClusterComplete";
 import StepKindCreateCluster from "./StepKindCreateCluster";
 import { useWizard, WizardProvider } from "../../hooks/useWizard";
 
-function Content({ manClusterName, onFinish }) {
+function Content({ onFinish }) {
 	const wizard = useWizard();
 
 	useEffect(() => {
@@ -24,7 +24,7 @@ function Content({ manClusterName, onFinish }) {
 			transitions={{}}
 		>
 			<StepSelectProvider
-				manClusterName={manClusterName}
+				manClusterName={wizard.manClusterName}
 				stepIndex={0}
 				stepName="selectProvider"
 			/>
@@ -63,11 +63,11 @@ export default function CreateClusterWizard({ manClusterName, onFinish }) {
 				flexDirection: "column",
 				justifyContent: "center",
 				alignItems: "center",
-				height: "100%",
+				height: "100vh",
 			}}
 		>
-			<WizardProvider>
-				<Content manClusterName={manClusterName} onFinish={onFinish} />
+			<WizardProvider additionalData={{ manClusterName }}>
+				<Content onFinish={onFinish} />
 			</WizardProvider>
 		</Box>
 	);

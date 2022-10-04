@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState } from "react";
 const WizardContext = createContext({});
 export const useWizard = () => useContext(WizardContext);
 
-export function WizardProvider({ children }) {
+export function WizardProvider({ children, additionalData }) {
 	const [data, setData] = useState({});
 	const [stepIndex, setStepIndex] = useState({});
 
@@ -23,6 +23,7 @@ export function WizardProvider({ children }) {
 				stepIndex,
 				setStepIndex,
 				updateData,
+				...additionalData,
 			}}
 		>
 			{children}

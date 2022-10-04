@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow } from "electron";
 import { initApis } from "./api";
 
 const createWindow = () => {
@@ -14,7 +14,7 @@ const createWindow = () => {
 };
 
 if (require("electron-squirrel-startup")) app.quit();
-app.whenReady().then(() => initApis());
+app.whenReady().then(() => initApis()); // API'lerin yüklenmesi ve kullanıma hazır hale gelmesi.
 app.on("ready", createWindow);
 app.on("activate", () =>
 	BrowserWindow.getAllWindows().length === 0 ? createWindow() : null

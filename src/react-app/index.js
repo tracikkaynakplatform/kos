@@ -1,34 +1,36 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import ManagementClusters from "./pages/ManagementClusters";
+
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import App from "./pages/App";
 import { Provider } from "react-redux";
 import { store } from "../react-app/redux/store";
-import AddCluster from "./pages/AddCluster";
-import ManagementClusterInfo from "./pages/ManagementClusterInfo";
-import CreateCluster from "./pages/CreateCluster";
+
+import AddClusterPage from "./pages/AddClusterPage";
+import ManagementClustersPage from "./pages/ManagementClusters";
+import ManagementClusterInfoPage from "./pages/ManagementClusterInfoPage";
+import CreateClusterPage from "./pages/CreateClusterPage";
+import MainPage from "./pages/MainPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<Provider store={store}>
 		<BrowserRouter>
 			<Routes>
-				<Route path="/main_window" exact element={<App />} />
+				<Route path="/main_window" exact element={<MainPage />} />
 				<Route
 					path="/cluster/:name"
-					element={<ManagementClusterInfo />}
+					element={<ManagementClusterInfoPage />}
 				/>
 				<Route
 					path="/management-clusters"
 					exact
-					element={<ManagementClusters />}
+					element={<ManagementClustersPage />}
 				/>
-				<Route path="/add-cluster" exact element={<AddCluster />} />
+				<Route path="/add-cluster" exact element={<AddClusterPage />} />
 				<Route
 					path="/create-cluster/:manClusterName"
 					exact
-					element={<CreateCluster />}
+					element={<CreateClusterPage />}
 				/>
 			</Routes>
 		</BrowserRouter>

@@ -1,7 +1,6 @@
-import { Box, Button, Card } from "@mui/material";
 import React, { useEffect } from "react";
+import { Box, Button, Card } from "@mui/material";
 import { useWizard } from "../hooks/useWizard";
-import { translate } from "../locales";
 
 export default function StepWizardWrapper({
 	disableBack,
@@ -40,14 +39,14 @@ export default function StepWizardWrapper({
 					onClick={onBackClick}
 					variant="contained"
 				>
-					{translate("back")}
+					Geri
 				</Button>
 				<Button
 					disabled={!!disableNext}
 					onClick={onNextClick}
 					variant="contained"
 				>
-					{translate("next")}
+					İleri
 				</Button>
 			</Box>
 		</Card>

@@ -5,12 +5,13 @@ import dirCheck, { DIRS } from "../../utils/dir-checker";
 import { PROVIDER_TYPE } from "../../providers";
 
 /**
- * Kümeyi temsil eden nesneyi tanımlar.
+ * @description Kümeyi temsil eden nesneyi tanımlar.
  * @typedef {Object} Cluster
  * @property {string} name - Kümenin adı.
  * @property {string} config - Kümenin kubeconfig dosyasının yolu.
  * @property {Number} provider - Kümenin bulunduğu altyapı sağlayıcısının kimlik numarası.
  */
+/** @typedef {import('../../providers').ProviderType} ProviderType */
 
 /**
  * Yönetim kümesini temsil eden ve kayıtlı kümeler ile işlem yapmaya yarayan sınıf.
@@ -18,24 +19,28 @@ import { PROVIDER_TYPE } from "../../providers";
 export default class ManagementCluster {
 	constructor(name) {
 		/**
+		 * @description Yönetim kümesinin adı.
 		 * @type {string}
 		 * @public
 		 */
 		this.name = name ?? "";
 
 		/**
+		 * @description Yönetim kümesi tarafından desteklenen altyapı sağlayıcılarının listesi. Bu listedeki numaralar {@link ProviderType} tarafından sağlanan ID numaralarından ibarettir.
 		 * @type {Array<Number>}
 		 * @public
 		 */
 		this.supportedProviders = [];
 
 		/**
+		 * @description Bu yönetim kümesine kayıtlı olan kümelerin listesi.
 		 * @type {Array<Cluster>}
 		 * @public
 		 */
 		this.clusters = [];
 
 		/**
+		 * @description Yönetim kümesinin config nesnesi.
 		 * @type {KubeConfig}
 		 * @public
 		 */

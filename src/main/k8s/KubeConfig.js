@@ -2,12 +2,23 @@ import { access, constants } from "fs";
 import { env, cwd } from "process";
 import fs from "fs";
 
+/** kubeconfig dosyasını ve içeriğini temsil eden ve işlem yapmaya yarayan sınıf. */
 export default class KubeConfig {
+	/**
+	 * @description Yeni bir KubeConfig nesnesi oluşturur ve konum olarak './config/' altında zaman damgasına sahip bir dosya ismi verir. İçeriği boştur ve sadece konum bilgisi kayıt edilir. Yani herhangi bir dosya oluşturulmaz.
+	 */
 	constructor() {
 		this.config = "";
 		this.path = `${cwd()}/config/kc-${Date.now()}.yaml`;
 	}
 
+	/**
+	 * @description Girilen yoldaki dosyayı kubeconfig dosyası olarak kabul eder. İçeriği okuyarak {@link config}'e kayıt eder ve dosya yolunu günceller.
+	 * @throws {NodeJS.ErrnoException} Girilen yolda dosya mevcut değil veya erişim izni yok ise fırlatır.
+	 * @throws {NodeJS.ErrnoException} Girilen yoldaki dosyayı okuma işlemi başarısız olursa fırlatır.
+	 * @param {String} path Yeni kubeconfig yolu
+	 * @returns {Promise}
+	 */
 	async changePath(path) {
 		return new Promise((resolve, reject) => {
 			access(this.path, constants.F_OK, async (err) => {
@@ -28,6 +39,11 @@ export default class KubeConfig {
 		await this.write();
 	}
 
+	/**
+	 * @description {@link path}'e kayıtlı olan yoldaki dosyanın içeriğini okuyarak {@link config} içerisine kayıt eder.
+	 * @throws {NodeJS.ErrnoException} Dosya okuma sırasında bir hata oluşursa fırlatır.
+	 * @returns {Promise<String>} Okunan dosyanın içeriğini döndürür.
+	 */
 	async load() {
 		return new Promise((resolve, reject) => {
 			fs.readFile(this.path, { encoding: "utf-8" }, (err, data) => {
@@ -50,7 +66,8 @@ export default class KubeConfig {
 	async delete() {
 		return new Promise((resolve, reject) => {
 			fs.unlink(this.path, (err) => {
-				if (err) return reject(err);
+				// Silememesi gibi bir durum olmayacaktır?
+				// if (err) return reject(err);
 				resolve();
 			});
 		});
