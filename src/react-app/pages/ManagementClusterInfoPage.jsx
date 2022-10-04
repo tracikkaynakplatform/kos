@@ -25,7 +25,7 @@ import {
 import ProviderChip from "../components/ProviderChip";
 import { providerNames } from "../providers/provider-names";
 import { providerLogos } from "../providers/provider-logos";
-import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import { useNavigate, useParams } from "react-router-dom";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -63,7 +63,7 @@ function HeaderCell({ children }) {
 	);
 }
 
-export default function ManagementClusterInfo(props) {
+export default function ManagementClusterInfoPage(props) {
 	const [clusters, setClusters] = useState([]);
 	const nav = useNavigate();
 	const { name } = useParams();

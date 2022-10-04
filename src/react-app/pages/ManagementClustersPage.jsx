@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import ManagementClusterCard from "../components/ManagementClusterCard";
 import { Box, Fab, TextField } from "@mui/material";
 import { Add, Search } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-export default function ManagementClusters(props) {
+export default function ManagementClustersPage(props) {
 	const nav = useNavigate();
 	const [clusters, setClusters] = useState([]);
 

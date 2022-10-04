@@ -1,1 +1,1 @@
-import '../react-app/index.js';
+import "../react-app/index.js";

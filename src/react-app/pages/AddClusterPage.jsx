@@ -2,10 +2,10 @@ import React from "react";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import { Fab } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import AddClusterWizard from "../components/AddClusterWizard";
 
-export default function AddCluster(props) {
+export default function AddClusterPage() {
 	const nav = useNavigate();
 
 	return (
