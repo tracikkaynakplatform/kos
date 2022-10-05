@@ -8,7 +8,8 @@ export default function LoadingModal({ open, onClose, message }) {
 				sx={{
 					display: "flex",
 					alignItems: "center",
-					justifyContent: "center",
+					justifyContent: "space-between",
+					flexDirection: "column",
 					position: "absolute",
 					gap: "10px",
 					top: "50%",
@@ -16,7 +17,8 @@ export default function LoadingModal({ open, onClose, message }) {
 					transform: "translate(-50%, -50%)",
 					boxShadow: 24,
 					backgroundColor: "white",
-					p: 10,
+					p: 8,
+					borderRadius: "20px",
 					":focus-visible": {
 						outline: "none",
 					},
