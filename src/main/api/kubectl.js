@@ -1,14 +1,32 @@
 import KubeConfig from "../k8s/KubeConfig";
 import Kubectl from "../services/Kubectl";
 
-export async function get(config, ...args) {
+async function execKube(config, callback) {
 	let result = null;
 	let kctl = new Kubectl();
 
 	await KubeConfig.tempConfig(kctl.config, config, async () => {
-		result = await kctl.get(...args);
+		result = await callback(kctl);
 	});
 	return result;
+}
+
+export async function get(config, ...args) {
+	return await execKube(config, async (kctl) => {
+		return await kctl.get(...args);
+	});
+}
+
+export async function delete_(config, ...args) {
+	return await execKube(config, async (kctl) => {
+		return await kctl.delete_(...args);
+	});
+}
+
+export async function currentContext(config) {
+	return await execKube(config, async (kctl) => {
+		return await kctl.currentContext();
+	});
 }
 
 export async function apply(config, yaml, ...args) {
@@ -27,14 +45,4 @@ export async function apply(config, yaml, ...args) {
 	});
 }
 
-export async function currentContext(config) {
-	let result = null;
-	let kctl = new Kubectl();
-
-	await KubeConfig.tempConfig(kctl.config, config, async () => {
-		result = await kctl.currentContext();
-	});
-	return result;
-}
-
-export default [get, currentContext, apply];
+export default [get, currentContext, apply, delete_];

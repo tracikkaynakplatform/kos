@@ -111,6 +111,18 @@ export default class Kubectl extends Downloader {
 		return output;
 	}
 
+	async delete_(resource, name, ...additionalArgs) {
+		return await this.#execKube(
+			...this.#createArgs(
+				undefined,
+				"delete",
+				resource,
+				name,
+				...additionalArgs
+			)
+		);
+	}
+
 	async apply(file, outputType = "json", ...additionalArgs) {
 		return new Promise((resolve, reject) => {
 			access(file, constants.F_OK, async (err) => {
