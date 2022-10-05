@@ -4,14 +4,18 @@ import ManagementClusterCard from "../components/ManagementClusterCard";
 import { Box, Fab, TextField } from "@mui/material";
 import { Add, Search } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import LoadingModal from "../components/LoadingModal.jsx";
 
 export default function ManagementClustersPage(props) {
 	const nav = useNavigate();
+	const [isLoading, setLoading] = useState(false);
 	const [clusters, setClusters] = useState([]);
 
 	useEffect(() => {
 		(async () => {
+			await setLoading(true);
 			await setClusters(await clusterConfig.getManagementClusters());
+			await setLoading(false);
 		})();
 	}, []);
 
@@ -79,6 +83,7 @@ export default function ManagementClustersPage(props) {
 					))}
 				</Box>
 			</Box>
+			<LoadingModal open={isLoading} />
 		</DashboardLayout>
 	);
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
 	Box,
 	Paper,
@@ -15,6 +16,7 @@ import {
 	ButtonGroup,
 	Fab,
 } from "@mui/material";
+
 import {
 	Delete as DeleteIcon,
 	Upgrade as UpgradeIcon,
@@ -22,13 +24,15 @@ import {
 	Add as AddIcon,
 	ArrowBack as ArrowBackIcon,
 } from "@mui/icons-material";
-import ProviderChip from "../components/ProviderChip";
+
 import { providerNames } from "../providers/provider-names";
 import { providerLogos } from "../providers/provider-logos";
-import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import { useNavigate, useParams } from "react-router-dom";
+import DashboardLayout from "../layouts/DashboardLayout.jsx";
+import ProviderChip from "../components/ProviderChip";
+import LoadingModal from "../components/LoadingModal.jsx";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {
 		backgroundColor: "#033e8a",
 		color: "white",
@@ -39,7 +43,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 	},
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(() => ({
 	transition: "all 0.5s",
 	"&:hover": {
 		boxShadow: "0 0 13px -7px",
@@ -65,13 +69,54 @@ function HeaderCell({ children }) {
 
 export default function ManagementClusterInfoPage(props) {
 	const [clusters, setClusters] = useState([]);
+	const [isLoading, setLoading] = useState(false);
+	const [loadingMessage, setLoadingMessage] = useState("");
+
 	const nav = useNavigate();
 	const { name } = useParams();
 	useEffect(() => {
 		(async () => {
+			setLoading(true);
+			setLoadingMessage("Kümeler yükleniyor");
 			const config = await kubeConfig.loadManagementConfig(name);
 			const _clusters = [...(await clusterConfig.getClusters(config))];
+
+			for (let i = 0; i < _clusters.length; i++) {
+				setLoadingMessage(
+					`${_clusters[i].name} kümesinin master makine sayısı alınıyor`
+				);
+				const clusterConfig = await clusterctl.getClusterConfig(
+					config,
+					_clusters[i].name
+				);
+				_clusters[i].masterCount =
+					(
+						await kubectl.get(
+							clusterConfig,
+							"nodes",
+							"json",
+							"-l",
+							"node-role.kubernetes.io/control-plane"
+						)
+					).items?.length ?? 0;
+
+				setLoadingMessage(
+					`${_clusters[i].name} kümesinin worker makine sayısı alınıyor`
+				);
+
+				_clusters[i].workerCount =
+					(
+						await kubectl.get(
+							clusterConfig,
+							"nodes",
+							"json",
+							"--selector",
+							"!node-role.kubernetes.io/control-plane"
+						)
+					).items?.length ?? 0;
+			}
 			await setClusters(_clusters);
+			setLoading(false);
 		})();
 	}, []);
 	return (
@@ -183,6 +228,7 @@ export default function ManagementClusterInfoPage(props) {
 					</Table>
 				</TableContainer>
 			</Box>
+			<LoadingModal open={isLoading} message={loadingMessage} />
 		</DashboardLayout>
 	);
 }
