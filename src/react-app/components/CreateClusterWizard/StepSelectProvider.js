@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
 	Typography,
 	FormControl,
@@ -7,25 +8,22 @@ import {
 	Box,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { useEffect, useState } from "react";
 import { translate } from "../../locales";
-import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
-import StepKindProviderConfig from "./StepKindProviderConfig";
-import React from "react";
-import Wrapper from "../StepWizardWrapper";
 import { useWizard } from "../../hooks/useWizard";
 import { PROVIDER_TYPE } from "../../../main/providers";
+import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
+import StepKindProviderConfig from "./StepKindProviderConfig";
+import Wrapper from "../StepWizardWrapper";
 
-export default function StepSelectProvider(props) {
+export default function StepSelectProvider({ goToNamedStep, ...props }) {
 	const snack = useSnackbar().enqueueSnackbar;
 	const [providers, setProviders] = useState([]);
 	const [provider, setProvider] = useState("");
 	const wizard = useWizard();
-	const _goto = props.goToNamedStep;
+	const _goto = goToNamedStep;
 
 	return (
 		<Wrapper
-			stepIndex={props.stepIndex}
 			onLoad={async () => {
 				let config = await kubeConfig.loadManagementConfig(
 					props.manClusterName
@@ -66,6 +64,7 @@ export default function StepSelectProvider(props) {
 				});
 			}}
 			disableBack
+			{...props}
 		>
 			<Typography
 				sx={{

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Box } from "@mui/material";
-import StepWizard from "react-step-wizard";
+import StepWizard from "../../lib/react-step-wizard";
 import StepSelectProvider from "./StepSelectProvider";
 import StepKindProviderConfig from "./StepKindProviderConfig";
 import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
@@ -13,41 +13,30 @@ function Content({ onFinish }) {
 	const wizard = useWizard();
 
 	useEffect(() => {
-		wizard.setStepIndex(0);
+		wizard.setStepName("selectProvider");
 	}, []);
 
 	return (
 		<StepWizard
 			onStepChange={(stats) => {
-				wizard.setStepIndex(stats.activeStep - 1);
+				wizard.setStepName(stats.activeStepName);
 			}}
 			transitions={{}}
 		>
 			<StepSelectProvider
 				manClusterName={wizard.manClusterName}
-				stepIndex={0}
 				stepName="selectProvider"
 			/>
 
 			{/* Kind */}
-			<StepKindProviderConfig
-				stepIndex={1}
-				stepName="kindProviderConfig"
-			/>
-			<StepKindCreateCluster stepIndex={2} stepName="kindCreateCluster" />
+			<StepKindProviderConfig stepName="kindProviderConfig" />
+			<StepKindCreateCluster stepName="kindCreateCluster" />
 
 			{/* DigitalOcean */}
-			<StepDigitalOceanSSHkey
-				stepIndex={3}
-				stepName="digitalOceanSSHkey"
-			/>
-			<StepDigitalOceanClusterConfig
-				stepIndex={4}
-				stepName="digitalOceanClusterConfig"
-			/>
+			<StepDigitalOceanSSHkey stepName="digitalOceanSSHkey" />
+			<StepDigitalOceanClusterConfig stepName="digitalOceanClusterConfig" />
 
 			<StepAddClusterCompleted
-				stepIndex={5}
 				stepName="addClusterComplete"
 				onFinish={onFinish}
 			/>

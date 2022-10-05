@@ -14,7 +14,7 @@ export default function StepConnecting(props) {
 		<Wrapper
 			disableBack
 			disableNext
-			stepIndex={props.stepIndex}
+			stepName={props.stepName}
 			onLoad={async () => {
 				try {
 					setInfoText("Yönetim kümesinin adı alınıyor...");

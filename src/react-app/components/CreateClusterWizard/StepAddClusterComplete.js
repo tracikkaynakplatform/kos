@@ -2,14 +2,14 @@ import React from "react";
 import { Typography, Box } from "@mui/material";
 import Wrapper from "../StepWizardWrapper";
 
-export default function StepAddClusterComplete({ onFinish, stepIndex }) {
+export default function StepAddClusterComplete({ onFinish, ...props }) {
 	return (
 		<Wrapper
-			stepIndex={stepIndex}
 			onNextClick={() => {
 				onFinish();
 			}}
 			disableBack
+			{...props}
 		>
 			<Typography
 				sx={{

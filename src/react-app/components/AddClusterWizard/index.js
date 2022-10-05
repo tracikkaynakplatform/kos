@@ -1,28 +1,28 @@
 import React, { useEffect } from "react";
-import StepWizard from "react-step-wizard";
+import StepWizard from "../../lib/react-step-wizard";
 import { useWizard, WizardProvider } from "../../hooks/useWizard";
 import StepKubeConfig from "./StepKubeConfig";
 import StepConnecting from "./StepConnecting";
 import { Box } from "@mui/material";
 import StepEnd from "./StepEnd";
 
-function Content(props) {
+function Content() {
 	const wizard = useWizard();
 
 	useEffect(() => {
-		wizard.setStepIndex(0);
+		wizard.setStepName("kubeConfig");
 	}, []);
 
 	return (
 		<StepWizard
 			onStepChange={(stats) => {
-				wizard.setStepIndex(stats.activeStep - 1);
+				wizard.setStepName(stats.activeStepName);
 			}}
 			transitions={{}}
 		>
-			<StepKubeConfig stepIndex={0} stepName="kubeConfig" />
-			<StepConnecting stepIndex={1} stepName="connecting" />
-			<StepEnd stepIndex={2} stepName="end" />
+			<StepKubeConfig stepName="kubeConfig" />
+			<StepConnecting stepName="connecting" />
+			<StepEnd stepName="end" />
 		</StepWizard>
 	);
 }

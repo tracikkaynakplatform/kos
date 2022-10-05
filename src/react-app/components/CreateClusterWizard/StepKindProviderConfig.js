@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
 	Typography,
 	FormControl,
@@ -7,19 +8,17 @@ import {
 	Box,
 	TextField,
 } from "@mui/material";
-import { useState } from "react";
-import React from "react";
 import { useWizard } from "../../hooks/useWizard";
 import { translate } from "../../locales";
 import Wrapper from "../StepWizardWrapper";
 
-export default function StepKindProviderConfig(props) {
+export default function StepKindProviderConfig({ goToNamedStep, ...props }) {
 	const wizard = useWizard();
 	const [kubVersion, setKubVersion] = useState("");
 	const [masterCount, setMasterCount] = useState(1);
 	const [workerCount, setWorkerCount] = useState(1);
 	const [clusterName, setClusterName] = useState("");
-	const _goto = props.goToNamedStep;
+	const _goto = goToNamedStep;
 
 	return (
 		<Wrapper
@@ -34,6 +33,7 @@ export default function StepKindProviderConfig(props) {
 			onBackClick={() => {
 				_goto("selectProvider");
 			}}
+			{...props}
 		>
 			<Typography
 				sx={{

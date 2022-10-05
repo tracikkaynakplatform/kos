@@ -8,14 +8,14 @@ export default function StepWizardWrapper({
 	onBackClick,
 	onNextClick,
 	onLoad,
-	stepIndex,
+	stepName,
 	sx,
-	...props
+	children,
 }) {
 	const wizard = useWizard();
 	useEffect(() => {
-		if (wizard.stepIndex == stepIndex) onLoad?.();
-	}, [wizard.stepIndex]);
+		if (wizard.stepName == stepName) onLoad?.();
+	}, [wizard.stepName]);
 	return (
 		<Card
 			sx={{
@@ -25,7 +25,7 @@ export default function StepWizardWrapper({
 				...sx,
 			}}
 		>
-			{props.children}
+			{children}
 			<Box
 				sx={{
 					display: "flex",

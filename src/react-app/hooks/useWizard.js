@@ -5,7 +5,7 @@ export const useWizard = () => useContext(WizardContext);
 
 export function WizardProvider({ children, additionalData }) {
 	const [data, setData] = useState({});
-	const [stepIndex, setStepIndex] = useState({});
+	const [stepName, setStepName] = useState("");
 
 	const updateData = async (key, value) => {
 		let newData = {};
@@ -20,8 +20,8 @@ export function WizardProvider({ children, additionalData }) {
 		<WizardContext.Provider
 			value={{
 				data,
-				stepIndex,
-				setStepIndex,
+				stepName,
+				setStepName,
 				updateData,
 				...additionalData,
 			}}

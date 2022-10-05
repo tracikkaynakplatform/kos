@@ -5,15 +5,14 @@ import React from "react";
 import Wrapper from "../StepWizardWrapper";
 import { useWizard } from "../../hooks/useWizard";
 
-export default function StepKindCreateCluster(props) {
-	const snack = useSnackbar().enqueueSnackbar;
-	const wizard = useWizard();
+export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 	const [infoText, setInfoText] = useState("");
-	const _goto = props.goToNamedStep;
+	const wizard = useWizard();
+	const snack = useSnackbar().enqueueSnackbar;
+	const _goto = goToNamedStep;
 
 	return (
 		<Wrapper
-			stepIndex={props.stepIndex}
 			disableNext
 			disableBack
 			onLoad={async () => {
@@ -43,6 +42,7 @@ export default function StepKindCreateCluster(props) {
 					_goto("kindProviderConfig");
 				}
 			}}
+			{...props}
 		>
 			<Typography
 				sx={{

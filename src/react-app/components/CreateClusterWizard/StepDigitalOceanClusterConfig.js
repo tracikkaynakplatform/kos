@@ -1,3 +1,4 @@
+import React from "react";
 import {
 	Typography,
 	Box,
@@ -13,14 +14,14 @@ import {
 	machineSizes,
 	customImages,
 } from "../../providers/digitalocean";
-import React from "react";
 import { useState } from "react";
-// import { useSnackbar } from 'notistack';
 import { translate } from "../../locales";
 import Wrapper from "../StepWizardWrapper";
 
-export default function StepDigitalOceanClusterConfig(props) {
-	// const snack = useSnackbar().enqueueSnackbar;
+export default function StepDigitalOceanClusterConfig({
+	goToNamedStep,
+	...props
+}) {
 	const [kubVersion, setKubVersion] = useState("");
 	const [masterCount, setMasterCount] = useState(1);
 	const [workerCount, setWorkerCount] = useState(1);
@@ -31,9 +32,7 @@ export default function StepDigitalOceanClusterConfig(props) {
 	const [masterMachineSize, setMasterMachineSize] = useState("");
 	const [workerMachineSize, setWorkerMachineSize] = useState("");
 
-	//const _next = props.nextStep;
-	// const _back = props.previousStep;
-	const _goto = props.goToNamedStep;
+	const _goto = goToNamedStep;
 
 	return (
 		<Wrapper
@@ -43,6 +42,7 @@ export default function StepDigitalOceanClusterConfig(props) {
 			onBackClick={() => {
 				_goto("digitalocean");
 			}}
+			{...props}
 		>
 			<Typography
 				sx={{

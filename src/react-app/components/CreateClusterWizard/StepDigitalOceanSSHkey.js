@@ -1,16 +1,12 @@
 import { Typography, Link as MUILink, Box, TextField } from "@mui/material";
 import { useState } from "react";
-// import { useSnackbar } from 'notistack';
 import React from "react";
 import { translate } from "../../locales";
 import Wrapper from "../StepWizardWrapper";
 
-export default function StepDigitalOceanSSHkey(props) {
-	// const snack = useSnackbar().enqueueSnackbar;
+export default function StepDigitalOceanSSHkey({ goToNamedStep, ...props }) {
 	const [fingerprint, setFingerprint] = useState("");
-	// const _next = props.nextStep;
-	// const _back = props.previousStep;
-	const _goto = props.goToNamedStep;
+	const _goto = goToNamedStep;
 
 	return (
 		<Wrapper
@@ -21,6 +17,7 @@ export default function StepDigitalOceanSSHkey(props) {
 			onBackClick={() => {
 				_goto("selectProvider");
 			}}
+			{...props}
 		>
 			<Typography
 				sx={{

@@ -1,24 +1,26 @@
+import React, { useState } from "react";
 import { Typography, TextField } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { useState, useEffect } from "react";
 import { translate } from "../../locales";
-import React from "react";
-import Wrapper from "../StepWizardWrapper";
 import { useWizard } from "../../hooks/useWizard";
+import Wrapper from "../StepWizardWrapper";
 
-export default function StepManagementCluster(props) {
+export default function StepManagementCluster({
+	nextStep,
+	previousStep,
+	...props
+}) {
 	const [kubeconfigData, setKubeconfigData] = useState("");
-	const wizard = useWizard();
 	const [textFieldEnabled, setTextFieldEnabled] = useState(true);
 	const [buttonsEnabled, setButtonsEnabled] = useState(true);
+	const wizard = useWizard();
 	const snack = useSnackbar().enqueueSnackbar;
 	const closeSnack = useSnackbar().closeSnackbar;
-	const _next = props.nextStep;
-	const _back = props.previousStep;
+	const _next = nextStep;
+	const _back = previousStep;
 
 	return (
 		<Wrapper
-			stepIndex={props.stepIndex}
 			disableBack={!buttonsEnabled}
 			disableNext={!buttonsEnabled}
 			onLoad={async () => {
@@ -66,6 +68,7 @@ export default function StepManagementCluster(props) {
 			onBackClick={() => {
 				_back();
 			}}
+			{...props}
 		>
 			<Typography
 				sx={{

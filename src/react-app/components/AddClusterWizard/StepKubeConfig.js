@@ -10,7 +10,7 @@ export default function StepKubeConfig(props) {
 
 	return (
 		<Wrapper
-			stepIndex={props.stepIndex}
+			stepName={props.stepName}
 			disableBack
 			onLoad={async () =>
 				await setKubeconfigData(await kubeConfig.defaultConfig())
