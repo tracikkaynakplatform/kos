@@ -31,6 +31,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import ProviderChip from "../components/ProviderChip";
 import LoadingModal from "../components/LoadingModal.jsx";
+import QuestionModal from "../components/QuestionModal.jsx";
+import { useSnackbar } from "notistack";
 
 const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -69,15 +71,16 @@ function HeaderCell({ children }) {
 
 export default function ManagementClusterInfoPage(props) {
 	const [clusters, setClusters] = useState([]);
-	const [isLoading, setLoading] = useState(false);
 	const [loadingMessage, setLoadingMessage] = useState("");
-
+	const [manClusterConfig, setManClusterConfig] = useState("");
+	const [questionMessage, setQuestionMessage] = useState("");
+	const [targetClusterName, setTargetClusterName] = useState("");
 	const nav = useNavigate();
 	const { name } = useParams();
-	useEffect(() => {
-		(async () => {
-			setLoading(true);
-			setLoadingMessage("Kümeler yükleniyor");
+
+	const refreshClusters = async () => {
+		setLoadingMessage("Kümeler yükleniyor");
+		try {
 			const config = await kubeConfig.loadManagementConfig(name);
 			const _clusters = [...(await clusterConfig.getClusters(config))];
 
@@ -89,35 +92,43 @@ export default function ManagementClusterInfoPage(props) {
 					config,
 					_clusters[i].name
 				);
-				_clusters[i].masterCount =
-					(
-						await kubectl.get(
-							clusterConfig,
-							"nodes",
-							"json",
-							"-l",
-							"node-role.kubernetes.io/control-plane"
-						)
-					).items?.length ?? 0;
+				try {
+					_clusters[i].masterCount =
+						(
+							await kubectl.get(
+								clusterConfig,
+								"nodes",
+								"json",
+								"-l",
+								"node-role.kubernetes.io/control-plane"
+							)
+						).items?.length ?? 0;
+				} catch (err) {}
 
 				setLoadingMessage(
 					`${_clusters[i].name} kümesinin worker makine sayısı alınıyor`
 				);
-
-				_clusters[i].workerCount =
-					(
-						await kubectl.get(
-							clusterConfig,
-							"nodes",
-							"json",
-							"--selector",
-							"!node-role.kubernetes.io/control-plane"
-						)
-					).items?.length ?? 0;
+				try {
+					_clusters[i].workerCount =
+						(
+							await kubectl.get(
+								clusterConfig,
+								"nodes",
+								"json",
+								"--selector",
+								"!node-role.kubernetes.io/control-plane"
+							)
+						).items?.length ?? 0;
+				} catch (err) {}
 			}
 			await setClusters(_clusters);
-			setLoading(false);
-		})();
+			setManClusterConfig(config);
+		} catch (err) {}
+		setLoadingMessage("");
+	};
+
+	useEffect(() => {
+		refreshClusters();
 	}, []);
 	return (
 		<DashboardLayout>
@@ -217,7 +228,16 @@ export default function ManagementClusterInfoPage(props) {
 											<Button>
 												<UpgradeIcon />
 											</Button>
-											<Button>
+											<Button
+												onClick={async () => {
+													setQuestionMessage(
+														`${x.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`
+													);
+													setTargetClusterName(
+														x.name
+													);
+												}}
+											>
 												<DeleteIcon />
 											</Button>
 										</ButtonGroup>
@@ -228,7 +248,26 @@ export default function ManagementClusterInfoPage(props) {
 					</Table>
 				</TableContainer>
 			</Box>
-			<LoadingModal open={isLoading} message={loadingMessage} />
+			<LoadingModal open={!!loadingMessage} message={loadingMessage} />
+			<QuestionModal
+				open={!!questionMessage}
+				yesButtonColor="error"
+				message={questionMessage}
+				yesButtonText="Sil"
+				noButtonText="Vazgeç"
+				onYesClick={async () => {
+					setLoadingMessage(`${targetClusterName} kümesi siliniyor`);
+					await kubectl.delete_(
+						manClusterConfig,
+						"cluster",
+						targetClusterName
+					);
+					setLoadingMessage("");
+					setQuestionMessage("");
+					refreshClusters();
+				}}
+				onNoClick={() => setQuestionMessage("")}
+			/>
 		</DashboardLayout>
 	);
 }
