@@ -3,7 +3,6 @@ import { CircularProgress, Typography } from "@mui/material";
 import BaseModal from "./BaseModal.jsx";
 
 export default function LoadingModal({ message, ...props }) {
-	console.log(props);
 	return (
 		<BaseModal {...props}>
 			<Typography>{message}</Typography>

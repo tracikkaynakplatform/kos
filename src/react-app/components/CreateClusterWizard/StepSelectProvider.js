@@ -46,8 +46,8 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 								};
 							case PROVIDER_TYPE.AWS:
 								return {
+									key: "AWSProviderConfig",
 									name: "AWS - Amazon Web Services",
-									key: "awsProviderConfig",
 								};
 						}
 					})

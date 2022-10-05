@@ -7,6 +7,7 @@ import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
 import StepDigitalOceanClusterConfig from "./StepDigitalOceanClusterConfig";
 import StepAddClusterCompleted from "./StepAddClusterComplete";
 import StepKindCreateCluster from "./StepKindCreateCluster";
+import StepAWSProviderConfig from "./StepAWSProviderConfig.jsx";
 import { useWizard, WizardProvider } from "../../hooks/useWizard";
 
 function Content({ onFinish }) {
@@ -35,6 +36,9 @@ function Content({ onFinish }) {
 			{/* DigitalOcean */}
 			<StepDigitalOceanSSHkey stepName="digitalOceanSSHkey" />
 			<StepDigitalOceanClusterConfig stepName="digitalOceanClusterConfig" />
+
+			{/* AWS */}
+			<StepAWSProviderConfig stepName="AWSProviderConfig" />
 
 			<StepAddClusterCompleted
 				stepName="addClusterComplete"
