@@ -1,10 +1,7 @@
+import { getClusterConfig } from "./clusterctl";
 import ManagementCluster from "../services/config/ManagementCluster";
-import { PROVIDER_TYPE } from "../providers";
 import Kubectl from "../services/Kubectl";
 import KubeConfig from "../k8s/KubeConfig";
-import fs from "fs";
-import dirCheck, { DIRS } from "../utils/dir-checker";
-import { getClusterConfig } from "./clusterctl";
 
 export async function getManagementClusters() {
 	return await ManagementCluster.getManagementClusters();

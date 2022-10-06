@@ -22,7 +22,7 @@ export default class Clusterctl extends Downloader {
 		this.config = new KubeConfig();
 	}
 
-	async #execClusterctl(...args) {
+	async #execClusterctl(env, ...args) {
 		let path = await this.check();
 
 		return new Promise((resolve, reject) => {
@@ -30,7 +30,7 @@ export default class Clusterctl extends Downloader {
 				path,
 				args,
 				{
-					env: { KUBECONFIG: this.config.path },
+					env: { KUBECONFIG: this.config.path, ...env },
 					encoding: "utf-8",
 				},
 				(err, stdout, stderr) => {
@@ -42,7 +42,7 @@ export default class Clusterctl extends Downloader {
 	}
 
 	async getClusterConfig(clusterName) {
-		return await this.#execClusterctl("get", "kubeconfig", clusterName);
+		return await this.#execClusterctl({}, "get", "kubeconfig", clusterName);
 	}
 
 	async generateCluster(
@@ -51,7 +51,8 @@ export default class Clusterctl extends Downloader {
 		masterCount,
 		workerCount,
 		isDocker = false,
-		infrastructure = ""
+		infrastructure = "",
+		env = {}
 	) {
 		let args = ["generate", "cluster", clusterName];
 
@@ -63,6 +64,6 @@ export default class Clusterctl extends Downloader {
 
 		if (infrastructure) args.push("--infrastructure", infrastructure);
 
-		return await this.#execClusterctl(...args);
+		return await this.#execClusterctl(env, ...args);
 	}
 }
