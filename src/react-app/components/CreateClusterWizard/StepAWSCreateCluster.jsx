@@ -1,11 +1,10 @@
-import { Typography, CircularProgress, Box } from "@mui/material";
-import { useState } from "react";
-import { useSnackbar } from "notistack";
-import React from "react";
+import React, { useState } from "react";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import Wrapper from "../StepWizardWrapper";
+import { useSnackbar } from "notistack";
 import { useWizard } from "../../hooks/useWizard";
 
-export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
+export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 	const [infoText, setInfoText] = useState("");
 	const wizard = useWizard();
 	const snack = useSnackbar().enqueueSnackbar;
@@ -13,8 +12,6 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 
 	return (
 		<Wrapper
-			disableNext
-			disableBack
 			onLoad={async () => {
 				try {
 					setInfoText(
@@ -26,8 +23,16 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 						wizard.data.kubVersion,
 						wizard.data.masterCount,
 						wizard.data.workerCount,
-						true,
-						"docker"
+						false,
+						"aws",
+						{
+							AWS_REGION: wizard.data.region,
+							AWS_SSH_KEY_NAME: wizard.data.sshKeyName,
+							AWS_CONTROL_PLANE_MACHINE_TYPE:
+								wizard.data.masterMachineType,
+							AWS_NODE_MACHINE_TYPE:
+								wizard.data.workerMachineType,
+						}
 					);
 					setInfoText(
 						"YAML dosyası yönetim kümesine uygulanıyor (kubectl apply)"
@@ -39,7 +44,7 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 						variant: "error",
 						autoHideDuration: 5000,
 					});
-					_goto("kindProviderConfig");
+					_goto("AWSProviderConfig");
 				}
 			}}
 			{...props}
@@ -52,16 +57,18 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 					pt: 2,
 				}}
 			>
-				{infoText}
+				Küme oluşturuluyor
 			</Typography>
 			<Box
 				sx={{
-					m: 5,
+					p: 3,
+					width: "500px",
 					display: "flex",
-					justifyContent: "center",
+					gap: "10px",
 				}}
 			>
 				<CircularProgress />
+				<Typography>{infoText}</Typography>
 			</Box>
 		</Wrapper>
 	);

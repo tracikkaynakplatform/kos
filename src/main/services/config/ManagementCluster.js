@@ -74,6 +74,7 @@ export default class ManagementCluster {
 					result.push({
 						name: i.metadata.name,
 						provider,
+						status: i.status.phase,
 					});
 				}
 			}

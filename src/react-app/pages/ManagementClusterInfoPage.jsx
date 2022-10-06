@@ -23,6 +23,7 @@ import {
 	Camera as CameraIcon,
 	Add as AddIcon,
 	ArrowBack as ArrowBackIcon,
+	Replay,
 } from "@mui/icons-material";
 
 import { providerNames } from "../providers/provider-names";
@@ -72,58 +73,23 @@ function HeaderCell({ children }) {
 export default function ManagementClusterInfoPage(props) {
 	const [clusters, setClusters] = useState([]);
 	const [loadingMessage, setLoadingMessage] = useState("");
-	const [manClusterConfig, setManClusterConfig] = useState("");
 	const [questionMessage, setQuestionMessage] = useState("");
 	const [targetClusterName, setTargetClusterName] = useState("");
+	const [config, setConfig] = useState("");
+	const { enqueueSnackbar: snack, closeSnackbar } = useSnackbar();
 	const nav = useNavigate();
 	const { name } = useParams();
 
 	const refreshClusters = async () => {
 		setLoadingMessage("Kümeler yükleniyor");
 		try {
-			const config = await kubeConfig.loadManagementConfig(name);
-			const _clusters = [...(await clusterConfig.getClusters(config))];
-
-			for (let i = 0; i < _clusters.length; i++) {
-				setLoadingMessage(
-					`${_clusters[i].name} kümesinin master makine sayısı alınıyor`
-				);
-				const clusterConfig = await clusterctl.getClusterConfig(
-					config,
-					_clusters[i].name
-				);
-				try {
-					_clusters[i].masterCount =
-						(
-							await kubectl.get(
-								clusterConfig,
-								"nodes",
-								"json",
-								"-l",
-								"node-role.kubernetes.io/control-plane"
-							)
-						).items?.length ?? 0;
-				} catch (err) {}
-
-				setLoadingMessage(
-					`${_clusters[i].name} kümesinin worker makine sayısı alınıyor`
-				);
-				try {
-					_clusters[i].workerCount =
-						(
-							await kubectl.get(
-								clusterConfig,
-								"nodes",
-								"json",
-								"--selector",
-								"!node-role.kubernetes.io/control-plane"
-							)
-						).items?.length ?? 0;
-				} catch (err) {}
-			}
+			const _config = await kubeConfig.loadManagementConfig(name);
+			const _clusters = [...(await clusterConfig.getClusters(_config))];
+			await setConfig(_config);
 			await setClusters(_clusters);
-			setManClusterConfig(config);
-		} catch (err) {}
+		} catch (err) {
+			snack(err.message, { variant: "error", autoHideDuration: 5000 });
+		}
 		setLoadingMessage("");
 	};
 
@@ -176,16 +142,32 @@ export default function ManagementClusterInfoPage(props) {
 					>
 						İşyükü kümeleri
 					</Typography>
-					<Button
+					<Box
 						sx={{
-							textTransform: "none",
-							fontSize: "18px",
+							display: "flex",
+							gap: "20px",
+							width: "400px",
+							height: "40px",
 						}}
-						onClick={() => nav(`/create-cluster/${name}`)}
-						variant="contained"
 					>
-						Yeni küme ekle <AddIcon />
-					</Button>
+						<Button
+							onClick={() => refreshClusters()}
+							variant="contained"
+						>
+							<Replay />
+						</Button>
+						<Button
+							sx={{
+								textTransform: "none",
+								fontSize: "18px",
+								width: "350px",
+							}}
+							onClick={() => nav(`/create-cluster/${name}`)}
+							variant="contained"
+						>
+							Yeni küme ekle <AddIcon />
+						</Button>
+					</Box>
 				</Box>
 				<TableContainer
 					sx={{
@@ -199,8 +181,8 @@ export default function ManagementClusterInfoPage(props) {
 							<TableRow>
 								<HeaderCell>İsim</HeaderCell>
 								<HeaderCell>Sağlayıcı</HeaderCell>
-								<HeaderCell>Worker Makine Sayısı</HeaderCell>
-								<HeaderCell>Master Makine Sayısı</HeaderCell>
+								{/* <HeaderCell>Worker Makine Sayısı</HeaderCell>
+								<HeaderCell>Master Makine Sayısı</HeaderCell> */}
 								<HeaderCell>İşlemler</HeaderCell>
 							</TableRow>
 						</TableHead>
@@ -212,14 +194,15 @@ export default function ManagementClusterInfoPage(props) {
 										<ProviderChip
 											name={providerNames[x.provider]}
 											logo={providerLogos[x.provider]}
+											status={x.status}
 										/>
 									</StyledTableCell>
-									<StyledTableCell>
+									{/* 	<StyledTableCell>
 										{x.workerCount ?? "Bilinmiyor"}
 									</StyledTableCell>
 									<StyledTableCell>
 										{x.masterCount ?? "Bilinmiyor"}
-									</StyledTableCell>
+									</StyledTableCell> */}
 									<StyledTableCell>
 										<ButtonGroup variant="contained">
 											<Button>
@@ -256,15 +239,14 @@ export default function ManagementClusterInfoPage(props) {
 				yesButtonText="Sil"
 				noButtonText="Vazgeç"
 				onYesClick={async () => {
-					setLoadingMessage(`${targetClusterName} kümesi siliniyor`);
-					await kubectl.delete_(
-						manClusterConfig,
-						"cluster",
-						targetClusterName
-					);
-					setLoadingMessage("");
 					setQuestionMessage("");
+					const info = snack(
+						`${targetClusterName} kümesi siliniyor`,
+						{ variant: "info", persist: true }
+					);
+					await kubectl.delete_(config, "cluster", targetClusterName);
 					refreshClusters();
+					closeSnackbar(info);
 				}}
 				onNoClick={() => setQuestionMessage("")}
 			/>

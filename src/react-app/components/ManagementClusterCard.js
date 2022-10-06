@@ -67,10 +67,10 @@ export default function ManagementClusterCard({
 					clusters?.map((x, i) => (
 						<ProviderChip
 							key={i}
-							sx={{ mt: 0.5, mb: 0.5, ml: 0.3, mr: 0.3 }}
 							name={x.name}
 							logo={providerLogos[x.provider]}
 							href={x.href}
+							status={x.status}
 						/>
 					))
 				) : (

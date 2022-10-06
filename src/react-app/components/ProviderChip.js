@@ -1,18 +1,20 @@
 import React from "react";
+import unknownLogo from "../public/assets/images/logos/unknown_32x32.png";
 import { Avatar, Badge, Chip } from "@mui/material";
 
-export default function ProviderChip({
-	logo,
-	name,
-	count,
-	href,
-	variant,
-	sx,
-	badgeColor,
-}) {
-	let innerItems = logo ? (
+export default function ProviderChip({ logo, name, status, href }) {
+	let badgeColor = "success";
+
+	switch (status) {
+		case "Provisioning":
+			badgeColor = "warning";
+			break;
+		case "Deleting":
+			badgeColor = "error";
+			break;
+	}
+	const inner = (
 		<Chip
-			sx={sx}
 			href={href}
 			avatar={
 				<Avatar
@@ -20,31 +22,26 @@ export default function ProviderChip({
 						width: "32px",
 						height: "32px",
 					}}
-					src={logo}
+					src={logo ?? unknownLogo}
 				/>
 			}
 			label={name}
-			variant={variant ?? "outlined"}
+			variant={"outlined"}
 			clickable={!!href}
 		/>
-	) : null;
-
-	return (
-		<>
-			{count ? (
-				<Badge
-					anchorOrigin={{
-						vertical: "bottom",
-						horizontal: "right",
-					}}
-					badgeContent={count ?? ""}
-					color={badgeColor ?? "primary"}
-				>
-					{innerItems}
-				</Badge>
-			) : (
-				innerItems
-			)}
-		</>
+	);
+	return status ? (
+		<Badge
+			anchorOrigin={{
+				vertical: "bottom",
+				horizontal: "right",
+			}}
+			variant="dot"
+			color={badgeColor}
+		>
+			{inner}
+		</Badge>
+	) : (
+		inner
 	);
 }

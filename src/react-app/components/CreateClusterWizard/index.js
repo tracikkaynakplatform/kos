@@ -9,6 +9,7 @@ import StepAddClusterCompleted from "./StepAddClusterComplete";
 import StepKindCreateCluster from "./StepKindCreateCluster";
 import StepAWSProviderConfig from "./StepAWSProviderConfig.jsx";
 import { useWizard, WizardProvider } from "../../hooks/useWizard";
+import StepAWSCreateCluster from "./StepAWSCreateCluster.jsx";
 
 function Content({ onFinish }) {
 	const wizard = useWizard();
@@ -39,6 +40,7 @@ function Content({ onFinish }) {
 
 			{/* AWS */}
 			<StepAWSProviderConfig stepName="AWSProviderConfig" />
+			<StepAWSCreateCluster stepName="AWSCreateCluster" />
 
 			<StepAddClusterCompleted
 				stepName="addClusterComplete"
