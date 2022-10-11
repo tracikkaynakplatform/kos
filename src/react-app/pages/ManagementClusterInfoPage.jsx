@@ -202,22 +202,33 @@ export default function ManagementClusterInfoPage() {
 									<StyledTableCell>
 										{(() => {
 											if (x.status === "Provisioning")
-												return "Oluşturuluyor";
+												return "Sağlanıyor";
 											if (x.status === "Provisioned")
-												return "Hazır";
+												return "Hazırlandı";
 											if (x.status === "Deleting")
 												return "Siliniyor";
 										})()}
 									</StyledTableCell>
 									<StyledTableCell>
 										<ButtonGroup variant="contained">
-											<Button>
+											<Button
+												disabled={
+													x.status !== "Provisioned"
+												}
+											>
 												<CameraIcon />
 											</Button>
-											<Button>
+											<Button
+												disabled={
+													x.status !== "Provisioned"
+												}
+											>
 												<UpgradeIcon />
 											</Button>
 											<Button
+												disabled={
+													x.status === "Deleting"
+												}
 												onClick={async () => {
 													modal.showModal(
 														QuestionModal,

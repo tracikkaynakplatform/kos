@@ -5,14 +5,12 @@ import Wrapper from "../StepWizardWrapper.jsx";
 export default function StepAddClusterComplete({ onFinish, ...props }) {
 	return (
 		<Wrapper
-			onNextClick={() => {
-				onFinish();
-			}}
+			onNextClick={() => onFinish()}
 			disableBack
-			{...props}
 			sx={{
 				width: "500px",
 			}}
+			{...props}
 		>
 			<Typography
 				sx={{

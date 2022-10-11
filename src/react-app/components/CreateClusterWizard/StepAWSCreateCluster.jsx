@@ -3,6 +3,8 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useWizard } from "../../hooks/useWizard";
 import Wrapper from "../StepWizardWrapper.jsx";
+import clusterctl from "../../api/clusterctl";
+import kubectl from "../../api/kubectl";
 
 export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 	const [infoText, setInfoText] = useState("");
