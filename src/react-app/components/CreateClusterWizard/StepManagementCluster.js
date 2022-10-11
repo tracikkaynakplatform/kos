@@ -4,6 +4,8 @@ import { useSnackbar } from "notistack";
 import { translate } from "../../locales";
 import { useWizard } from "../../hooks/useWizard";
 import Wrapper from "../StepWizardWrapper";
+import kubeConfig from "../../api/kubeConfig";
+import kubectl from "../../api/kubectl";
 
 export default function StepManagementCluster({
 	nextStep,

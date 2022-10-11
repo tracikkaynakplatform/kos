@@ -6,6 +6,7 @@ import { Add, Search } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../hooks/useModal";
 import LoadingModal from "../components/LoadingModal.jsx";
+import clusterConfig from "../api/clusterConfig";
 
 export default function ManagementClustersPage(props) {
 	const nav = useNavigate();

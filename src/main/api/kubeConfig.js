@@ -9,15 +9,6 @@ export async function defaultConfigPath() {
 	return await KubeConfig.defaultConfigPath();
 }
 
-export async function saveWorkloadConfig(config, name, managementClusterName) {
-	return await saveConfig(
-		config,
-		`${await dirCheck(
-			DIRS.workloadClusters
-		)}/${name}_${managementClusterName}.kubeconfig`
-	);
-}
-
 export async function saveManagementConfig(config, name) {
 	return await saveConfig(
 		config,
@@ -43,7 +34,6 @@ export async function loadManagementConfig(name) {
 export default [
 	defaultConfig,
 	defaultConfigPath,
-	saveWorkloadConfig,
 	saveManagementConfig,
 	saveConfig,
 	loadManagementConfig,

@@ -6,19 +6,19 @@ import kubectlAPIs from "./kubectl";
 
 export const apis = [
 	{
-		namespace: "kubeConfig",
+		namespace: "kubeConfigAPI",
 		apis: kubeConfigAPIs,
 	},
 	{
-		namespace: "clusterConfig",
+		namespace: "clusterConfigAPI",
 		apis: clusterConfigAPIs,
 	},
 	{
-		namespace: "kubectl",
+		namespace: "kubectlAPI",
 		apis: kubectlAPIs,
 	},
 	{
-		namespace: "clusterctl",
+		namespace: "clusterctlAPI",
 		apis: clusterctlAPIs,
 	},
 ];

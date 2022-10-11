@@ -35,6 +35,9 @@ import LoadingModal from "../components/LoadingModal.jsx";
 import QuestionModal from "../components/QuestionModal.jsx";
 import { useModal } from "../hooks/useModal";
 import { useSnackbar } from "notistack";
+import clusterConfig from "../api/clusterConfig";
+import kubeConfig from "../api/kubeConfig";
+import kubectl from "../api/kubectl";
 
 const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {

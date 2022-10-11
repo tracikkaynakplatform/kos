@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { useSnackbar } from "notistack";
 import { useWizard } from "../../hooks/useWizard";
 import Wrapper from "../StepWizardWrapper";
+import kubectl from "../../api/kubectl";
+import clusterConfig from "../../api/clusterConfig";
+import kubeConfig from "../../api/kubeConfig";
 
 export default function StepConnecting(props) {
 	const [infoText, setInfoText] = useState("");

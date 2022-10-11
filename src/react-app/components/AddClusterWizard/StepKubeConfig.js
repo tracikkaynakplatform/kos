@@ -2,6 +2,7 @@ import { TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useWizard } from "../../hooks/useWizard";
 import Wrapper from "../StepWizardWrapper";
+import kubeConfig from "../../api/kubeConfig";
 
 export default function StepKubeConfig(props) {
 	const [kubeconfigData, setKubeconfigData] = useState("");
@@ -13,7 +14,7 @@ export default function StepKubeConfig(props) {
 			stepName={props.stepName}
 			disableBack
 			onLoad={async () =>
-				await setKubeconfigData(await kubeConfig.defaultConfig())
+				setKubeconfigData(await kubeConfig.defaultConfig())
 			}
 			onNextClick={async () => {
 				await wizard.updateData("config", kubeconfigData);

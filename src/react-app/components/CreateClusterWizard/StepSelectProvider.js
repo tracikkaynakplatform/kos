@@ -11,9 +11,9 @@ import { useSnackbar } from "notistack";
 import { translate } from "../../locales";
 import { useWizard } from "../../hooks/useWizard";
 import { PROVIDER_TYPE } from "../../../main/providers";
-import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
-import StepKindProviderConfig from "./StepKindProviderConfig";
 import Wrapper from "../StepWizardWrapper";
+import clusterConfig from "../../api/clusterConfig";
+import kubeConfig from "../../api/kubeConfig";
 
 export default function StepSelectProvider({ goToNamedStep, ...props }) {
 	const snack = useSnackbar().enqueueSnackbar;
