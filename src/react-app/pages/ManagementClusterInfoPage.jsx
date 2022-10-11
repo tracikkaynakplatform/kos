@@ -33,6 +33,7 @@ import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import ProviderChip from "../components/ProviderChip";
 import LoadingModal from "../components/LoadingModal.jsx";
 import QuestionModal from "../components/QuestionModal.jsx";
+import { useModal } from "../hooks/useModal";
 import { useSnackbar } from "notistack";
 
 const StyledTableCell = styled(TableCell)(() => ({
@@ -70,32 +71,30 @@ function HeaderCell({ children }) {
 	);
 }
 
-export default function ManagementClusterInfoPage(props) {
+export default function ManagementClusterInfoPage() {
 	const [clusters, setClusters] = useState([]);
-	const [loadingMessage, setLoadingMessage] = useState("");
-	const [questionMessage, setQuestionMessage] = useState("");
-	const [targetClusterName, setTargetClusterName] = useState("");
 	const [config, setConfig] = useState("");
 	const { enqueueSnackbar: snack, closeSnackbar } = useSnackbar();
-	const nav = useNavigate();
 	const { name } = useParams();
+	const modal = useModal();
+	const nav = useNavigate();
 
 	const refreshClusters = async () => {
-		setLoadingMessage("Kümeler yükleniyor");
+		modal.showModal(LoadingModal, { message: "Kümeler yükleniyor" });
 		try {
 			const _config = await kubeConfig.loadManagementConfig(name);
-			const _clusters = [...(await clusterConfig.getClusters(_config))];
 			await setConfig(_config);
-			await setClusters(_clusters);
+			await setClusters([...(await clusterConfig.getClusters(_config))]);
 		} catch (err) {
 			snack(err.message, { variant: "error", autoHideDuration: 5000 });
 		}
-		setLoadingMessage("");
+		modal.closeModal();
 	};
 
 	useEffect(() => {
 		refreshClusters();
 	}, []);
+
 	return (
 		<DashboardLayout>
 			<Box
@@ -181,8 +180,7 @@ export default function ManagementClusterInfoPage(props) {
 							<TableRow>
 								<HeaderCell>İsim</HeaderCell>
 								<HeaderCell>Sağlayıcı</HeaderCell>
-								{/* <HeaderCell>Worker Makine Sayısı</HeaderCell>
-								<HeaderCell>Master Makine Sayısı</HeaderCell> */}
+								<HeaderCell>Durum</HeaderCell>
 								<HeaderCell>İşlemler</HeaderCell>
 							</TableRow>
 						</TableHead>
@@ -197,12 +195,16 @@ export default function ManagementClusterInfoPage(props) {
 											status={x.status}
 										/>
 									</StyledTableCell>
-									{/* 	<StyledTableCell>
-										{x.workerCount ?? "Bilinmiyor"}
-									</StyledTableCell>
 									<StyledTableCell>
-										{x.masterCount ?? "Bilinmiyor"}
-									</StyledTableCell> */}
+										{(() => {
+											if (x.status === "Provisioning")
+												return "Oluşturuluyor";
+											if (x.status === "Provisioned")
+												return "Hazır";
+											if (x.status === "Deleting")
+												return "Siliniyor";
+										})()}
+									</StyledTableCell>
 									<StyledTableCell>
 										<ButtonGroup variant="contained">
 											<Button>
@@ -213,11 +215,41 @@ export default function ManagementClusterInfoPage(props) {
 											</Button>
 											<Button
 												onClick={async () => {
-													setQuestionMessage(
-														`${x.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`
-													);
-													setTargetClusterName(
-														x.name
+													modal.showModal(
+														QuestionModal,
+														{
+															yesButtonColor:
+																"error",
+															message: `${x.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`,
+															yesButtonText:
+																"Sil",
+															noButtonText:
+																"Vazgeç",
+
+															onYesClick:
+																async () => {
+																	modal.closeModal();
+																	const info =
+																		snack(
+																			`"${x.name}" kümesi siliniyor`,
+																			{
+																				variant:
+																					"info",
+																				persist: true,
+																			}
+																		);
+																	await kubectl.delete_(
+																		config,
+																		"cluster",
+																		x.name
+																	);
+																	closeSnackbar(
+																		info
+																	);
+																},
+															onNoClick: () =>
+																modal.closeModal(),
+														}
 													);
 												}}
 											>
@@ -231,25 +263,6 @@ export default function ManagementClusterInfoPage(props) {
 					</Table>
 				</TableContainer>
 			</Box>
-			<LoadingModal open={!!loadingMessage} message={loadingMessage} />
-			<QuestionModal
-				open={!!questionMessage}
-				yesButtonColor="error"
-				message={questionMessage}
-				yesButtonText="Sil"
-				noButtonText="Vazgeç"
-				onYesClick={async () => {
-					setQuestionMessage("");
-					const info = snack(
-						`${targetClusterName} kümesi siliniyor`,
-						{ variant: "info", persist: true }
-					);
-					await kubectl.delete_(config, "cluster", targetClusterName);
-					refreshClusters();
-					closeSnackbar(info);
-				}}
-				onNoClick={() => setQuestionMessage("")}
-			/>
 		</DashboardLayout>
 	);
 }

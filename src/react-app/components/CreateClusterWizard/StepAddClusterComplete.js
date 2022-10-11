@@ -10,6 +10,9 @@ export default function StepAddClusterComplete({ onFinish, ...props }) {
 			}}
 			disableBack
 			{...props}
+			sx={{
+				width: "500px",
+			}}
 		>
 			<Typography
 				sx={{

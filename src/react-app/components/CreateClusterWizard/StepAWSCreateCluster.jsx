@@ -12,6 +12,8 @@ export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 
 	return (
 		<Wrapper
+			disableBack
+			disableNext
 			onLoad={async () => {
 				try {
 					setInfoText(

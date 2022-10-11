@@ -9,7 +9,7 @@ import {
 	Typography,
 } from "@mui/material";
 import Wrapper from "../StepWizardWrapper";
-import { machineTypes, regions } from "../../providers/aws";
+import { kubernetesVersions, machineTypes, regions } from "../../providers/aws";
 import { useWizard } from "../../hooks/useWizard";
 import { translate } from "../../locales";
 
@@ -84,11 +84,11 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 							label={translate("kubernetesVersion")}
 							onChange={(e) => setKubVersion(e.target.value)}
 						>
-							{/* TODO: Kind'ın desteklediği Kubernetes sürümleri alınacak */}
-							<MenuItem value="1.24.0">1.24.0</MenuItem>
-							<MenuItem value="1.24.4">1.24.4</MenuItem>
-							<MenuItem value="1.23.10">1.23.10</MenuItem>
-							<MenuItem value="1.22.13">1.22.13</MenuItem>
+							{kubernetesVersions.map((x, i) => (
+								<MenuItem value={x} key={i}>
+									{x}
+								</MenuItem>
+							))}
 						</Select>
 					</FormControl>
 					<TextField

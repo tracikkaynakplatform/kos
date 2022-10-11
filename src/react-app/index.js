@@ -9,29 +9,36 @@ import ManagementClustersPage from "./pages/ManagementClustersPage.jsx";
 import ManagementClusterInfoPage from "./pages/ManagementClusterInfoPage.jsx";
 import CreateClusterPage from "./pages/CreateClusterPage.jsx";
 import MainPage from "./pages/MainPage.jsx";
+import { ModalProvider } from "./hooks/useModal.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<SnackbarProvider maxSnack={5}>
-		<BrowserRouter>
-			<Routes>
-				<Route path="/main_window" exact element={<MainPage />} />
-				<Route
-					path="/cluster/:name"
-					element={<ManagementClusterInfoPage />}
-				/>
-				<Route
-					path="/management-clusters"
-					exact
-					element={<ManagementClustersPage />}
-				/>
-				<Route path="/add-cluster" exact element={<AddClusterPage />} />
-				<Route
-					path="/create-cluster/:manClusterName"
-					exact
-					element={<CreateClusterPage />}
-				/>
-			</Routes>
-		</BrowserRouter>
+		<ModalProvider>
+			<BrowserRouter>
+				<Routes>
+					<Route path="/main_window" exact element={<MainPage />} />
+					<Route
+						path="/cluster/:name"
+						element={<ManagementClusterInfoPage />}
+					/>
+					<Route
+						path="/management-clusters"
+						exact
+						element={<ManagementClustersPage />}
+					/>
+					<Route
+						path="/add-cluster"
+						exact
+						element={<AddClusterPage />}
+					/>
+					<Route
+						path="/create-cluster/:manClusterName"
+						exact
+						element={<CreateClusterPage />}
+					/>
+				</Routes>
+			</BrowserRouter>
+		</ModalProvider>
 	</SnackbarProvider>
 );

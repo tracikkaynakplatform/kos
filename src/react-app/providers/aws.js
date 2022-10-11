@@ -17,3 +17,4 @@ export const machineTypes = [
 ];
 
 export const regions = ["eu-west-1"];
+export const kubernetesVersions = ["1.23.0", "1.22.0", "1.21.0", "1.20.0"];

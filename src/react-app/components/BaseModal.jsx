@@ -16,7 +16,7 @@ export const BaseModal = forwardRef(({ open, onClose, children }, ref) => (
 				transform: "translate(-50%, -50%)",
 				boxShadow: 24,
 				backgroundColor: "white",
-				p: 8,
+				p: 3,
 				borderRadius: "20px",
 				":focus-visible": {
 					outline: "none",
