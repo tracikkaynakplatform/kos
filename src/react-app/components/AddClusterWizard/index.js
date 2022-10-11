@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import StepWizard from "../../lib/react-step-wizard";
 import { useWizard, WizardProvider } from "../../hooks/useWizard";
-import StepKubeConfig from "./StepKubeConfig";
-import StepConnecting from "./StepConnecting";
 import { Box } from "@mui/material";
-import StepEnd from "./StepEnd";
+import StepWizard from "../../lib/react-step-wizard";
+import StepKubeConfig from "./StepKubeConfig.jsx";
+import StepConnecting from "./StepConnecting.jsx";
+import StepEnd from "./StepEnd.jsx";
 
 function Content() {
 	const wizard = useWizard();

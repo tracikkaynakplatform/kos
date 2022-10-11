@@ -8,10 +8,10 @@ import {
 	TextField,
 	Typography,
 } from "@mui/material";
-import Wrapper from "../StepWizardWrapper";
 import { kubernetesVersions, machineTypes, regions } from "../../providers/aws";
 import { useWizard } from "../../hooks/useWizard";
 import { translate } from "../../locales";
+import Wrapper from "../StepWizardWrapper.jsx";
 
 export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 	const [region, setRegion] = useState("");

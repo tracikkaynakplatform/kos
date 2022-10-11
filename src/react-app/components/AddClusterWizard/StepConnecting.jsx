@@ -1,8 +1,8 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useWizard } from "../../hooks/useWizard";
-import Wrapper from "../StepWizardWrapper";
+import Wrapper from "../StepWizardWrapper.jsx";
 import kubectl from "../../api/kubectl";
 import clusterConfig from "../../api/clusterConfig";
 import kubeConfig from "../../api/kubeConfig";

@@ -1,7 +1,7 @@
-import { Box, Typography } from "@mui/material";
 import React from "react";
+import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Wrapper from "../StepWizardWrapper";
+import Wrapper from "../StepWizardWrapper.jsx";
 
 export default function StepEnd(props) {
 	const nav = useNavigate();

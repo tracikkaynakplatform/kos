@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 import { Box } from "@mui/material";
-import StepWizard from "../../lib/react-step-wizard";
-import StepSelectProvider from "./StepSelectProvider";
-import StepKindProviderConfig from "./StepKindProviderConfig";
-import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey";
-import StepDigitalOceanClusterConfig from "./StepDigitalOceanClusterConfig";
-import StepAddClusterCompleted from "./StepAddClusterComplete";
-import StepKindCreateCluster from "./StepKindCreateCluster";
-import StepAWSProviderConfig from "./StepAWSProviderConfig.jsx";
 import { useWizard, WizardProvider } from "../../hooks/useWizard";
+import StepWizard from "../../lib/react-step-wizard";
+import StepSelectProvider from "./StepSelectProvider.jsx";
+import StepKindProviderConfig from "./StepKindProviderConfig.jsx";
+import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey.jsx";
+import StepDigitalOceanClusterConfig from "./StepDigitalOceanClusterConfig.jsx";
+import StepAddClusterCompleted from "./StepAddClusterComplete.jsx";
+import StepKindCreateCluster from "./StepKindCreateCluster.jsx";
+import StepAWSProviderConfig from "./StepAWSProviderConfig.jsx";
 import StepAWSCreateCluster from "./StepAWSCreateCluster.jsx";
 
 function Content({ onFinish }) {

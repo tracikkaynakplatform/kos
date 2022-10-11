@@ -1,9 +1,9 @@
 import React from "react";
 import { Card, Typography, Box, Divider, Link as MUILink } from "@mui/material";
-import ProviderChip from "./ProviderChip";
 import { providerNames } from "../providers/provider-names";
 import { providerLogos } from "../providers/provider-logos";
 import { Link } from "react-router-dom";
+import ProviderChip from "./ProviderChip.jsx";
 
 export default function ManagementClusterCard({
 	name,

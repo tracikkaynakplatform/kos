@@ -1,9 +1,11 @@
+import React from "react";
 import { Typography, CircularProgress, Box } from "@mui/material";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
-import React from "react";
-import Wrapper from "../StepWizardWrapper";
 import { useWizard } from "../../hooks/useWizard";
+import Wrapper from "../StepWizardWrapper.jsx";
+import kubectl from "../../api/kubectl";
+import clusterctl from "../../api/clusterctl";
 
 export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 	const [infoText, setInfoText] = useState("");

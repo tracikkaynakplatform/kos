@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import Wrapper from "../StepWizardWrapper";
 import { useSnackbar } from "notistack";
 import { useWizard } from "../../hooks/useWizard";
+import Wrapper from "../StepWizardWrapper.jsx";
 
 export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 	const [infoText, setInfoText] = useState("");

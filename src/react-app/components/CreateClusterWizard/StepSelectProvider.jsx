@@ -11,7 +11,7 @@ import { useSnackbar } from "notistack";
 import { translate } from "../../locales";
 import { useWizard } from "../../hooks/useWizard";
 import { PROVIDER_TYPE } from "../../../main/providers";
-import Wrapper from "../StepWizardWrapper";
+import Wrapper from "../StepWizardWrapper.jsx";
 import clusterConfig from "../../api/clusterConfig";
 import kubeConfig from "../../api/kubeConfig";
 

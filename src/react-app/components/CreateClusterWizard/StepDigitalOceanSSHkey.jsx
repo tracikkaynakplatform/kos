@@ -1,8 +1,8 @@
+import React from "react";
 import { Typography, Link as MUILink, Box, TextField } from "@mui/material";
 import { useState } from "react";
-import React from "react";
 import { translate } from "../../locales";
-import Wrapper from "../StepWizardWrapper";
+import Wrapper from "../StepWizardWrapper.jsx";
 
 export default function StepDigitalOceanSSHkey({ goToNamedStep, ...props }) {
 	const [fingerprint, setFingerprint] = useState("");

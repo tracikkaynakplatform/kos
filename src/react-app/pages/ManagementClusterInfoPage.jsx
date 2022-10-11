@@ -29,12 +29,13 @@ import {
 import { providerNames } from "../providers/provider-names";
 import { providerLogos } from "../providers/provider-logos";
 import { useNavigate, useParams } from "react-router-dom";
-import DashboardLayout from "../layouts/DashboardLayout.jsx";
-import ProviderChip from "../components/ProviderChip";
-import LoadingModal from "../components/LoadingModal.jsx";
-import QuestionModal from "../components/QuestionModal.jsx";
 import { useModal } from "../hooks/useModal";
 import { useSnackbar } from "notistack";
+
+import DashboardLayout from "../layouts/DashboardLayout.jsx";
+import ProviderChip from "../components/ProviderChip.jsx";
+import LoadingModal from "../components/LoadingModal.jsx";
+import QuestionModal from "../components/QuestionModal.jsx";
 import clusterConfig from "../api/clusterConfig";
 import kubeConfig from "../api/kubeConfig";
 import kubectl from "../api/kubectl";

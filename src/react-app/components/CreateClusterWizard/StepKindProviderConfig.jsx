@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useWizard } from "../../hooks/useWizard";
 import { translate } from "../../locales";
-import Wrapper from "../StepWizardWrapper";
+import Wrapper from "../StepWizardWrapper.jsx";
 
 export default function StepKindProviderConfig({ goToNamedStep, ...props }) {
 	const wizard = useWizard();

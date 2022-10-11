@@ -16,7 +16,7 @@ import {
 } from "../../providers/digitalocean";
 import { useState } from "react";
 import { translate } from "../../locales";
-import Wrapper from "../StepWizardWrapper";
+import Wrapper from "../StepWizardWrapper.jsx";
 
 export default function StepDigitalOceanClusterConfig({
 	goToNamedStep,

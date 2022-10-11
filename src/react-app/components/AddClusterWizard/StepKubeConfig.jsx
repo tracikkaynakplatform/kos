@@ -1,7 +1,7 @@
-import { TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { TextField, Typography } from "@mui/material";
 import { useWizard } from "../../hooks/useWizard";
-import Wrapper from "../StepWizardWrapper";
+import Wrapper from "../StepWizardWrapper.jsx";
 import kubeConfig from "../../api/kubeConfig";
 
 export default function StepKubeConfig(props) {
