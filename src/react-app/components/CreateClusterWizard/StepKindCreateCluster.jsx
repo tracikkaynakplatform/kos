@@ -54,15 +54,18 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 					pt: 2,
 				}}
 			>
-				{infoText}
+				Küme oluşturuluyor...
 			</Typography>
 			<Box
 				sx={{
 					m: 5,
 					display: "flex",
 					justifyContent: "center",
+					alignItems: "center",
+					flexDirection: "column",
 				}}
 			>
+				<Typography>{infoText}</Typography>
 				<CircularProgress />
 			</Box>
 		</Wrapper>
