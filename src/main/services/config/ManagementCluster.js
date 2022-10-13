@@ -8,7 +8,7 @@ import { PROVIDER_TYPE } from "../../providers";
  * @description Kümeyi temsil eden nesneyi tanımlar.
  * @typedef {Object} Cluster
  * @property {string} name - Kümenin adı.
- * @property {string} config - Kümenin kubeconfig dosyasının yolu.
+ * @property {string} status - Kümenin durum bilgisi.
  * @property {Number} provider - Kümenin bulunduğu altyapı sağlayıcısının kimlik numarası.
  */
 /** @typedef {import('../../providers').ProviderType} ProviderType */

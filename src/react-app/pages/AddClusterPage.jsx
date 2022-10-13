@@ -1,28 +1,14 @@
 import React from "react";
-import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
-import { Fab } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import AddClusterWizard from "../components/AddClusterWizard";
+import TempLayout from "../layouts/TempLayout.jsx";
 
 export default function AddClusterPage() {
 	const nav = useNavigate();
 
 	return (
-		<DashboardLayout>
-			<Fab
-				color="primary"
-				sx={{
-					margin: 0,
-					top: "auto",
-					left: "auto",
-					position: "fixed",
-				}}
-				onClick={() => nav(-1)}
-			>
-				<ArrowBackIcon />
-			</Fab>
+		<TempLayout onClick={() => nav(-1)}>
 			<AddClusterWizard />
-		</DashboardLayout>
+		</TempLayout>
 	);
 }

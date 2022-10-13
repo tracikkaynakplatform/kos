@@ -3,13 +3,14 @@ import ReactDOM from "react-dom/client";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
+import { ModalProvider } from "./hooks/useModal.js";
 
 import AddClusterPage from "./pages/AddClusterPage.jsx";
 import ManagementClustersPage from "./pages/ManagementClustersPage.jsx";
 import ManagementClusterInfoPage from "./pages/ManagementClusterInfoPage.jsx";
+import UpgradeClusterPage from "./pages/UpgradeClusterPage.jsx";
 import CreateClusterPage from "./pages/CreateClusterPage.jsx";
 import MainPage from "./pages/MainPage.jsx";
-import { ModalProvider } from "./hooks/useModal.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -36,6 +37,11 @@ root.render(
 						path="/create-cluster/:manClusterName"
 						exact
 						element={<CreateClusterPage />}
+					/>
+					<Route
+						path="/upgrade-cluster/:manClusterName/:clusterName"
+						exact
+						element={<UpgradeClusterPage />}
 					/>
 				</Routes>
 			</BrowserRouter>

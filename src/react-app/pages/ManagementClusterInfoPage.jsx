@@ -219,6 +219,12 @@ export default function ManagementClusterInfoPage() {
 												<CameraIcon />
 											</Button>
 											<Button
+												onClick={() => {
+													nav(
+														`/upgrade-cluster/${name}/${x.name}`,
+														{ replace: true }
+													);
+												}}
 												disabled={
 													x.status !== "Provisioned"
 												}

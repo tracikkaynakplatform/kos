@@ -7,4 +7,9 @@ export const PROVIDER_TYPE = {
 	DOCKER: 3,
 };
 
+export const PROVIDER_CLASS = {
+	[PROVIDER_TYPE.AWS]: "AWS",
+	[PROVIDER_TYPE.DOCKER]: "Docker",
+};
+
 export const digitalocean = _do;

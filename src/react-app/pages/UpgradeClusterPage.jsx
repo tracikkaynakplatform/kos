@@ -1,19 +1,21 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import CreateClusterWizard from "../components/CreateClusterWizard";
+import UpgradeClusterWizard from "../components/UpgradeClusterWizard";
 import TempLayout from "../layouts/TempLayout.jsx";
 
-export default function CreateClusterPage() {
+export default function UpgradeClusterPage() {
 	const nav = useNavigate();
-	const { manClusterName } = useParams();
+	const { manClusterName, clusterName } = useParams();
 
 	return (
 		<TempLayout onBackClicked={() => nav(-1)}>
-			<CreateClusterWizard
+			<UpgradeClusterWizard
+				onError={() => nav(-1)}
 				onFinish={() => {
-					nav("/management-clusters");
+					nav(-1);
 				}}
 				manClusterName={manClusterName}
+				clusterName={clusterName}
 			/>
 		</TempLayout>
 	);

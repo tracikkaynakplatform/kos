@@ -3,20 +3,30 @@ import { Box, Fab, TextField } from "@mui/material";
 import { Add, Search } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../hooks/useModal";
+import { useSnackbar } from "notistack";
+
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import ManagementClusterCard from "../components/ManagementClusterCard.jsx";
 import LoadingModal from "../components/LoadingModal.jsx";
 import clusterConfig from "../api/clusterConfig";
 
 export default function ManagementClustersPage(props) {
+	const [clusters, setClusters] = useState([]);
 	const nav = useNavigate();
 	const modal = useModal();
-	const [clusters, setClusters] = useState([]);
+	const snack = useSnackbar().enqueueSnackbar;
 
 	useEffect(() => {
 		(async () => {
 			modal.showModal(LoadingModal, { message: "Yükleniyor" });
-			await setClusters(await clusterConfig.getManagementClusters());
+			try {
+				await setClusters(await clusterConfig.getManagementClusters());
+			} catch (err) {
+				snack(err.message, {
+					variant: "error",
+					autoHideDuration: 5000,
+				});
+			}
 			modal.closeModal();
 		})();
 	}, []);

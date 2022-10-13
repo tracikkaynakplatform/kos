@@ -12,22 +12,34 @@ import { useState } from "react";
 import { useSnackbar } from "notistack";
 import { useWizard } from "../../hooks/useWizard";
 import Wrapper from "../StepWizardWrapper.jsx";
+import { PROVIDER_TYPE } from "../../providers";
 
 export default function StepSelectVersion({ goToNamedStep, ...props }) {
 	const [cpKubVersion, setCPKubVersion] = useState({ id: "" });
 	const [wKubVersion, setWKubVersion] = useState({ id: "" });
+	const [versions, setVersions] = useState({});
 	const wizard = useWizard();
 	const snack = useSnackbar().enqueueSnackbar;
 	const _goto = goToNamedStep;
-	const imageVersions = {
-		"kindest/node:v1.24.0": "v1.24.6",
-		"kindest/node:v1.25.1": "v1.25.1",
-		"kindest/node:v1.25.2": "v1.25.2",
-	};
 
 	return (
 		<Wrapper
 			disableBack
+			onLoad={async () => {
+				if (wizard.data.provider == PROVIDER_TYPE.DOCKER) {
+					setVersions({
+						"kindest/node:v1.24.0": "v1.24.6",
+						"kindest/node:v1.25.1": "v1.25.1",
+						"kindest/node:v1.25.2": "v1.25.2",
+					});
+				} else if (wizard.data.provider == PROVIDER_TYPE.AWS) {
+					setVersions({
+						"ami-0afc5e75ac5599f0c": "v1.24.1",
+						"ami-05c1cad52ff9bf3d1": "v1.24.3",
+						"ami-07aa950fad9bc438a": "v1.25.2",
+					});
+				}
+			}}
 			onNextClick={async () => {
 				try {
 					// TODO: Girdileri doğrula
@@ -75,20 +87,15 @@ export default function StepSelectVersion({ goToNamedStep, ...props }) {
 						onChange={(e) => {
 							setCPKubVersion({
 								id: e.target.value,
-								version: imageVersions[e.target.value],
+								version: versions[e.target.value],
 							});
 						}}
 					>
-						{/* TODO: Yükseltilebilir sürümler dinamik olarak alınacak  */}
-						<MenuItem value="kindest/node:v1.24.0">
-							v1.24.6
-						</MenuItem>
-						<MenuItem value="kindest/node:v1.25.1">
-							v1.25.1
-						</MenuItem>
-						<MenuItem value="kindest/node:v1.25.2">
-							v1.25.2
-						</MenuItem>
+						{Object.keys(versions).map((x, i) => (
+							<MenuItem key={i} value={x}>
+								{versions[x]}
+							</MenuItem>
+						))}
 					</Select>
 				</FormControl>
 				<FormControl fullWidth>
@@ -99,20 +106,15 @@ export default function StepSelectVersion({ goToNamedStep, ...props }) {
 						onChange={(e) =>
 							setWKubVersion({
 								id: e.target.value,
-								version: e.target.innerText,
+								version: versions[e.target.value],
 							})
 						}
 					>
-						{/* TODO: Yükseltilebilir sürümler dinamik olarak alınacak  */}
-						<MenuItem value="kindest/node:v1.24.0">
-							v1.24.6
-						</MenuItem>
-						<MenuItem value="kindest/node:v1.25.1">
-							v1.25.1
-						</MenuItem>
-						<MenuItem value="kindest/node:v1.25.2">
-							v1.25.2
-						</MenuItem>
+						{Object.keys(versions).map((x, i) => (
+							<MenuItem key={i} value={x}>
+								{versions[x]}
+							</MenuItem>
+						))}
 					</Select>
 				</FormControl>
 			</Box>

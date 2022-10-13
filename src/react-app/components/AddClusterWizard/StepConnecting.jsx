@@ -1,31 +1,32 @@
 import React, { useState } from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useWizard } from "../../hooks/useWizard";
-import Wrapper from "../StepWizardWrapper.jsx";
+import StepBaseLoading from "../StepBaseLoading.jsx";
 import kubectl from "../../api/kubectl";
 import clusterConfig from "../../api/clusterConfig";
 import kubeConfig from "../../api/kubeConfig";
 
 export default function StepConnecting(props) {
-	const [infoText, setInfoText] = useState("");
+	const [info, setInfo] = useState("");
 	const snack = useSnackbar().enqueueSnackbar;
 	const wizard = useWizard();
 	const _goto = props.goToNamedStep;
 
 	return (
-		<Wrapper
+		<StepBaseLoading
+			title="Kümeye bağlanılıyor..."
+			info={info}
 			disableBack
 			disableNext
 			stepName={props.stepName}
 			onLoad={async () => {
 				try {
-					setInfoText("Yönetim kümesinin adı alınıyor...");
+					setInfo("Yönetim kümesinin adı alınıyor...");
 					let manName = await kubectl.currentContext(
 						wizard.data.config
 					);
 
-					setInfoText(
+					setInfo(
 						"Desteklenen altyapı sağlayıcılarının bilgisi alınıyor..."
 					);
 					let supportedProviders =
@@ -38,7 +39,7 @@ export default function StepConnecting(props) {
 							"Desteklenen altyapı sağlayıcıları bulunamadı!\nKümenin bir yönetim kümesi olduğundan emin olun."
 						);
 
-					setInfoText(
+					setInfo(
 						"Yönetim kümesi kubeconfig dosyası kayıt ediliyor..."
 					);
 					await kubeConfig.saveManagementConfig(
@@ -54,30 +55,6 @@ export default function StepConnecting(props) {
 					_goto("kubeConfig");
 				}
 			}}
-		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				Kümeye bağlanılıyor...
-			</Typography>
-			<Box
-				sx={{
-					m: 5,
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "center",
-					alignItems: "center",
-					width: "100%",
-				}}
-			>
-				<Typography>{infoText}</Typography>
-				<CircularProgress />
-			</Box>
-		</Wrapper>
+		/>
 	);
 }

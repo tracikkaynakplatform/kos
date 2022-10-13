@@ -1,25 +1,25 @@
 import React from "react";
-import { Typography, CircularProgress, Box } from "@mui/material";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 import { useWizard } from "../../hooks/useWizard";
-import Wrapper from "../StepWizardWrapper.jsx";
+import StepBaseLoading from "../StepBaseLoading.jsx";
+import { PROVIDER_CLASS } from "../../providers";
 import kubectl from "../../api/kubectl";
-import clusterctl from "../../api/clusterctl";
 import kubeConfig from "../../api/kubeConfig";
+import clusterConfig from "../../api/clusterConfig";
 
 export default function StepGetClusterInfo({
 	onError,
 	goToNamedStep,
 	...props
 }) {
-	const [infoText, setInfo] = useState("");
 	const wizard = useWizard();
 	const snack = useSnackbar().enqueueSnackbar;
 	const _goto = goToNamedStep;
 
 	return (
-		<Wrapper
+		<StepBaseLoading
+			title="Küme ile ilgili bilgi toplanıyor..."
 			disableNext
 			disableBack
 			onLoad={async () => {
@@ -27,10 +27,26 @@ export default function StepGetClusterInfo({
 					const config = await kubeConfig.loadManagementConfig(
 						wizard.manClusterName
 					);
-					// TODO: Provider tipini bul.
+					const clusters = await clusterConfig.getClusters(config);
+					let cluster;
+					for (let i of clusters) {
+						if (i.name == wizard.clusterName) {
+							cluster = i;
+							break;
+						}
+					}
+					console.log("Cluster: ", cluster);
+					if (!cluster) {
+						snack("Küme bulunamadı!", {
+							variant: "error",
+							autoHideDuration: 2000,
+						});
+						onError();
+						return;
+					}
 					const templates = await kubectl.get(
 						config,
-						"dockermachinetemplate",
+						`${PROVIDER_CLASS[cluster.provider]}machinetemplate`,
 						"json"
 					);
 					let cpRegex = new RegExp(
@@ -53,16 +69,19 @@ export default function StepGetClusterInfo({
 					delete controlPlaneTemplate.metadata.generation;
 					delete controlPlaneTemplate.metadata.resourceVersion;
 					delete controlPlaneTemplate.metadata.uid;
+					// delete controlPlaneTemplate.metadata.anotations;
 
 					delete workerTemplate.metadata.creationTimestamp;
 					delete workerTemplate.metadata.generation;
 					delete workerTemplate.metadata.resourceVersion;
 					delete workerTemplate.metadata.uid;
+					//delete workerTemplate.metadata.anotations;
 
 					controlPlaneTemplate.metadata.name += "-kos-upgrade";
 					workerTemplate.metadata.name += "-kos-upgrade";
 
 					// TODO: Provider tipini de wizard data'ya ekle.
+					wizard.updateData("provider", cluster.provider);
 					wizard.updateData(
 						"controlPlaneTemplate",
 						controlPlaneTemplate
@@ -80,29 +99,6 @@ export default function StepGetClusterInfo({
 				}
 			}}
 			{...props}
-		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				Küme hakkında bilgi toplanıyor...
-			</Typography>
-			<Box
-				sx={{
-					m: 5,
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					flexDirection: "column",
-				}}
-			>
-				<Typography>{infoText}</Typography>
-				<CircularProgress />
-			</Box>
-		</Wrapper>
+		/>
 	);
 }

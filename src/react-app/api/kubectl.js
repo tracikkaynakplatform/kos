@@ -1,7 +1,7 @@
 // Servis tarafına dönülmesi durumunda buradaki API'ler değiştirilebilir.
 
-export async function get(config, ...args) {
-	return await kubectlAPI.get(config, ...args);
+export async function get(config, resourceType, outputType, ...args) {
+	return await kubectlAPI.get(config, resourceType, outputType, ...args);
 }
 
 export async function delete_(config, ...args) {

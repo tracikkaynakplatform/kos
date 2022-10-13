@@ -1,24 +1,25 @@
 import React, { useState } from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useWizard } from "../../hooks/useWizard";
-import Wrapper from "../StepWizardWrapper.jsx";
 import clusterctl from "../../api/clusterctl";
 import kubectl from "../../api/kubectl";
+import StepBaseLoading from "../StepBaseLoading.jsx";
 
 export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
-	const [infoText, setInfoText] = useState("");
+	const [info, setInfo] = useState("");
 	const wizard = useWizard();
 	const snack = useSnackbar().enqueueSnackbar;
 	const _goto = goToNamedStep;
 
 	return (
-		<Wrapper
+		<StepBaseLoading
+			title="Küme oluşturuluyor..."
+			info={info}
 			disableBack
 			disableNext
 			onLoad={async () => {
 				try {
-					setInfoText(
+					setInfo(
 						"Küme oluşturmak için yaml dosyası üretiliyor... (clusterctl generate)"
 					);
 					let yaml = await clusterctl.generateCluster(
@@ -38,10 +39,66 @@ export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 								wizard.data.workerMachineType,
 						}
 					);
-					setInfoText(
+					setInfo(
 						"YAML dosyası yönetim kümesine uygulanıyor (kubectl apply)"
 					);
 					await kubectl.apply(wizard.data.config, yaml);
+					setInfo(
+						"CNI kurulumu için kümenin hazır hale gelmesi bekleniyor..."
+					);
+					await new Promise(async (resolve, reject) => {
+						const interval = setInterval(async () => {
+							try {
+								let cluster;
+								try {
+									cluster = await kubectl.get(
+										wizard.data.config,
+										"cluster",
+										"json",
+										wizard.data.clusterName
+									);
+								} catch (err) {
+									return;
+								}
+
+								let ok = false;
+								if (cluster.status.phase == "Provisioned") {
+									for (let condition of cluster.status
+										.conditions) {
+										if (condition.status == "False") {
+											ok = false;
+											break;
+										}
+										ok = true;
+									}
+								}
+								if (ok) {
+									clearInterval(interval);
+									resolve();
+								}
+							} catch (err) {
+								clearInterval(interval);
+								reject(err);
+							}
+						}, 5000);
+					});
+					setInfo(
+						"Yeni oluşturulan kümenin kubeconfig bilgisi alınıyor"
+					);
+					const clusterConfig = await clusterctl.getClusterConfig(
+						wizard.data.config,
+						wizard.data.clusterName
+					);
+
+					setInfo("Calico yükleniyor");
+					await kubectl.apply(
+						clusterConfig,
+						await (
+							await fetch(
+								"https://raw.githubusercontent.com/projectcalico/calico/v3.24.1/manifests/calico.yaml"
+							)
+						).text()
+					);
 					_goto("addClusterComplete");
 				} catch (err) {
 					snack(err.message, {
@@ -52,28 +109,6 @@ export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 				}
 			}}
 			{...props}
-		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				Küme oluşturuluyor
-			</Typography>
-			<Box
-				sx={{
-					p: 3,
-					width: "500px",
-					display: "flex",
-					gap: "10px",
-				}}
-			>
-				<CircularProgress />
-				<Typography>{infoText}</Typography>
-			</Box>
-		</Wrapper>
+		/>
 	);
 }
