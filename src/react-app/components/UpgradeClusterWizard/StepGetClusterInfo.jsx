@@ -69,13 +69,13 @@ export default function StepGetClusterInfo({
 					delete controlPlaneTemplate.metadata.generation;
 					delete controlPlaneTemplate.metadata.resourceVersion;
 					delete controlPlaneTemplate.metadata.uid;
-					// delete controlPlaneTemplate.metadata.anotations;
+					delete controlPlaneTemplate.metadata.annotations;
 
 					delete workerTemplate.metadata.creationTimestamp;
 					delete workerTemplate.metadata.generation;
 					delete workerTemplate.metadata.resourceVersion;
 					delete workerTemplate.metadata.uid;
-					//delete workerTemplate.metadata.anotations;
+					delete workerTemplate.metadata.annotations;
 
 					controlPlaneTemplate.metadata.name += "-kos-upgrade";
 					workerTemplate.metadata.name += "-kos-upgrade";

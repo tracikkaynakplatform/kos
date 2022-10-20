@@ -124,25 +124,16 @@ export default class Kubectl extends Downloader {
 	}
 
 	async apply(file, outputType = "json", ...additionalArgs) {
-		return new Promise((resolve, reject) => {
-			access(file, constants.F_OK, async (err) => {
-				if (err) reject(err);
-				try {
-					let output = await this.#execKube(
-						...this.#createArgs(
-							outputType,
-							"apply",
-							"-f",
-							file,
-							...additionalArgs
-						)
-					);
-					if (outputType === "json") resolve(JSON.parse(output));
-					else resolve(output);
-				} catch (err) {
-					reject(err);
-				}
-			});
-		});
+		let output = await this.#execKube(
+			...this.#createArgs(
+				outputType,
+				"apply",
+				"-f",
+				file,
+				...additionalArgs
+			)
+		);
+		if (outputType === "json") return JSON.parse(output);
+		else return output;
 	}
 }

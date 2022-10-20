@@ -12,6 +12,10 @@ export async function apply(config, yaml, ...args) {
 	return await kubectlAPI.apply(config, yaml, ...args);
 }
 
+export async function applyFile(config, file, ...args) {
+	return await kubectlAPI.applyFile(config, file, ...args);
+}
+
 export async function currentContext(config) {
 	return await kubectlAPI.currentContext(config);
 }
@@ -21,4 +25,5 @@ export default {
 	delete_,
 	currentContext,
 	apply,
+	applyFile,
 };

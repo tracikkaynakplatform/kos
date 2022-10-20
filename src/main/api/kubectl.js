@@ -29,6 +29,12 @@ export async function currentContext(config) {
 	});
 }
 
+export async function applyFile(config, file, ...args) {
+	return await execKube(config, async (kctl) => {
+		return await kctl.apply(file, ...args);
+	});
+}
+
 export async function apply(config, yaml, ...args) {
 	return new Promise(async (resolve, reject) => {
 		let kctl = new Kubectl();
@@ -45,4 +51,4 @@ export async function apply(config, yaml, ...args) {
 	});
 }
 
-export default [get, currentContext, apply, delete_];
+export default [get, currentContext, apply, applyFile, delete_];

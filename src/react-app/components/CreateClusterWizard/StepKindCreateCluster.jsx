@@ -84,16 +84,13 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 					);
 
 					setInfo("Calico yükleniyor");
-					await kubectl.apply(
+					await kubectl.applyFile(
 						clusterConfig,
-						await (
-							await fetch(
-								"https://raw.githubusercontent.com/projectcalico/calico/v3.24.1/manifests/calico.yaml"
-							)
-						).text()
+						"https://raw.githubusercontent.com/projectcalico/calico/v3.24.1/manifests/calico.yaml"
 					);
 					_goto("addClusterComplete");
 				} catch (err) {
+					console.error(err);
 					snack(err.message, {
 						variant: "error",
 						autoHideDuration: 5000,

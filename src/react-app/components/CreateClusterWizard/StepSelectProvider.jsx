@@ -79,9 +79,6 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 			<Typography>
 				Oluşturulacak kümenin hangi altyapı sağlayıcısı kullanılarak
 				oluşturulacağını seçin.
-				<br />
-				Bu altyapı yönetim kümenizin oluşturulmasında kullanılan altyapı
-				ile aynı olmalıdır.
 			</Typography>
 			<Box
 				sx={{

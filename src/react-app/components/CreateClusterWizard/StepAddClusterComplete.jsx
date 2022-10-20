@@ -32,7 +32,7 @@ export default function StepAddClusterComplete({ onFinish, ...props }) {
 				<Typography>
 					Küme oluşturma işlemi başarıyla sonuçlandı. Oluşturduğunuz
 					kümenin hazır olup olmadığını kümeler menüsünden takip
-					edebilirsiniz. [Sihirbaz sonlanır]
+					edebilirsiniz.
 				</Typography>
 			</Box>
 		</Wrapper>

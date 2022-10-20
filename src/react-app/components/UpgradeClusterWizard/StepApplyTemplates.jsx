@@ -21,6 +21,23 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 			disableBack
 			onLoad={async () => {
 				try {
+					if (wizard.data.provider == PROVIDER_TYPE.DOCKER) {
+						setInfo("Kümenin sürüm bilgisi değiştiriliyor");
+						const cluster = await kubectl.get(
+							wizard.data.config,
+							"cluster",
+							"json",
+							wizard.clusterName
+						);
+						cluster.spec.topology.version =
+							wizard.data.cpKubVersion.version;
+
+						await kubectl.apply(
+							wizard.data.config,
+							await yaml.dump(cluster)
+						);
+					}
+
 					setInfo("Control plane şablonları uygulanıyor");
 					const cpTemplate = wizard.data.controlPlaneTemplate;
 
@@ -104,21 +121,6 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 						await yaml.dump(machineDeployment)
 					);
 
-					setInfo("Kümenin sürüm bilgisi değiştiriliyor");
-					const cluster = await kubectl.get(
-						wizard.data.config,
-						"cluster",
-						"json",
-						wizard.clusterName
-					);
-					if (wizard.data.provider == PROVIDER_TYPE.DOCKER)
-						cluster.spec.topology.version =
-							wizard.data.cpKubVersion.version;
-
-					await kubectl.apply(
-						wizard.data.config,
-						await yaml.dump(cluster)
-					);
 					_goto("end");
 				} catch (err) {
 					console.error(err);
