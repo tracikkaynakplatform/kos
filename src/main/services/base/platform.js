@@ -1,4 +1,6 @@
 import process from "process";
+import {logger} from "../../logger";
+
 
 // singleton. Loads and holds (friendly names and utilities for) platform specific client properties.
 class Platform {
@@ -18,6 +20,7 @@ class Platform {
       this.osFamily = 'windows';
       this.exeExt = '.exe'; 
     }    
+    logger.debug(`constructed Platform instance for ${this.osFamily}/${this.arch}`);
   } // constructor
 
 

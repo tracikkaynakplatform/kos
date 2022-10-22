@@ -11,6 +11,7 @@ import ManagementClusterInfoPage from "./pages/ManagementClusterInfoPage.jsx";
 import UpgradeClusterPage from "./pages/UpgradeClusterPage.jsx";
 import CreateClusterPage from "./pages/CreateClusterPage.jsx";
 import MainPage from "./pages/MainPage.jsx";
+import { logger } from "./logger.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -48,3 +49,5 @@ root.render(
 		</ModalProvider>
 	</SnackbarProvider>
 );
+
+logger.debug("Rendered index.js .");
