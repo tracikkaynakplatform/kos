@@ -3,12 +3,12 @@ import { execFile } from "child_process";
 import fs from "fs";
 import KubeConfig from "../k8s/KubeConfig";
 import dirCheck, { DIRS } from "../utils/dir-checker";
-import Downloader from "./base/Downloader";
+import ClientExecutable from "./base/client-executable";
 
 /**
  * clusterctl ile işlemler yapmaya yarayan sınıf.
  */
-export default class Clusterctl extends Downloader {
+export default class Clusterctl extends ClientExecutable {
 	constructor() {
 		super(
 			"https://api.github.com/repos/kubernetes-sigs/cluster-api/releases/latest",

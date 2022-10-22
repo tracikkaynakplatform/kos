@@ -1,6 +1,6 @@
-import Downloader from "./base/Downloader";
+import ClientExecutable from "./base/client-executable";
 
-class Kind extends Downloader {
+class Kind extends ClientExecutable {
 	constructor() {
 		const url =
 			"htpps://api.github.com/repos/kubernetes-sigs/kind/releases/latest";

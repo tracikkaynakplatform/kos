@@ -1,16 +1,19 @@
 import { get as _get } from "request";
-import { access, constants } from "fs";
-import process, { cwd } from "process";
+import { access,accessSync , constants } from "fs";
+import { cwd } from "process";
 import { chmod } from "fs";
 import findInPath from "../../utils/find-in-path";
 import downloadFile from "../../utils/download-file";
+import platform from "./platform";
 
-class Downloader {
+class ClientExecutable {
+	MAX_DOWNLOAD_RETRIES = 3;
+	
 	constructor(url, name) {
 		this.url = url;
 		this.name = name;
-		this.os = process.platform;
-		this.path = `${cwd()}/bin/${this.name}`;
+		this.path = `${cwd()}/bin/${this.name}${platform.exeExt}`;
+		this.downloadRetries = 0;
 	}
 
 	/**
@@ -21,7 +24,7 @@ class Downloader {
 	 */
 	async check() {
 		try {
-			return await findInPath(this.name);
+			return await findInPath(this.name);			
 		} catch (err) {
 			return new Promise((resolve, reject) => {
 				access(this.path, constants.F_OK, (err) => {
@@ -51,7 +54,7 @@ class Downloader {
 					if (error) reject(error);
 					body = JSON.parse(body);
 					body.assets.filter((item) => {
-						if (item.name.search(this.os) !== -1) {
+						if (item.name.search(platform.osFamily) !== -1) {
 							resolve(item);
 							return;
 						}
@@ -69,7 +72,7 @@ class Downloader {
 		const data = await this.getOsObject();
 		await downloadFile(data.browser_download_url, this.path);
 		return new Promise((resolve, reject) => {
-			chmod(this.path, 0o777, (err) => {
+			chmod(this.path, 0o755, (err) => {
 				if (err) reject(err);
 				resolve(this.path);
 			});
@@ -77,4 +80,4 @@ class Downloader {
 	}
 }
 
-export default Downloader;
+export default ClientExecutable;
