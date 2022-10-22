@@ -1,4 +1,4 @@
-import ClientExecutable from "./base/client-executable";
+import { ClientExecutable } from "./base/client-executable";
 import { execFile } from "child_process";
 import { get as _get } from "request";
 import downloadFile from "../utils/download-file";

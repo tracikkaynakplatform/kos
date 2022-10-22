@@ -1,6 +1,6 @@
 import process from "process";
 
-// loads and holds (friendly names and utilities for) platform specific client properties.
+// singleton. Loads and holds (friendly names and utilities for) platform specific client properties.
 class Platform {
 
   constructor() {
@@ -25,4 +25,7 @@ class Platform {
 
 // There is this single client (current), so we just need to export a single constant.
 const platform = new Platform();
-export default platform;
+// make 1-level immutable.
+Object.freeze(platform);
+// no default export, per: https://google.github.io/styleguide/jsguide.html#es-module-exports
+export  { platform };

@@ -3,7 +3,7 @@ import { execFile } from "child_process";
 import fs from "fs";
 import KubeConfig from "../k8s/KubeConfig";
 import dirCheck, { DIRS } from "../utils/dir-checker";
-import ClientExecutable from "./base/client-executable";
+import { ClientExecutable } from "./base/client-executable";
 
 /**
  * clusterctl ile işlemler yapmaya yarayan sınıf.

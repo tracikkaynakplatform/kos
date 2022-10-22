@@ -4,9 +4,9 @@ import { cwd } from "process";
 import { chmod } from "fs";
 import findInPath from "../../utils/find-in-path";
 import downloadFile from "../../utils/download-file";
-import platform from "./platform";
+import { platform } from "./platform";
 
-class ClientExecutable {
+export class ClientExecutable {
 	MAX_DOWNLOAD_RETRIES = 3;
 	
 	constructor(url, name) {
@@ -80,4 +80,3 @@ class ClientExecutable {
 	}
 }
 
-export default ClientExecutable;

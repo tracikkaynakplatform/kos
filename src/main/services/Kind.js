@@ -1,4 +1,4 @@
-import ClientExecutable from "./base/client-executable";
+import { ClientExecutable } from "./base/client-executable";
 
 class Kind extends ClientExecutable {
 	constructor() {
