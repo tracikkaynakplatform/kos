@@ -6,7 +6,7 @@
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
-    "test": "jest",
+    "test": "NODE_ENV=test jest",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
