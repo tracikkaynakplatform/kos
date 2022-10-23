@@ -23,3 +23,6 @@ Logging can only have an insignificant effect to performance. Do not print conti
 
 # Example:
 see [platform.js](./src/main/services/base/platform.js) for updated/current example contribution.
+
+# Tests:
+We intent to use [jest](https://jestjs.io/) for testing, but we cloud not find a completely functional setup combination.
