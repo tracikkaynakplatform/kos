@@ -1,14 +1,15 @@
-import Downloader from "./base/Downloader";
+import { ClientExecutable } from "./base/client-executable";
 import { execFile } from "child_process";
 import { get as _get } from "request";
 import downloadFile from "../utils/download-file";
 import { access, constants, chmod } from "fs";
 import KubeConfig from "../k8s/KubeConfig";
+import platform from "./base/platform";
 
 /**
  * kubectl ile işlem yapmaya yarayan sınıf.
  */
-export default class Kubectl extends Downloader {
+export default class Kubectl extends ClientExecutable {
 	constructor() {
 		super("https://dl.k8s.io/release/", "kubectl");
 
@@ -55,7 +56,7 @@ export default class Kubectl extends Downloader {
 	 * Son sürüm kubectl indirilecek dosyanın sürüm numarasını döndürür.
 	 * @returns {Promise<boolean>}
 	 */
-	async getVersion() {
+	async #getVersion() {
 		return new Promise((resolve, reject) => {
 			_get(
 				"https://dl.k8s.io/release/stable.txt",
@@ -72,17 +73,9 @@ export default class Kubectl extends Downloader {
 	 * Son sürüm kubectl indirirken kullanılacak url'i bind eder.
 	 * @returns {Promise<void>}
 	 */
-	async getDownloadUrl() {
+	async #getDownloadUrl() {
 		await this.getVersion();
-		switch (this.os) {
-			case "darwin":
-			case "linux":
-				this.url = `https://dl.k8s.io/release/${this.version}/bin/${this.os}/amd64/kubectl`;
-				break;
-			case "win32":
-				this.url = `https://dl.k8s.io/release/${this.version}/bin/windows/amd64/kubectl.exe`;
-				break;
-		}
+		this.url = `https://dl.k8s.io/release/${this.version}/bin/${platform.osFamily}/${platform.arch}/kubectl${platform.exeExt}`
 	}
 
 	/**
