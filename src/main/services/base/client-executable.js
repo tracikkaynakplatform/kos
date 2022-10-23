@@ -6,6 +6,9 @@ import findInPath from "../../utils/find-in-path";
 import downloadFile from "../../utils/download-file";
 import { platform } from "./platform";
 
+/**
+ * Represents common code for client executables, like kubectl, clusterctl ...
+ */
 export class ClientExecutable {
 	MAX_DOWNLOAD_RETRIES = 3;
 	

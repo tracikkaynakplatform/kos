@@ -4,7 +4,7 @@ import { get as _get } from "request";
 import downloadFile from "../utils/download-file";
 import { access, constants, chmod } from "fs";
 import KubeConfig from "../k8s/KubeConfig";
-import platform from "./base/platform";
+import {platform} from "./base/platform";
 
 /**
  * kubectl ile işlem yapmaya yarayan sınıf.
