@@ -1,7 +1,7 @@
 
 
 # Naming and Styling:
-For naming, hierarchy and styling; refer to: [Google JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html).
+For naming, hierarchy and styling; refer to: [Google JavaScript Style Guide](https://google.github.io/styleguide/jsguide.html). Remember that (from the book "Code Complete"), less documentation is needed when the naming and hierarchy is more self-explanatory.
 
 
 # Documenting and Commenting:
@@ -21,8 +21,9 @@ Logging can only have an insignificant effect to performance. Do not print conti
 
 `info` and above level (info, warn, error) logs can also appear on production, so be extra cautious about your choice of words.
 
-# Example:
-see [platform.js](./src/main/services/base/platform.js) for updated/current example contribution.
+# Examples:
+see [platform.js](./src/main/services/base/platform.js) [client-executable.js](./src/main/services/base/client-executable.js) and for updated/current example contribution.
 
 # Tests:
-We intent to use [jest](https://jestjs.io/) for testing, but we cloud not find a completely functional setup combination.
+We use [jest](https://jestjs.io/) for unit testing. Please refer to the [test](./src/test/) for sample test files. It is vital to make test files for all core functionality, like utility (and business) classes/files. Others (wrappers, ui, service, ...) may need some other forms of testing (integration, ui, ...) which may not have a proper setup, yet.
+
