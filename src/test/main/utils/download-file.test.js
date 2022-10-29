@@ -1,4 +1,4 @@
-import downloadFile from "../../../main/utils/download-file";
+import { downloadFile } from "../../../main/utils/download-file";
 import * as fs from "fs";
 import * as path from "path";
 

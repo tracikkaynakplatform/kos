@@ -1,14 +1,14 @@
-import { cwd } from "process";
 import { execFile } from "child_process";
-import fs from "fs";
-import KubeConfig from "../k8s/KubeConfig";
-import dirCheck, { DIRS } from "../utils/dir-checker";
 import { ClientExecutable } from "./base/client-executable";
+import { KubeConfig } from "../k8s/KubeConfig";
 
 /**
- * clusterctl ile işlemler yapmaya yarayan sınıf.
+ * Wrapper class for clusterctl command line tool.
  */
 export default class Clusterctl extends ClientExecutable {
+	/**
+	 * Instantiate a new Clusterctl object.
+	 */
 	constructor() {
 		super(
 			"https://api.github.com/repos/kubernetes-sigs/cluster-api/releases/latest",
@@ -16,8 +16,8 @@ export default class Clusterctl extends ClientExecutable {
 		);
 
 		/**
+		 * @property Config object that will be used with clusterctl.
 		 * @type {KubeConfig}
-		 * @public
 		 */
 		this.config = new KubeConfig();
 	}
@@ -33,18 +33,34 @@ export default class Clusterctl extends ClientExecutable {
 					env: { KUBECONFIG: this.config.path, ...env },
 					encoding: "utf-8",
 				},
-				(err, stdout, stderr) => {
-					if (err) reject(err);
+				(err, stdout) => {
+					if (err) return reject(err);
 					resolve(stdout);
 				}
 			);
 		});
 	}
 
+	/**
+	 * Performs `clusterctl get kubeconfig clusterName`
+	 * @param	{String} clusterName	Name of target cluster.
+	 * @returns	{Promise<String>}		Output of clusterctl.
+	 */
 	async getClusterConfig(clusterName) {
 		return await this.#execClusterctl({}, "get", "kubeconfig", clusterName);
 	}
 
+	/**
+	 * Performs `clusterctl generate cluster ...`
+	 * @param	{String}			clusterName
+	 * @param	{String}			kubernetesVersion
+	 * @param	{Number}			masterCount
+	 * @param	{Number}			workerCount
+	 * @param	{Boolean}			isDocker			If it is true, adds **--flavor development**.
+	 * @param	{String}			infrastructure
+	 * @param	{Object}			env					Environment variables those will pass to clusterctl execution.
+	 * @returns {Promise<String>}						Output of clusterctl.
+	 */
 	async generateCluster(
 		clusterName,
 		kubernetesVersion,

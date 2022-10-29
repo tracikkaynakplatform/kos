@@ -1,4 +1,4 @@
-import KubeConfig from "../k8s/KubeConfig";
+import { KubeConfig } from "../k8s/KubeConfig";
 import Clusterctl from "../services/Clusterctl";
 
 export async function generateCluster(managementClusterConfig, ...args) {

@@ -1,56 +1,61 @@
-import fs from "fs";
-import KubeConfig from "../../k8s/KubeConfig";
 import Kubectl from "../Kubectl";
-import dirCheck, { DIRS } from "../../utils/dir-checker";
+import { KubeConfig } from "../../k8s/KubeConfig";
+import { dirCheck, DIRS } from "../../utils/dir-check";
 import { PROVIDER_TYPE } from "../../providers";
+import { readdir } from "fs";
 
 /**
- * @description Kümeyi temsil eden nesneyi tanımlar.
- * @typedef {Object} Cluster
- * @property {string} name - Kümenin adı.
- * @property {string} status - Kümenin durum bilgisi.
- * @property {Number} provider - Kümenin bulunduğu altyapı sağlayıcısının kimlik numarası.
+ * Represents a cluster.
+ * @typedef		{Object} Cluster
+ * @property	{String} name		Name of the cluster.
+ * @property	{String} status		Current state of cluster. "Provisioned", "Provisioning", "Deleting" etc.
+ * @property	{Number} provider	Provider of the cluster.
+ * @see PROVIDER_TYPE
  */
-/** @typedef {import('../../providers').ProviderType} ProviderType */
 
 /**
- * Yönetim kümesini temsil eden ve kayıtlı kümeler ile işlem yapmaya yarayan sınıf.
+ * Represents a management cluster and do stuff with it.
  */
 export default class ManagementCluster {
+	/**
+	 * Instantiate a new ManagementCluster object with given parameters.
+	 * @param {String} name	Management cluster name that will be using with clusterctl.
+	 */
 	constructor(name) {
 		/**
-		 * @description Yönetim kümesinin adı.
+		 * @property Name of the management cluster.
 		 * @type {string}
-		 * @public
 		 */
 		this.name = name ?? "";
 
 		/**
-		 * @description Yönetim kümesi tarafından desteklenen altyapı sağlayıcılarının listesi. Bu listedeki numaralar {@link ProviderType} tarafından sağlanan ID numaralarından ibarettir.
+		 * @property Supported providers by management cluster.
+		 * @see {@link ProviderType}
 		 * @type {Array<Number>}
-		 * @public
 		 */
 		this.supportedProviders = [];
 
 		/**
-		 * @description Bu yönetim kümesine kayıtlı olan kümelerin listesi.
+		 * @property List of clusters those owned by this managemenet cluster.
 		 * @type {Array<Cluster>}
-		 * @public
+		 * @see PROVIDER_TYPE
 		 */
 		this.clusters = [];
 
 		/**
-		 * @description Yönetim kümesinin config nesnesi.
+		 * @property KubeConfig object that will be used at clusterctl.
 		 * @type {KubeConfig}
-		 * @public
 		 */
 		this.config = new KubeConfig();
 	}
 
+	/**
+	 * Gets cluster list in the management cluster and put them into `clusters`.
+	 * @returns {Promise<Array<Cluster>>}	`clusters`
+	 */
 	async getClusters() {
 		let kctl = new Kubectl();
 		let result = [];
-
 		await KubeConfig.tempConfig(
 			kctl.config,
 			this.config.config,
@@ -83,6 +88,10 @@ export default class ManagementCluster {
 		return result;
 	}
 
+	/**
+	 * Gets supported providers by management cluster and put them into `supportedProviders`
+	 * @returns {Promise<Array<Number>>}	List of {@link PROVIDER_TYPE}.
+	 */
 	async getSupportedProviders() {
 		let kctl = new Kubectl();
 		let providers = [];
@@ -110,11 +119,16 @@ export default class ManagementCluster {
 		return providers;
 	}
 
+	/**
+	 * Gets all management clusters.
+	 * @returns {Promise<Array<ManagementCluster>>}	List of management cluster those used by KOS.
+	 * @static
+	 */
 	static async getManagementClusters() {
 		let dir = await dirCheck(DIRS.managementClusters);
 		return new Promise((resolve, reject) => {
-			fs.readdir(dir, async (err, files) => {
-				if (err) reject(err);
+			readdir(dir, async (err, files) => {
+				if (err) return reject(err);
 				let configFiles = files.filter((x) =>
 					x.endsWith(".kubeconfig")
 				);
@@ -124,13 +138,13 @@ export default class ManagementCluster {
 						let manCluster = new ManagementCluster(
 							conf.split(".").slice(0, -1).join(".")
 						);
-
 						await manCluster.config.changePath(`${dir}/${conf}`);
 						await manCluster.getClusters();
 						await manCluster.getSupportedProviders();
+
 						clusterList.push(manCluster);
 					} catch (err) {
-						reject(err);
+						return reject(err);
 					}
 				}
 				resolve(clusterList);

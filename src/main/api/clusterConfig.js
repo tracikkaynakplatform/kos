@@ -1,7 +1,7 @@
 import { getClusterConfig } from "./clusterctl";
 import ManagementCluster from "../services/config/ManagementCluster";
 import Kubectl from "../services/Kubectl";
-import KubeConfig from "../k8s/KubeConfig";
+import { KubeConfig } from "../k8s/KubeConfig";
 
 export async function getManagementClusters() {
 	return await ManagementCluster.getManagementClusters();

@@ -1,5 +1,5 @@
-import KubeConfig from "../k8s/KubeConfig";
-import dirCheck, { DIRS } from "../utils/dir-checker";
+import { KubeConfig } from "../k8s/KubeConfig";
+import { DIRS, dirCheck } from "../utils/dir-check";
 
 export async function defaultConfig() {
 	return await KubeConfig.defaultConfig();

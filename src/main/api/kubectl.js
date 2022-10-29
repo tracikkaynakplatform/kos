@@ -1,4 +1,4 @@
-import KubeConfig from "../k8s/KubeConfig";
+import { KubeConfig } from "../k8s/KubeConfig";
 import Kubectl from "../services/Kubectl";
 
 async function execKube(config, callback) {

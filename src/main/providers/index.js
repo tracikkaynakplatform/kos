@@ -1,14 +1,6 @@
 /**
- * @typedef {Object} ProviderType
- * @property {Number} AWS
- * @property {Number} GCP
- * @property {Number} DIGITAL_OCEAN
- * @property {Number} DOCKER
- */
-
-/**
- * @description Altyapı sağlayıcılarının ID numaraları. Yapılan tüm işlemler bu ID numaralarına göre yapılır.
- * @type {ProviderType}
+ * ID enumeration for providers.
+ * @enum {Number}
  */
 export const PROVIDER_TYPE = {
 	AWS: 0,

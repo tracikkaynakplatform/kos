@@ -1,39 +1,25 @@
-import { env, platform } from "process";
-import { access, constants } from "fs";
+import { env } from "process";
+import { accessSync, constants } from "fs";
+import { platform } from "../services/base/platform";
 
 /**
- * @description Bir dizin veya dosyanın varlığını denetler
- * @param {String} path Kontrol edilecek dizin/dosya
- * @returns {Promise<Boolean>} Dizin/dosya var ise true aksi halde false döner.
+ * Searchs for `fileName` in the PATH environment variable.
+ * @param	{String} fileName	Name of the file to search.
+ * @returns	{String}			Absolute path of `fileName`.
+ * @throws						Throws exception if there is not PATH variable or wouldn't find the file.
  */
-async function checkExists(path) {
-	return new Promise((res, rej) => {
-		access(path, constants.F_OK, (err) => {
-			if (!err) return res(path);
-			return rej(err);
-		});
-	});
-}
-
-/**
- * @description PATH çevre değişkeni içerisindeki dizinlerden birinde fileName isimli bir dosya olup olmadığını bulur.
- * @param {String} fileName Dosya adı.
- * @throws {Error} PATH 	çevre değişkeni mevcut değilse fırlatır.
- * @throws {Error} Dosya bulunamaz ise fırlatır.
- * @returns {Promise<String>} Dosyanın tam yolunu döndürür.
- */
-export default async function findInPath(fileName) {
+export function findInPath(fileName) {
 	let path = "";
 	let splitChar = ":";
-	if (platform == "win32") splitChar = ";";
+	if (platform.osFamily == "windows") splitChar = ";";
 	let paths = env.PATH?.split(splitChar);
-	if (!paths) throw new Error("PATH çevre değişkeni mevcut değil");
+	if (!paths) throw new Error("PATH environment variable doesn't exists!");
 	for (let p of paths) {
 		path = `${p}/${fileName}`;
 		try {
-			await checkExists(path);
+			accessSync(path, constants.F_OK);
 			return path;
 		} catch (err) {}
 	}
-	throw new Error("Dosya bulunamadı");
+	throw new Error("File couldn't found");
 }
