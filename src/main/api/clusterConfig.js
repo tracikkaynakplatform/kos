@@ -1,6 +1,4 @@
-import { getClusterConfig } from "./clusterctl";
 import ManagementCluster from "../services/config/ManagementCluster";
-import Kubectl from "../services/Kubectl";
 import { KubeConfig } from "../k8s/KubeConfig";
 
 export async function getManagementClusters() {
@@ -19,33 +17,6 @@ export async function getClusters(managementClusterConfig) {
 	return manCluster.clusters;
 }
 
-export async function getControlPlanes(managementClusterConfig, clusterName) {
-	const manCluster = new ManagementCluster();
-	let controlPlanesList = [];
-	await KubeConfig.tempConfig(
-		manCluster.config,
-		managementClusterConfig,
-		async () => {
-			const clusterKC = await getClusterConfig(
-				managementClusterConfig,
-				clusterName
-			);
-			const kctl = new Kubectl();
-			await KubeConfig.tempConfig(kctl.config, clusterKC, async () => {
-				controlPlanesList = (
-					await kctl.get(
-						"nodes",
-						"json",
-						"-l",
-						"node-role.kubernetes.io/control-plane"
-					)
-				).items;
-			});
-		}
-	);
-	return controlPlanesList;
-}
-
 export async function getSupportedProviders(managementClusterConfig) {
 	const manCluster = new ManagementCluster();
 	await KubeConfig.tempConfig(
@@ -58,9 +29,4 @@ export async function getSupportedProviders(managementClusterConfig) {
 	return manCluster.supportedProviders;
 }
 
-export default [
-	getControlPlanes,
-	getManagementClusters,
-	getSupportedProviders,
-	getClusters,
-];
+export default [getManagementClusters, getSupportedProviders, getClusters];
