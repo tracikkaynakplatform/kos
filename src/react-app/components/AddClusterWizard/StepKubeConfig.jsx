@@ -20,24 +20,17 @@ export default function StepKubeConfig(props) {
 				await wizard.updateData("config", kubeconfigData);
 				_goto("connecting");
 			}}
+			title="Küme Bilgileri"
+			text={
+				<>
+					Eklemek istediğiniz yönetim kümesinin kubeconfig içeriğini
+					giriniz.
+					<br />
+					(Varsayılan olarak sistemdeki ~/.kube/config dosya içeriği
+					alınmıştır)
+				</>
+			}
 		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				Küme bilgileri
-			</Typography>
-			<Typography>
-				Eklemek istediğiniz yönetim kümesinin kubeconfig içeriğini
-				giriniz.
-				<br />
-				(Varsayılan olarak sistemdeki ~/.kube/config dosya içeriği
-				alınmıştır)
-			</Typography>
 			<TextField
 				onChange={(e) => setKubeconfigData(e.target.value)}
 				value={kubeconfigData}

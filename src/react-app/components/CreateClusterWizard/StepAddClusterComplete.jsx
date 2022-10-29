@@ -1,5 +1,4 @@
 import React from "react";
-import { Typography, Box } from "@mui/material";
 import Wrapper from "../StepWizardWrapper.jsx";
 
 export default function StepAddClusterComplete({ onFinish, ...props }) {
@@ -7,34 +6,12 @@ export default function StepAddClusterComplete({ onFinish, ...props }) {
 		<Wrapper
 			onNextClick={() => onFinish()}
 			disableBack
-			sx={{
-				width: "500px",
-			}}
+			width={500}
+			title="Küme oluşturma başarılı"
+			text="Küme oluşturma işlemi başarıyla sonuçlandı. Oluşturduğunuz
+			kümenin hazır olup olmadığını kümeler menüsünden takip
+			edebilirsiniz."
 			{...props}
-		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				Küme oluşturma başarılı.
-			</Typography>
-			<Box
-				sx={{
-					m: 5,
-					display: "flex",
-					justifyContent: "center",
-				}}
-			>
-				<Typography>
-					Küme oluşturma işlemi başarıyla sonuçlandı. Oluşturduğunuz
-					kümenin hazır olup olmadığını kümeler menüsünden takip
-					edebilirsiniz.
-				</Typography>
-			</Box>
-		</Wrapper>
+		/>
 	);
 }

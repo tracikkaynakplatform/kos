@@ -11,51 +11,40 @@ import { useSnackbar } from "notistack";
 import { translate } from "../../locales";
 import { useWizard } from "../../hooks/useWizard";
 import { PROVIDER_TYPE } from "../../../main/providers";
-import Wrapper from "../StepWizardWrapper.jsx";
 import clusterConfig from "../../api/clusterConfig";
 import kubeConfig from "../../api/kubeConfig";
+import StepInput from "../StepInput.jsx";
+
+const nameKey = {};
 
 export default function StepSelectProvider({ goToNamedStep, ...props }) {
 	const snack = useSnackbar().enqueueSnackbar;
 	const [providers, setProviders] = useState([]);
-	const [provider, setProvider] = useState("");
 	const wizard = useWizard();
 	const _goto = goToNamedStep;
 
 	return (
-		<Wrapper
+		<StepInput
 			onLoad={async () => {
 				let config = await kubeConfig.loadManagementConfig(
 					props.manClusterName
 				);
 				await wizard.updateData("config", config);
-				let supportedProviders =
-					await clusterConfig.getSupportedProviders(config);
-				setProviders(
-					supportedProviders.map((p) => {
-						switch (p) {
-							case PROVIDER_TYPE.DOCKER:
-								return {
-									key: "kindProviderConfig",
-									name: "Kind - Docker",
-								};
-							case PROVIDER_TYPE.DIGITAL_OCEAN:
-								return {
-									key: "digitalOceanSSHkey",
-									name: "DigitalOcean",
-								};
-							case PROVIDER_TYPE.AWS:
-								return {
-									key: "AWSProviderConfig",
-									name: "AWS - Amazon Web Services",
-								};
-						}
-					})
-				);
+				setProviders(await clusterConfig.getSupportedProviders(config));
 			}}
-			onNextClick={() => {
-				if (!!provider) {
-					_goto(provider);
+			onNextClick={(fields) => {
+				if (!!fields.provider) {
+					switch (fields.provider) {
+						case "Kind - Docker":
+							_goto("kindProviderConfig");
+							break;
+						case "DigitalOcean":
+							_goto("digitalOceanSSHkey");
+							break;
+						case "AWS - Amazon Web Services":
+							_goto("AWSProviderConfig");
+							break;
+					}
 					return;
 				}
 				snack(translate("errSelectOperation"), {
@@ -64,43 +53,43 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 				});
 			}}
 			disableBack
+			title="Altyapı sağlayıcısı seçin"
+			text="Oluşturulacak kümenin hangi altyapı sağlayıcısı kullanılarak
+			oluşturulacağını seçin."
+			width={500}
+			fields={[
+				{
+					title: "Altyapı Sağlayıcısı",
+					type: "select",
+					values: providers.map((p) => {
+						switch (p) {
+							case PROVIDER_TYPE.DOCKER:
+								return "Kind - Docker";
+							case PROVIDER_TYPE.DIGITAL_OCEAN:
+								return "DigitalOcean";
+							case PROVIDER_TYPE.AWS:
+								return "AWS - Amazon Web Services";
+						}
+					}),
+					name: "provider",
+				},
+			]}
 			{...props}
 		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				Altyapı sağlayıcısı seçin
-			</Typography>
-			<Typography>
-				Oluşturulacak kümenin hangi altyapı sağlayıcısı kullanılarak
-				oluşturulacağını seçin.
-			</Typography>
-			<Box
-				sx={{
-					mt: "10px",
-					mb: "10px",
-				}}
-			>
-				<FormControl fullWidth>
-					<InputLabel>{translate("provider")}</InputLabel>
-					<Select
-						value={provider}
-						label={translate("provider")}
-						onChange={(e) => setProvider(e.target.value)}
-					>
-						{providers.map((x, i) => (
-							<MenuItem value={x.key} key={i}>
-								{x.name}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-			</Box>
-		</Wrapper>
+			{/* 	<FormControl fullWidth>
+				<InputLabel>{translate("provider")}</InputLabel>
+				<Select
+					value={provider}
+					label={translate("provider")}
+					onChange={(e) => setProvider(e.target.value)}
+				>
+					{providers.map((x, i) => (
+						<MenuItem value={x.key} key={i}>
+							{x.name}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl> */}
+		</StepInput>
 	);
 }

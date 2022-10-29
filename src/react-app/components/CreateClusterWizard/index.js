@@ -4,8 +4,6 @@ import { useWizard, WizardProvider } from "../../hooks/useWizard";
 import StepWizard from "../../lib/react-step-wizard";
 import StepSelectProvider from "./StepSelectProvider.jsx";
 import StepKindProviderConfig from "./StepKindProviderConfig.jsx";
-import StepDigitalOceanSSHkey from "./StepDigitalOceanSSHkey.jsx";
-import StepDigitalOceanClusterConfig from "./StepDigitalOceanClusterConfig.jsx";
 import StepAddClusterCompleted from "./StepAddClusterComplete.jsx";
 import StepKindCreateCluster from "./StepKindCreateCluster.jsx";
 import StepAWSProviderConfig from "./StepAWSProviderConfig.jsx";
@@ -33,10 +31,6 @@ function Content({ onFinish }) {
 			{/* Kind */}
 			<StepKindProviderConfig stepName="kindProviderConfig" />
 			<StepKindCreateCluster stepName="kindCreateCluster" />
-
-			{/* DigitalOcean */}
-			<StepDigitalOceanSSHkey stepName="digitalOceanSSHkey" />
-			<StepDigitalOceanClusterConfig stepName="digitalOceanClusterConfig" />
 
 			{/* AWS */}
 			<StepAWSProviderConfig stepName="AWSProviderConfig" />

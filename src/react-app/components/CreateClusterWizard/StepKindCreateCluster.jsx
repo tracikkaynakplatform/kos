@@ -35,6 +35,7 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 					setInfo(
 						"YAML dosyası yönetim kümesine uygulanıyor (kubectl apply)"
 					);
+					console.log(yaml);
 					await kubectl.apply(wizard.data.config, yaml);
 					setInfo(
 						"CNI kurulumu için kümenin hazır hale gelmesi bekleniyor..."

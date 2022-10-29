@@ -70,25 +70,18 @@ export default function StepManagementCluster({
 			onBackClick={() => {
 				_back();
 			}}
+			text={
+				<>
+					Yeni küme oluşturmak için kullanılacak yönetim kümesine ait
+					olan kube config bilgilerini girin.
+					<br />
+					(Varsayılan olarak sistemdeki ~/.kube/config dosya içeriği
+					alınmıştır)
+				</>
+			}
+			title="Yönetim kümesinin bilgileri"
 			{...props}
 		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				Yönetim kümesinin bilgileri
-			</Typography>
-			<Typography>
-				Yeni küme oluşturmak için kullanılacak yönetim kümesine ait olan
-				kube config bilgilerini girin.
-				<br />
-				(Varsayılan olarak sistemdeki ~/.kube/config dosya içeriği
-				alınmıştır)
-			</Typography>
 			<TextField
 				disabled={!textFieldEnabled}
 				onChange={(e) => setKubeconfigData(e.target.value)}

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Box, Button, Card } from "@mui/material";
+import { Box, Button, Card, Typography } from "@mui/material";
 import { useWizard } from "../hooks/useWizard";
 
 export default function StepWizardWrapper({
@@ -8,7 +8,10 @@ export default function StepWizardWrapper({
 	onBackClick,
 	onNextClick,
 	onLoad,
+	title,
+	text,
 	stepName,
+	width,
 	sx,
 	children,
 }) {
@@ -21,11 +24,31 @@ export default function StepWizardWrapper({
 			sx={{
 				display: "flex",
 				flexDirection: "column",
+				width: (width ?? 300) + "px",
 				p: 3,
 				...sx,
 			}}
 		>
-			{children}
+			<Typography
+				sx={{
+					fontSize: "20px",
+					fontWeight: "bold",
+					pb: 2,
+					pt: 2,
+				}}
+			>
+				{title}
+			</Typography>
+			{!!text ? <Typography>{text}</Typography> : null}
+			<Box
+				sx={{
+					p: 3,
+					display: "flex",
+					gap: "10px",
+				}}
+			>
+				{children}
+			</Box>
 			<Box
 				sx={{
 					display: "flex",
