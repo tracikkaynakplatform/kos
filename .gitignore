@@ -89,10 +89,8 @@ typings/
 # Electron-Forge
 out/
 
-# git reposunda durmaları gereksiz.
-config/kubeconfig
-bin/kubectl
-bin/clusterctl
-bin/kind
+# They are unnecessary to stay in git.
+config/
+bin/
 .kube
 .cluster-api
