@@ -25,7 +25,7 @@ export default function StepWizardWrapper({
 				display: "flex",
 				flexDirection: "column",
 				width: (width ?? 300) + "px",
-				p: 3,
+				p: 2,
 				...sx,
 			}}
 		>
@@ -42,7 +42,8 @@ export default function StepWizardWrapper({
 			{!!text ? <Typography>{text}</Typography> : null}
 			<Box
 				sx={{
-					p: 3,
+					mt: "10px",
+					mb: "10px",
 					display: "flex",
 					gap: "10px",
 				}}

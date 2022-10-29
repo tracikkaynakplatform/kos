@@ -1,12 +1,4 @@
-import React, { useEffect, useState } from "react";
-import {
-	Typography,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-	Box,
-} from "@mui/material";
+import React, { useState } from "react";
 import { useSnackbar } from "notistack";
 import { translate } from "../../locales";
 import { useWizard } from "../../hooks/useWizard";
@@ -14,8 +6,6 @@ import { PROVIDER_TYPE } from "../../../main/providers";
 import clusterConfig from "../../api/clusterConfig";
 import kubeConfig from "../../api/kubeConfig";
 import StepInput from "../StepInput.jsx";
-
-const nameKey = {};
 
 export default function StepSelectProvider({ goToNamedStep, ...props }) {
 	const snack = useSnackbar().enqueueSnackbar;
@@ -34,17 +24,7 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 			}}
 			onNextClick={(fields) => {
 				if (!!fields.provider) {
-					switch (fields.provider) {
-						case "Kind - Docker":
-							_goto("kindProviderConfig");
-							break;
-						case "DigitalOcean":
-							_goto("digitalOceanSSHkey");
-							break;
-						case "AWS - Amazon Web Services":
-							_goto("AWSProviderConfig");
-							break;
-					}
+					_goto(fields.provider);
 					return;
 				}
 				snack(translate("errSelectOperation"), {
@@ -64,11 +44,20 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 					values: providers.map((p) => {
 						switch (p) {
 							case PROVIDER_TYPE.DOCKER:
-								return "Kind - Docker";
+								return {
+									label: "Kind - Docker",
+									value: "kindProviderConfig",
+								};
 							case PROVIDER_TYPE.DIGITAL_OCEAN:
-								return "DigitalOcean";
+								return {
+									label: "DigitalOcean",
+									value: "digitalOceanSSHkey",
+								};
 							case PROVIDER_TYPE.AWS:
-								return "AWS - Amazon Web Services";
+								return {
+									label: "AWS - Amazon Web Services",
+									value: "selectAWSClusterType",
+								};
 						}
 					}),
 					name: "provider",

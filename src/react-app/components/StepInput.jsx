@@ -1,13 +1,15 @@
-import React, { createRef, useState } from "react";
+import React, { useState } from "react";
 import {
-	Box,
 	FormControl,
 	Select,
 	InputLabel,
 	MenuItem,
 	TextField,
-	Typography,
 	Grid,
+	RadioGroup,
+	FormControlLabel,
+	Radio,
+	FormLabel,
 } from "@mui/material";
 import { useWizard } from "../hooks/useWizard";
 import Wrapper from "./StepWizardWrapper.jsx";
@@ -18,15 +20,23 @@ export default function StepInput({
 	fields,
 	...props
 }) {
-	const states = fields?.map((x) =>
-		x.type === "string"
-			? useState(x.value ?? "")
-			: x.type === "number"
-			? useState("1")
-			: x.type === "select"
-			? useState(x.values[0] ?? "")
-			: undefined
-	);
+	const extractOption = (obj, opt) =>
+		typeof obj === "string" ? obj : obj[opt];
+
+	const states = fields?.map((x) => {
+		switch (x.type) {
+			case "string":
+				return useState(x.value ?? "");
+			case "number":
+				return useState(x.value ?? "1");
+			case "select":
+				return useState(x.values[0] ?? "");
+			case "radio":
+				return useState(extractOption(x.values[0] ?? "", "value"));
+			default:
+				return undefined;
+		}
+	});
 	const items = [];
 	for (let i = 0; i < fields.length; i++) {
 		let x = fields[i];
@@ -58,6 +68,43 @@ export default function StepInput({
 				);
 				break;
 
+			case "radio":
+				items.push(
+					<Grid item key={i} xs={x.size || 12}>
+						<FormControl>
+							<FormLabel>{x.title}</FormLabel>
+							<RadioGroup
+								row={
+									x.direction === "horizontal"
+										? true
+										: undefined
+								}
+								/* defaultValue={
+									x.values?.find(
+										(l) => !!extractOption(l, "checked")
+									)?.value
+								} */
+								onChange={(e) => {
+									console.log(e.target.value);
+									states[i][1](e.target.value);
+								}}
+							>
+								{x.values?.map((y, k) => {
+									return (
+										<FormControlLabel
+											key={k}
+											control={<Radio />}
+											value={extractOption(y, "value")}
+											label={extractOption(y, "label")}
+										/>
+									);
+								})}
+							</RadioGroup>
+						</FormControl>
+					</Grid>
+				);
+				break;
+
 			case "select":
 				items.push(
 					<Grid item key={i} xs={x.size || 12}>
@@ -71,16 +118,12 @@ export default function StepInput({
 								}}
 							>
 								{x.values.map((y, k) => {
-									let text, value;
-									if (typeof y === "string") {
-										text = y;
-										value = y;
-									} else if (typeof y === "object")
-										(text = y.text), (value = y.value);
-
 									return (
-										<MenuItem key={k} value={value}>
-											{text}
+										<MenuItem
+											key={k}
+											value={extractOption(y, "value")}
+										>
+											{extractOption(y, "label")}
 										</MenuItem>
 									);
 								})}
@@ -92,25 +135,24 @@ export default function StepInput({
 		}
 	}
 
-	const [a, se] = useState("");
-
 	return (
 		<Wrapper
 			onBackClick={onBackClick}
 			onNextClick={() => {
 				let values = {};
 				states.map((x, i) => {
+					let name = fields[i].name ?? i;
 					switch (fields[i].type) {
 						case "string":
+						case "radio":
 						case "select":
-							values[fields[i].name] = x[0];
+							values[name] = x[0];
 							break;
 						case "number":
-							values[fields[i].name] = parseInt(x[0]);
+							values[name] = parseInt(x[0]);
 							break;
 					}
 				});
-				console.log(values);
 				onNextClick?.(values);
 			}}
 			{...props}

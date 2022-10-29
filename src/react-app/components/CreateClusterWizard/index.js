@@ -8,6 +8,8 @@ import StepAddClusterCompleted from "./StepAddClusterComplete.jsx";
 import StepKindCreateCluster from "./StepKindCreateCluster.jsx";
 import StepAWSProviderConfig from "./StepAWSProviderConfig.jsx";
 import StepAWSCreateCluster from "./StepAWSCreateCluster.jsx";
+import StepSelectAWSClusterType from "./StepSelectAWSClusterType.jsx";
+import StepAWSProviderEKSConfig from "./StepAWSProviderEKSConfig.jsx";
 
 function Content({ onFinish }) {
 	const wizard = useWizard();
@@ -18,9 +20,7 @@ function Content({ onFinish }) {
 
 	return (
 		<StepWizard
-			onStepChange={(stats) => {
-				wizard.setStepName(stats.activeStepName);
-			}}
+			onStepChange={(stats) => wizard.setStepName(stats.activeStepName)}
 			transitions={{}}
 		>
 			<StepSelectProvider
@@ -33,7 +33,9 @@ function Content({ onFinish }) {
 			<StepKindCreateCluster stepName="kindCreateCluster" />
 
 			{/* AWS */}
+			<StepSelectAWSClusterType stepName="selectAWSClusterType" />
 			<StepAWSProviderConfig stepName="AWSProviderConfig" />
+			<StepAWSProviderEKSConfig stepName="AWSProviderEKSConfig" />
 			<StepAWSCreateCluster stepName="AWSCreateCluster" />
 
 			<StepAddClusterCompleted

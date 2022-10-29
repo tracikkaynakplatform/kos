@@ -9,11 +9,10 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 	return (
 		<StepInput
 			onBackClick={() => {
-				goToNamedStep("selectProvider");
+				goToNamedStep("selectAWSClusterType");
 			}}
 			onNextClick={async (fields) => {
 				// TODO: Girdi doğrulama
-				console.log("fields", fields);
 				for (let field of Object.keys(fields))
 					await wizard.updateData(field, fields[field]);
 				goToNamedStep("AWSCreateCluster");
