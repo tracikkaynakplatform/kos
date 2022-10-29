@@ -18,7 +18,7 @@ export default class Kubectl extends ClientExecutable {
 		 * @type {String}
 		 * @private
 		 */
-		this.#version = null;
+		this._version = null;
 
 		/**
 		 * @property KubeConfig object that will used by kubectl.
@@ -59,7 +59,7 @@ export default class Kubectl extends ClientExecutable {
 				"https://dl.k8s.io/release/stable.txt",
 				(error, response, body) => {
 					if (error) return reject(error);
-					this.#version = body;
+					this._version = body;
 					resolve(true);
 				}
 			);
@@ -67,10 +67,8 @@ export default class Kubectl extends ClientExecutable {
 	}
 
 	async #getDownloadUrl() {
-		await this.getVersion();
-		this.url = `https://dl.k8s.io/release/${this.#version}/bin/${
-			platform.osFamily
-		}/${platform.arch}/kubectl${platform.exeExt}`;
+		await this.#getVersion();
+		this.url = `https://dl.k8s.io/release/${this._version}/bin/${platform.osFamily}/${platform.arch}/kubectl${platform.exeExt}`;
 	}
 
 	async download() {
