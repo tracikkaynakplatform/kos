@@ -12,8 +12,16 @@ export async function getSupportedProviders(managementClusterConfig) {
 	);
 }
 
+export async function getCluster(managementClusterConfig, clusterName) {
+	return await clusterConfigAPI.getCluster(
+		managementClusterConfig,
+		clusterName
+	);
+}
+
 export default {
 	getManagementClusters,
 	getSupportedProviders,
 	getClusters,
+	getCluster,
 };
