@@ -3,22 +3,26 @@ import { Box, Fab, TextField } from "@mui/material";
 import { Add, Search } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../hooks/useModal";
-import { useSnackbar } from "notistack";
-
+import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
+import clusterConfig from "../api/clusterConfig";
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import ManagementClusterCard from "../components/ManagementClusterCard.jsx";
 import LoadingModal from "../components/LoadingModal.jsx";
-import clusterConfig from "../api/clusterConfig";
+import Loading from "../components/Snackbars/Loading.jsx";
 
-export default function ManagementClustersPage(props) {
+export default function ManagementClustersPage() {
 	const [clusters, setClusters] = useState([]);
 	const nav = useNavigate();
 	const modal = useModal();
-	const snack = useSnackbar().enqueueSnackbar;
+	const { enqueueSnackbar: snack, closeSnackbar } = useCustomSnackbar();
 
 	useEffect(() => {
 		(async () => {
-			modal.showModal(LoadingModal, { message: "Yükleniyor" });
+			let loading = snack(
+				"Yönetim kümeleri yükleniyor",
+				{ persist: true },
+				Loading
+			);
 			try {
 				await setClusters(await clusterConfig.getManagementClusters());
 			} catch (err) {
@@ -27,7 +31,7 @@ export default function ManagementClustersPage(props) {
 					autoHideDuration: 5000,
 				});
 			}
-			modal.closeModal();
+			closeSnackbar(loading);
 		})();
 	}, []);
 

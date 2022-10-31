@@ -36,9 +36,11 @@ import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import ProviderChip from "../components/ProviderChip.jsx";
 import LoadingModal from "../components/LoadingModal.jsx";
 import QuestionModal from "../components/QuestionModal.jsx";
+import Loading from "../components/Snackbars/Loading.jsx";
 import clusterConfig from "../api/clusterConfig";
 import kubeConfig from "../api/kubeConfig";
 import kubectl from "../api/kubectl";
+import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 
 const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -78,13 +80,13 @@ function HeaderCell({ children }) {
 export default function ManagementClusterInfoPage() {
 	const [clusters, setClusters] = useState([]);
 	const [config, setConfig] = useState("");
-	const { enqueueSnackbar: snack, closeSnackbar } = useSnackbar();
+	const { enqueueSnackbar: snack, closeSnackbar } = useCustomSnackbar();
 	const { name } = useParams();
 	const modal = useModal();
 	const nav = useNavigate();
 
 	const refreshClusters = async () => {
-		modal.showModal(LoadingModal, { message: "Kümeler yükleniyor" });
+		let loading = snack("Kümeler yükleniyor", { persist: true }, Loading);
 		try {
 			const _config = await kubeConfig.loadManagementConfig(name);
 			await setConfig(_config);
@@ -92,7 +94,7 @@ export default function ManagementClusterInfoPage() {
 		} catch (err) {
 			snack(err.message, { variant: "error", autoHideDuration: 5000 });
 		}
-		modal.closeModal();
+		closeSnackbar(loading);
 	};
 
 	useEffect(() => {
@@ -259,14 +261,26 @@ export default function ManagementClusterInfoPage() {
 																				persist: true,
 																			}
 																		);
-																	await kubectl.delete_(
-																		config,
-																		"cluster",
-																		x.name
-																	);
-																	closeSnackbar(
-																		info
-																	);
+																	try {
+																		await kubectl.delete_(
+																			config,
+																			"cluster",
+																			x.name
+																		);
+																	} catch (err) {
+																		snack(
+																			err.message,
+																			{
+																				variant:
+																					"error",
+																				autoHideDuration: 5000,
+																			}
+																		);
+																	} finally {
+																		closeSnackbar(
+																			info
+																		);
+																	}
 																},
 															onNoClick: () =>
 																modal.closeModal(),
