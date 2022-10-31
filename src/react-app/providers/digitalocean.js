@@ -1,13 +1,8 @@
-// TODO: "doctl compute region list" çıktısı buraya aktarılacak
 export const regions = [
 	{
 		name: "New York - Datacenter 1 - NYC1",
 		key: "nyc1",
 	},
-	/* {
-		name: 'New York - Datacenter 2 - NYC2', // TODO: sınırlı kullanıcıya hizmet veriyor.
-		key: 'nyc2'
-	}, */
 	{
 		name: "New York - Datacenter 3 - NYC3",
 		key: "nyc3",
@@ -16,10 +11,8 @@ export const regions = [
 		name: "Frankfurt - Datacenter 1 - FRA1",
 		key: "fra1",
 	},
-	// TODO: kalan bölge seçenekleri de eklenecek.
 ];
 
-// TODO: "doctl compute size list" çıktısı buraya aktarılacak
 export const machineSizes = [
 	{
 		name: "s-1vcpu-512mb-10gb",
@@ -41,7 +34,6 @@ export const machineSizes = [
 	},
 ];
 
-// TODO: "doctl compute image list-user" çıktısı buraya aktarılacak
 export const customImages = [
 	{
 		id: "115270572",
@@ -51,7 +43,6 @@ export const customImages = [
 	},
 ];
 
-// TODO: "doctl kubernetes options version" çıktısı buraya aktarılacak
 export const kubernetesVersions = [
 	"1.23.9-do.0",
 	"1.22.12-do.0",
