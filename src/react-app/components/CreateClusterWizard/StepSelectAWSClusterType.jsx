@@ -8,7 +8,6 @@ export default function StepSelectAWSClusterType({ goToNamedStep, ...props }) {
 				goToNamedStep("selectProvider");
 			}}
 			onNextClick={(fields) => {
-				console.log(fields);
 				goToNamedStep(fields.clusterType);
 			}}
 			title="AWS Küme Tipi"

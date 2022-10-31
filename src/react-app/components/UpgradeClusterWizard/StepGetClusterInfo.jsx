@@ -27,34 +27,60 @@ export default function StepGetClusterInfo({
 					const config = await kubeConfig.loadManagementConfig(
 						wizard.manClusterName
 					);
+
 					const cluster = await clusterConfig.getCluster(
 						config,
 						wizard.clusterName
 					);
-
 					if (!cluster) throw new Error("Küme bulunamadı");
 
-					const templates = await kubectl.get(
-						config,
-						`${PROVIDER_CLASS[cluster.provider]}machinetemplate`,
-						"json"
-					);
-					let cpRegex = new RegExp(
-						`${wizard.clusterName}-control-plane.*`,
-						"g"
-					);
-					let wRegex = new RegExp(`${wizard.clusterName}-md-.*`, "g");
-					var controlPlaneTemplate = null;
-					var workerTemplate = null;
-					for (let template of templates.items) {
-						if (cpRegex.test(template.metadata.name))
-							controlPlaneTemplate = template;
-						if (wRegex.test(template.metadata.name))
-							workerTemplate = template;
+					const machineTemplate = `${
+						PROVIDER_CLASS[cluster.provider]
+					}machinetemplate`;
 
-						if (workerTemplate && controlPlaneTemplate) break;
-					}
-					// Gereksiz veriyi nesnelerden temizle
+					const clusterResource = await kubectl.get(
+						config,
+						"cluster",
+						"json",
+						wizard.clusterName
+					);
+
+					const kubeadmResource = await kubectl.get(
+						config,
+						"KubeadmControlPlane",
+						"json",
+						clusterResource.spec.controlPlaneRef.name
+					);
+
+					var controlPlaneTemplate = await kubectl.get(
+						config,
+						machineTemplate,
+						"json",
+						kubeadmResource.spec.machineTemplate.infrastructureRef
+							.name
+					);
+
+					var machineDeployment = (
+						await kubectl.get(
+							config,
+							"machinedeployment",
+							"json",
+							"-l",
+							`cluster.x-k8s.io/cluster-name=${wizard.clusterName}`
+						)
+					).items[0];
+					console.log(machineDeployment);
+					var workerTemplate = await kubectl.get(
+						config,
+						machineTemplate,
+						"json",
+						machineDeployment.spec.template.spec.infrastructureRef
+							.name
+					);
+					console.log(controlPlaneTemplate, workerTemplate);
+					if (!workerTemplate || !controlPlaneTemplate)
+						throw new Error("Makine şemaları bulunamadı");
+
 					delete controlPlaneTemplate.metadata.creationTimestamp;
 					delete controlPlaneTemplate.metadata.generation;
 					delete controlPlaneTemplate.metadata.resourceVersion;
@@ -70,7 +96,6 @@ export default function StepGetClusterInfo({
 					controlPlaneTemplate.metadata.name += "-kos-upgrade";
 					workerTemplate.metadata.name += "-kos-upgrade";
 
-					// TODO: Provider tipini de wizard data'ya ekle.
 					wizard.updateData("provider", cluster.provider);
 					wizard.updateData(
 						"controlPlaneTemplate",

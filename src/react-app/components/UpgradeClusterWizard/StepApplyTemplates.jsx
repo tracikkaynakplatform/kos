@@ -49,14 +49,11 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 							id: wizard.data.cpKubVersion.id,
 						};
 
-					console.log("Control Plane Template: ", cpTemplate);
-
 					await kubectl.apply(
 						wizard.data.config,
 						await yaml.dump(cpTemplate)
 					);
 
-					setInfo("Worker şablonları uygulanıyor");
 					const workerTemplate = wizard.data.workerTemplate;
 
 					if (wizard.data.provider == PROVIDER_TYPE.DOCKER)
@@ -67,13 +64,11 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 							id: wizard.data.wKubVersion.id,
 						};
 
-					console.log("Worker Template: ", workerTemplate);
 					await kubectl.apply(
 						wizard.data.config,
 						await yaml.dump(workerTemplate)
 					);
 
-					setInfo("KubeadmControlPlane nesnesi düzenleniyor");
 					const kubeadmControlPlane = (
 						await kubectl.get(
 							wizard.data.config,
@@ -87,7 +82,6 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 						cpTemplate.metadata.name;
 					kubeadmControlPlane.spec.version =
 						wizard.data.cpKubVersion.version;
-					console.log("KubeadmControlPlane: ", kubeadmControlPlane);
 
 					setInfo("KubeadmControlPlane nesnesi uygulanıyor");
 					await kubectl.apply(
@@ -111,7 +105,6 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 						workerTemplate.metadata.name;
 					machineDeployment.spec.template.spec.version =
 						wizard.data.wKubVersion.version;
-					console.log("MachineDeployment: ", machineDeployment);
 
 					setInfo(
 						"Worker'lar için MachineDeployment nesneleri uygulanıyor"

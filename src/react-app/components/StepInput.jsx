@@ -85,7 +85,6 @@ export default function StepInput({
 									)?.value
 								} */
 								onChange={(e) => {
-									console.log(e.target.value);
 									states[i][1](e.target.value);
 								}}
 							>
