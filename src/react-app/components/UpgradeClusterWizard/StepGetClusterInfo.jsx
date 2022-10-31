@@ -27,23 +27,13 @@ export default function StepGetClusterInfo({
 					const config = await kubeConfig.loadManagementConfig(
 						wizard.manClusterName
 					);
-					const clusters = await clusterConfig.getClusters(config);
-					let cluster;
-					for (let i of clusters) {
-						if (i.name == wizard.clusterName) {
-							cluster = i;
-							break;
-						}
-					}
-					console.log("Cluster: ", cluster);
-					if (!cluster) {
-						snack("Küme bulunamadı!", {
-							variant: "error",
-							autoHideDuration: 2000,
-						});
-						onError();
-						return;
-					}
+					const cluster = await clusterConfig.getCluster(
+						config,
+						wizard.clusterName
+					);
+
+					if (!cluster) throw new Error("Küme bulunamadı");
+
 					const templates = await kubectl.get(
 						config,
 						`${PROVIDER_CLASS[cluster.provider]}machinetemplate`,
