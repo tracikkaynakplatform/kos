@@ -28,17 +28,22 @@ export default class Clusterctl extends ClientExecutable {
 
 		return new Promise((resolve, reject) => {
 			logger.debug(
-				`Executing clusterctl: ${path} ${args.join(" ")} with ${
-					this.config.path
-				} kubeconfig file and ${Object.keys(env).map(
-					(x) => `${x}=${env[x]}`
-				)}environment variables`
+				`Executing clusterctl: ${path} ${args.join(" ")} ${
+					env
+						? `with ${Object.keys(env ?? {}).map(
+								(x) => `${x}=${env[x]}`
+						  )}environment variables`
+						: ""
+				}`
 			);
 			execFile(
 				path,
 				args,
 				{
-					env: { KUBECONFIG: this.config.path, ...env },
+					env: {
+						KUBECONFIG: this.config.path,
+						...env,
+					},
 					encoding: "utf-8",
 				},
 				(err, stdout) => {
@@ -62,32 +67,29 @@ export default class Clusterctl extends ClientExecutable {
 	 * Performs `clusterctl generate cluster ...`
 	 * @param	{String}			clusterName
 	 * @param	{String}			kubernetesVersion
-	 * @param	{Number}			masterCount
+	 * @param	{Number}			controlPlaneCount
 	 * @param	{Number}			workerCount
-	 * @param	{Boolean}			isDocker			If it is true, adds **--flavor development**.
 	 * @param	{String}			infrastructure
-	 * @param	{Object}			env					Environment variables those will pass to clusterctl execution.
+	 * @param	{String}			flavor
+	 * @param	{Object}			variables			Additional variables for defining cluster spec.
 	 * @returns {Promise<String>}						Output of clusterctl.
 	 */
 	async generateCluster(
 		clusterName,
 		kubernetesVersion,
-		masterCount,
+		controlPlaneCount,
 		workerCount,
-		isDocker = false,
-		infrastructure = "",
-		env = {}
+		infrastructure,
+		flavor,
+		variables
 	) {
 		let args = ["generate", "cluster", clusterName];
 
-		if (isDocker) args.push("--flavor", "development");
-
-		args.push("--kubernetes-version", kubernetesVersion);
-		args.push("--control-plane-machine-count", masterCount);
-		args.push("--worker-machine-count", workerCount);
-
+		if (flavor) args.push("--flavor", flavor);
 		if (infrastructure) args.push("--infrastructure", infrastructure);
-
-		return await this.#execClusterctl(env, ...args);
+		args.push("--kubernetes-version", kubernetesVersion);
+		args.push("--control-plane-machine-count", controlPlaneCount);
+		args.push("--worker-machine-count", workerCount);
+		return await this.#execClusterctl(variables, ...args);
 	}
 }

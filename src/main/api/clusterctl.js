@@ -8,9 +8,7 @@ export async function generateCluster(managementClusterConfig, ...args) {
 	await KubeConfig.tempConfig(
 		cctl.config,
 		managementClusterConfig,
-		async () => {
-			result = await cctl.generateCluster(...args);
-		}
+		async () => (result = await cctl.generateCluster(...args))
 	);
 	return result;
 }
@@ -22,9 +20,7 @@ export async function getClusterConfig(managementClusterConfig, clusterName) {
 	await KubeConfig.tempConfig(
 		cctl.config,
 		managementClusterConfig,
-		async () => {
-			result = await cctl.getClusterConfig(clusterName);
-		}
+		async () => (result = await cctl.getClusterConfig(clusterName))
 	);
 	return result;
 }

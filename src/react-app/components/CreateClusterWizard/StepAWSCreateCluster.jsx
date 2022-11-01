@@ -28,8 +28,8 @@ export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 						wizard.data.kubVersion,
 						wizard.data.masterCount,
 						wizard.data.workerCount,
-						false,
 						"aws",
+						undefined,
 						{
 							AWS_REGION: wizard.data.region,
 							AWS_SSH_KEY_NAME: wizard.data.sshKeyName,

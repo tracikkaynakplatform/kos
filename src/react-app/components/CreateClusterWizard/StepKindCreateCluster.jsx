@@ -29,8 +29,8 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 						wizard.data.kubVersion,
 						wizard.data.masterCount,
 						wizard.data.workerCount,
-						true,
-						"docker"
+						"docker",
+						"development"
 					);
 					setInfo(
 						"YAML dosyası yönetim kümesine uygulanıyor (kubectl apply)"
