@@ -1,6 +1,7 @@
 import { execFile } from "child_process";
 import { ClientExecutable } from "./base/client-executable";
 import { KubeConfig } from "../k8s/KubeConfig";
+import { logger } from "../logger";
 
 /**
  * Wrapper class for clusterctl command line tool.
@@ -26,6 +27,13 @@ export default class Clusterctl extends ClientExecutable {
 		let path = await this.check();
 
 		return new Promise((resolve, reject) => {
+			logger.debug(
+				`Executing clusterctl: ${path} ${args.join(" ")} with ${
+					this.config.path
+				} kubeconfig file and ${Object.keys(env).map(
+					(x) => `${x}=${env[x]}`
+				)}environment variables`
+			);
 			execFile(
 				path,
 				args,
