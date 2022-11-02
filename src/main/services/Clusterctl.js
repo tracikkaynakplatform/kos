@@ -87,9 +87,11 @@ export default class Clusterctl extends ClientExecutable {
 
 		if (flavor) args.push("--flavor", flavor);
 		if (infrastructure) args.push("--infrastructure", infrastructure);
-		args.push("--kubernetes-version", kubernetesVersion);
-		args.push("--control-plane-machine-count", controlPlaneCount);
-		args.push("--worker-machine-count", workerCount);
+		if (kubernetesVersion)
+			args.push("--kubernetes-version", kubernetesVersion);
+		if (controlPlaneCount)
+			args.push("--control-plane-machine-count", controlPlaneCount);
+		if (workerCount) args.push("--worker-machine-count", workerCount);
 		return await this.#execClusterctl(variables, ...args);
 	}
 }
