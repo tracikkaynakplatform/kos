@@ -5,6 +5,7 @@ import { platform } from "./platform";
 import { findInPath } from "../../utils/find-in-path";
 import { downloadFile } from "../../utils/download-file";
 import { dirCheck, DIRS } from "../../utils/dir-check";
+import { execFile } from "child_process";
 
 /**
  * Represents common code for client executables, like kubectl, clusterctl ...
@@ -44,9 +45,35 @@ export class ClientExecutable {
 	}
 
 	/**
+	 * Runs the executable file and returns its stdout.
+	 * @param 	{Array<String>}		args	The arguments will pass to executable.
+	 * @param 	{Object}			env		Environment variables.
+	 * @returns {Promise<String>}			stdout of the executable file.
+	 * @throws								Throws exception if it can't find the executable file or
+	 * 										an error occured at execution of the file.
+	 */
+	async exec(args = [], env = {}) {
+		const path = await this.check();
+		return new Promise((resolve, reject) => {
+			execFile(
+				path,
+				args,
+				{
+					env: env,
+					encoding: "utf-8",
+				},
+				(err, stdout, stderr) => {
+					if (err) return reject(err);
+					resolve(stdout);
+				}
+			);
+		});
+	}
+
+	/**
 	 * Checks existence of the executable file.
-	 * @throws						Throws exception if it can't find the executable file.
 	 * @returns {Promise<String>}	Path of the executable file.
+	 * @throws						Throws exception if it can't find the executable file.
 	 */
 	async check() {
 		return new Promise((resolve, reject) => {
