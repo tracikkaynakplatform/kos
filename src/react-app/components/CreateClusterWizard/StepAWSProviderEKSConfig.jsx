@@ -11,7 +11,12 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 			onBackClick={() => {
 				goToNamedStep("selectAWSClusterType");
 			}}
-			onNextClick={async (fields) => {}}
+			onNextClick={async (fields) => {
+				for (let field of Object.keys(fields))
+					await wizard.updateData(field, fields[field]);
+				wizard.updateData('type', 'eks');
+				goToNamedStep("AWSCreateCluster");
+			}}
 			title="AWS-EKS Küme Bilgileri"
 			text="Oluşturulacak EKS kümesinin detaylarını girin."
 			fields={[

@@ -15,6 +15,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 				// TODO: Girdi doğrulama
 				for (let field of Object.keys(fields))
 					await wizard.updateData(field, fields[field]);
+				wizard.updateData('type', 'ec2');
 				goToNamedStep("AWSCreateCluster");
 			}}
 			title="AWS Küme Bilgileri"
