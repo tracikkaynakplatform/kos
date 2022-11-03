@@ -9,12 +9,28 @@ import { logger } from "../logger";
  */
 class Clusterawsadm extends ClientExecutable {
 
-	constructor() {
+	constructor(awsconfig) {
 		super(
 			"https://api.github.com/repos/kubernetes-sigs/cluster-api-provider-aws/releases/latest",
 			"clusterawsadm"
 		);
+		this.awsconfig = awsconfig;
+		if (awsconfig) {
+			this.checkSetEncodedCredentials(this.awsconfig);
+		}
   }
+
+	async checkSetEncodedCredentials(awsconfig) {
+		if (! awsconfig.aws_b64encoded_credentials) {
+			this.#setEncodedCredentials(awsconfig);
+		}
+	}
+
+	async #setEncodedCredentials(awsconfig) {
+		const args = ['bootstrap', 'credentials', 'encode-as-profile'];
+		awsconfig.aws_b64encoded_credentials = await this.exec(awsconfig, {}, args);
+		return awsconfig.aws_b64encoded_credentials;
+	}
 
 	/**
 	 * Execute clusterawsadm with:
@@ -23,7 +39,9 @@ class Clusterawsadm extends ClientExecutable {
 	 * @param args 
 	 */
 	async exec(config, env, args) {
-		const path = await this.check();
+		let [__b64creds, path] = await Promise.all(
+			[ this.checkSetEncodedCredentials(config), 
+				this.check() ]);
 		logger.debug(
 			`Executing Clusterawsadm ${path} ${args.join(" ")} ${
 				env
