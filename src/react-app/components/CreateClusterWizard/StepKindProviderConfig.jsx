@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useWizard } from "../../hooks/useWizard";
+import { kubernetesVersions } from "../../providers/docker";
 import StepInput from "../StepInput.jsx";
 
 export default function StepKindProviderConfig({ goToNamedStep, ...props }) {
@@ -29,16 +30,7 @@ export default function StepKindProviderConfig({ goToNamedStep, ...props }) {
 				{
 					title: "Kubernetes Versiyonu",
 					type: "select",
-					values: [
-						"v1.20.15",
-						"v1.22.15",
-						"v1.23.12",
-						"v1.23.13",
-						"v1.24.4",
-						"v1.24.6",
-						"v1.24.7",
-						"v1.25.3",
-					],
+					values: kubernetesVersions,
 					name: "kubVersion",
 				},
 				{
