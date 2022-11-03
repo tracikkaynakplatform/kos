@@ -2,9 +2,17 @@ import { ClientExecutable } from "./base/client-executable";
 import { execFile } from "child_process";
 import { get as _get } from "request";
 import { downloadFile } from "../utils/download-file";
-import { access, constants, chmod } from "fs";
+import { chmod } from "fs";
 import { KubeConfig } from "../k8s/KubeConfig";
 import { platform } from "./base/platform";
+
+/**
+ * Options for kubectl
+ * @typedef		{Object}			Options
+ * @property	{'json'|'normal'}	outputType
+ * @property	{String}			label
+ * @property	{boolean}			allNamespaces
+ */
 
 /**
  * Wrapper class for kubectl command line tool.
@@ -27,30 +35,17 @@ export default class Kubectl extends ClientExecutable {
 		this.config = new KubeConfig();
 	}
 
-	#createArgs(outputType, ...args) {
-		let argString = [];
-		argString.push(...args);
-		if (outputType === "json") argString.push(...["-o", "json"]);
-		return argString;
+	#parseOptions(args, options) {
+		let _args = [...args];
+		if (options.outputType === "json") _args.push("-o", "json");
+		if (options.label) args.push("-l", options.label);
+		if (options.allNamespaces) _args.push("-A");
+		return _args;
 	}
 
-	async #execKube(...args) {
-		let path = await this.check();
-
-		return new Promise((resolve, reject) => {
-			execFile(
-				path,
-				args,
-				{
-					env: { KUBECONFIG: this.config.path },
-					encoding: "utf-8",
-				},
-				(err, stdout) => {
-					if (err) return reject(err);
-					resolve(stdout);
-				}
-			);
-		});
+	async #parseOutput(output, options) {
+		if (options.outputType === "json") return await JSON.parse(output);
+		return output;
 	}
 
 	async #getVersion() {
@@ -71,8 +66,12 @@ export default class Kubectl extends ClientExecutable {
 		this.url = `https://dl.k8s.io/release/${this._version}/bin/${platform.osFamily}/${platform.arch}/kubectl${platform.exeExt}`;
 	}
 
+	async exec(args = [], env = {}) {
+		return await super.exec(args, { KUBECONFIG: this.config.path, ...env });
+	}
+
 	async download() {
-		await this.getDownloadUrl();
+		await this.#getDownloadUrl();
 		await downloadFile(this.url, this.path);
 		return new Promise((resolve, reject) => {
 			chmod(this.path, 0o755, (err) => {
@@ -84,64 +83,54 @@ export default class Kubectl extends ClientExecutable {
 
 	/**
 	 * Performs `kubectl config current-context`.
-	 * @returns {Promise<String>} Current context name.
+	 * @returns {Promise<String>}			Current context name.
 	 */
 	async currentContext() {
-		return (await this.#execKube("config", "current-context")).trim();
+		return (await this.exec(["config", "current-context"])).trim();
 	}
 
 	/**
 	 * Performs `kubectl get resource`.
-	 * @param	{String}			resource			Resource type. eg. cluster, pods, deployments.
-	 * @param	{'json'}			[outputType=json]	Output type of kubectl.
-	 * @param	{...String}			additionalArgs		Extra arguments those will pass to kubectl.
-	 * @returns	{Promise<String>}						Output of kubectl.
+	 * @param	{String}							resource	Resource type. eg. cluster, pods, deployments.
+	 * @param	{String}							name		Resource name.
+	 * @param	{Options}							options		Additional options for target command.
+	 * @returns	{Promise<String>|Promise<Object>}				Output of kubectl.
 	 */
-	async get(resource, outputType = "json", ...additionalArgs) {
-		let output = await this.#execKube(
-			...this.#createArgs(outputType, "get", resource, ...additionalArgs)
+	async get(resource, name, options) {
+		return await this.#parseOutput(
+			await this.exec(
+				this.#parseOptions(["get", resource, name], options)
+			),
+			options
 		);
-		if (outputType === "json") return JSON.parse(output);
-		return output;
 	}
 
 	/**
 	 * Performs `kubectl delete resource`.
 	 * @param	{String}			resource		Resource type. eg. cluster, pods, deployments.
 	 * @param	{String}			name			Target resource name.
-	 * @param	{...String}			additionalArgs	Extra arguments those will pass to kubectl.
-	 * @returns	{Promise<String>}					Output of kubectl.
+	 * @param	{Options}			options			Additional options for target command.
+	 * @returns	{Promise<String>|Promise<Object>}	Output of kubectl.
 	 */
-	async delete_(resource, name, ...additionalArgs) {
-		return await this.#execKube(
-			...this.#createArgs(
-				undefined,
-				"delete",
-				resource,
-				name,
-				...additionalArgs
-			)
+	async delete_(resource, name, options = {}) {
+		return await this.#parseOutput(
+			await this.exec(
+				this.#parseOptions(["delete", resource, name], options)
+			),
+			options
 		);
 	}
 
 	/**
 	 * Performs `kubectl apply -f file`.
-	 * @param	{String} 			file				The file that will apply to cluster.
-	 * @param	{'json'}			[outputType=json]	Output type of kubectl.
-	 * @param	{...String}			additionalArgs		Extra arguments those will pass to kubectl.
-	 * @returns	{Promise<String>}						Output of kubectl.
+	 * @param	{String} 			file			The file that will apply to cluster.
+	 * @param	{Options}			options			Additional options for target command.
+	 * @returns	{Promise<String>|Promise<Object>}	Output of kubectl.
 	 */
-	async apply(file, outputType = "json", ...additionalArgs) {
-		let output = await this.#execKube(
-			...this.#createArgs(
-				outputType,
-				"apply",
-				"-f",
-				file,
-				...additionalArgs
-			)
+	async apply(file, options) {
+		return await this.#parseOutput(
+			await this.exec(this.#parseOptions(["apply", "-f", file], options)),
+			options
 		);
-		if (outputType === "json") return JSON.parse(output);
-		else return output;
 	}
 }

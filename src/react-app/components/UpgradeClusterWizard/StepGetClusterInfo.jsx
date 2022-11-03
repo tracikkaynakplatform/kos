@@ -41,45 +41,42 @@ export default function StepGetClusterInfo({
 					const clusterResource = await kubectl.get(
 						config,
 						"cluster",
-						"json",
-						wizard.clusterName
+						wizard.clusterName,
+						{ outputType: "json" }
 					);
 
 					const kubeadmResource = await kubectl.get(
 						config,
 						"KubeadmControlPlane",
-						"json",
-						clusterResource.spec.controlPlaneRef.name
+						clusterResource.spec.controlPlaneRef.name,
+						{ outputType: "json" }
 					);
 
 					var controlPlaneTemplate = await kubectl.get(
 						config,
 						machineTemplate,
-						"json",
 						kubeadmResource.spec.machineTemplate.infrastructureRef
-							.name
+							.name,
+						{ outputType: "json" }
 					);
 
 					var machineDeployment = (
-						await kubectl.get(
-							config,
-							"machinedeployment",
-							"json",
-							"-l",
-							`cluster.x-k8s.io/cluster-name=${wizard.clusterName}`
-						)
+						await kubectl.get(config, "machinedeployment", "", {
+							outputType: "json",
+							label: `cluster.x-k8s.io/cluster-name=${wizard.clusterName}`,
+						})
 					).items[0];
-					console.log(machineDeployment);
+
 					var workerTemplate = await kubectl.get(
 						config,
 						machineTemplate,
-						"json",
 						machineDeployment.spec.template.spec.infrastructureRef
-							.name
+							.name,
+						{ outputType: "json" }
 					);
-					console.log(controlPlaneTemplate, workerTemplate);
+
 					if (!workerTemplate || !controlPlaneTemplate)
-						throw new Error("Makine şemaları bulunamadı");
+						throw new Error("Makina şemaları bulunamadı");
 
 					delete controlPlaneTemplate.metadata.creationTimestamp;
 					delete controlPlaneTemplate.metadata.generation;

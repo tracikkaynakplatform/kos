@@ -54,10 +54,13 @@ export class ClientExecutable {
 	 */
 	async exec(args = [], env = {}) {
 		const path = await this.check();
+		const _args = [];
+
+		for (let i of args) if (i) _args.push(i);
 		return new Promise((resolve, reject) => {
 			execFile(
 				path,
-				args,
+				_args,
 				{
 					env: env,
 					encoding: "utf-8",

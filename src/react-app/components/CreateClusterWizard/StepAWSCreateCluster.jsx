@@ -19,8 +19,8 @@ export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 						cluster = await kubectl.get(
 							wizard.data.config,
 							"cluster",
-							"json",
-							wizard.data.clusterName
+							wizard.data.clusterName,
+							{ outputType: "json" }
 						);
 					} catch (err) {
 						return;

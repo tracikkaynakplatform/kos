@@ -60,7 +60,9 @@ export default class ManagementCluster {
 			kctl.config,
 			this.config.config,
 			async () => {
-				let clusterList = await kctl.get("cluster", "json", "-A");
+				let clusterList = await kctl.get("cluster", "", {
+					outputType: "json",
+				});
 				clusterList = clusterList?.items;
 
 				for (let i of clusterList) {
@@ -99,7 +101,10 @@ export default class ManagementCluster {
 			kctl.config,
 			this.config.config,
 			async () => {
-				let pods = await kctl.get("pods", "json", "-A"); // --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -A
+				let pods = await kctl.get("pods", "", {
+					outputType: "json",
+					allNamespaces: true,
+				}); // --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' -A
 				for (let i of pods.items) {
 					switch (i.metadata.namespace) {
 						case "capd-system":

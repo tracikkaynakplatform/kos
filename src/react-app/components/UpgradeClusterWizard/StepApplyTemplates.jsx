@@ -26,8 +26,8 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 						const cluster = await kubectl.get(
 							wizard.data.config,
 							"cluster",
-							"json",
-							wizard.clusterName
+							wizard.clusterName,
+							{ outputType: "json" }
 						);
 						cluster.spec.topology.version =
 							wizard.data.cpKubVersion.version;
@@ -73,9 +73,11 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 						await kubectl.get(
 							wizard.data.config,
 							"KubeadmControlPlane",
-							"json",
-							"-l",
-							`cluster.x-k8s.io/cluster-name=${wizard.clusterName}`
+							"",
+							{
+								outputType: "json",
+								label: `cluster.x-k8s.io/cluster-name=${wizard.clusterName}`,
+							}
 						)
 					).items[0];
 					kubeadmControlPlane.spec.machineTemplate.infrastructureRef.name =
@@ -96,9 +98,11 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 						await kubectl.get(
 							wizard.data.config,
 							"MachineDeployment",
-							"json",
-							"-l",
-							`cluster.x-k8s.io/cluster-name=${wizard.clusterName}`
+							"",
+							{
+								outputType: "json",
+								label: `cluster.x-k8s.io/cluster-name=${wizard.clusterName}`,
+							}
 						)
 					).items[0];
 					machineDeployment.spec.template.spec.infrastructureRef.name =
