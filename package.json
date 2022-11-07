@@ -2,11 +2,12 @@
   "name": "kos",
   "productName": "kos",
   "version": "1.0.0",
-  "description": "Kubernetes orkestrasyon sistemi",
+  "description": "Kubernetes Orkestrasyon Sistemi",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
-    "test": "NODE_ENV=test jest",
+    "test": "NODE_ENV=test DEBUG=jest jest --forceExit --detectOpenHandles --useStderr --silent false --verbose false --runInBand",
+    "test_old": "NODE_ENV=test jest",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
@@ -14,8 +15,7 @@
   },
   "keywords": [],
   "author": {
-    "name": "Fatih Karatay",
-    "email": "karatayy61@gmail.com"
+    "name": "KOS group"
   },
   "license": "MIT",
   "config": {
