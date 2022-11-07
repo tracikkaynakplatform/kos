@@ -6,8 +6,10 @@ import { logger } from "../logger";
 
 /**
  * Represents clusterawsadm executable.
+ * NOTE: awsconfig object should be set, at least, before any call that needs credentials.
+ * Should be constructed once used that way (cached).
  */
-class Clusterawsadm extends ClientExecutable {
+export class Clusterawsadm extends ClientExecutable {
 
 	constructor(awsconfig) {
 		super(
@@ -16,75 +18,87 @@ class Clusterawsadm extends ClientExecutable {
 		);
 		this.awsconfig = awsconfig;
 		if (awsconfig) {
-			this.checkSetEncodedCredentials(this.awsconfig);
+			this.checkSetEncodedCredentials();
 		}
   }
 
-	async checkSetEncodedCredentials(awsconfig) {
-		if (! awsconfig.aws_b64encoded_credentials) {
-			this.#setEncodedCredentials(awsconfig);
+
+	/**
+	 * 
+	 * @returns {string} aws_b64encoded_credentials
+	 */
+	async checkSetEncodedCredentials() {
+		if (! this.awsconfig.aws_b64encoded_credentials) {
+			return await this.#setEncodedCredentials();
 		}
 	}
 
-	async #setEncodedCredentials(awsconfig) {
+	async #setEncodedCredentials() {
 		const args = ['bootstrap', 'credentials', 'encode-as-profile'];
-		awsconfig.aws_b64encoded_credentials = await this.exec(awsconfig, {}, args);
-		return awsconfig.aws_b64encoded_credentials;
+		this.awsconfig.aws_b64encoded_credentials = 
+				await this.exec(args, this.awsconfig.toEnvObject());
+		return this.awsconfig.aws_b64encoded_credentials;
 	}
 
 	/**
-	 * Execute clusterawsadm with:
-	 * @param {AWSConfig} config 
-	 * @param env 
-	 * @param args 
+	 * 
+	 * @param {Any} response string representation of a json objecy
+	 * @param {*} resolve function to call on positive results
+	 * @param {*} reject function to call on errors
 	 */
-	async exec(config, env, args) {
-		let [__b64creds, path] = await Promise.all(
-			[ this.checkSetEncodedCredentials(config), 
-				this.check() ]);
-		logger.debug(
-			`Executing Clusterawsadm ${path} ${args.join(" ")} ${
-				env
-					? `with ${Object.keys(env ?? {}).map(
-							(x) => `${x}=${env[x]}`
-						)}environment variables`
-					: ""
-			}`
+	resolveJsonResponse(response, resolve, reject) {
+		if(response) {
+			try {
+					const obj = JSON.parse(response);
+					resolve(obj);
+			} catch(e) {
+					reject(`Error while parsing json response: ${e} \nResponse: ${response}`);
+			}
+		} else {
+			reject("Null Response");
+		}
+	}
+
+
+	async jsonExec({args = [], env = {}}) {
+
+		const response = await this.exec(
+			[...args, '-o', 'json'], 
+			{ ...this.awsconfig.toEnvObject(), ...env } 
 		);
+
 		return new Promise((resolve, reject) => {
-			execFile(
-				path,
-				...args,
-				{
-					env: {
-						...config.toEnvObject(),
-						...env,
-					},
-					encoding: "utf-8",
-				},
-				(err, stdout) => {
-					if (err) return reject(err);
-					resolve(stdout);
-				}
-			);
-		});
+			this.resolveJsonResponse(response, resolve, reject);
+		});		
 	}
 
 	/**
 	 * Returns public AMI IDs for that region, k8s version and operating system combination.
-	 * @param {AWSConfig} config 
 	 * @param {string} kubernetesVersion 
 	 * @param {string} os 
 	 * @param {string} region 
 	 * @param {Object} env 
-	 * @returns {Promise<String>}
+	 * @returns {Promise<String>} AWSAMIList object containing list of AMIs.
 	 */
-	async listPublicAMIs(config, kubernetesVersion, os, region="", env={}) {
+	async listPublicAMIs( { 
+		kubernetesVersion, 
+		os, 
+		region=this.awsconfig.aws_region, 
+		env = {}
+	  } ) {
+
+		// constructor calls this, iff called with a valid config, but to be sure:
+		// should be called before ANY operation requiring CREDENTIALS !!
+		await this.checkSetEncodedCredentials();
+
 		let args = ['ami', 'list'];
-		if (k8sVersion) { args.push("--kubernetes-version", kubernetesVersion); }
+		if (kubernetesVersion) { args.push("--kubernetes-version", kubernetesVersion); }
 		args.push("--region", (region ? region : config.aws_region));
 		if (os) { args.push("--os", os); }
-		return await this.exec(config, env, args);
+
+		return this.jsonExec({args, env});
+
 	}
+
 
 }

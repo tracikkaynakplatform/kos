@@ -6,7 +6,7 @@ import { findInPath } from "../../utils/find-in-path";
 import { downloadFile } from "../../utils/download-file";
 import { dirCheck, DIRS } from "../../utils/dir-check";
 import { execFile } from "child_process";
-
+import { logger } from "../../logger";
 /**
  * Represents common code for client executables, like kubectl, clusterctl ...
  */
@@ -57,6 +57,17 @@ export class ClientExecutable {
 		const _args = [];
 
 		for (let i of args) if (i) _args.push(i);
+
+		logger.debug(
+			`Executing -> ${path} ${_args.join(" ")} ${
+				env && env != {}
+					? `with ${Object.keys(env ?? {}).map(
+							(x) => `${x}=${env[x]}`
+						)}environment variables`
+					: ""
+			}`
+		);
+
 		return new Promise((resolve, reject) => {
 			execFile(
 				path,
@@ -65,12 +76,13 @@ export class ClientExecutable {
 					env: env,
 					encoding: "utf-8",
 				},
-				(err, stdout, stderr) => {
+				(err, stdout) => {
 					if (err) return reject(err);
 					resolve(stdout);
 				}
 			);
 		});
+
 	}
 
 	/**
@@ -78,7 +90,7 @@ export class ClientExecutable {
 	 * @returns {Promise<String>}	Path of the executable file.
 	 * @throws						Throws exception if it can't find the executable file.
 	 */
-	async check() {
+	async check({}={}) {
 		return new Promise((resolve, reject) => {
 			try {
 				resolve(findInPath(this.name));

@@ -94,3 +94,5 @@ config/
 bin/
 .kube
 .cluster-api
+
+.vscode/

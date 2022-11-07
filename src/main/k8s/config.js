@@ -2,7 +2,7 @@
 /**  
  * Base class for Config(urations): eg: kubeconfig, clusterconfig, awsconfig...
  */
-class Config {
+export class Config {
   constructor() {
     this.env_fields = []
   }
