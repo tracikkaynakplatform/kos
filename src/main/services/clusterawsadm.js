@@ -41,38 +41,6 @@ export class Clusterawsadm extends ClientExecutable {
 	}
 
 	/**
-	 * 
-	 * @param {Any} response string representation of a json objecy
-	 * @param {*} resolve function to call on positive results
-	 * @param {*} reject function to call on errors
-	 */
-	resolveJsonResponse(response, resolve, reject) {
-		if(response) {
-			try {
-					const obj = JSON.parse(response);
-					resolve(obj);
-			} catch(e) {
-					reject(`Error while parsing json response: ${e} \nResponse: ${response}`);
-			}
-		} else {
-			reject("Null Response");
-		}
-	}
-
-
-	async jsonExec({args = [], env = {}}) {
-
-		const response = await this.exec(
-			[...args, '-o', 'json'], 
-			{ ...this.awsconfig.toEnvObject(), ...env } 
-		);
-
-		return new Promise((resolve, reject) => {
-			this.resolveJsonResponse(response, resolve, reject);
-		});		
-	}
-
-	/**
 	 * Returns public AMI IDs for that region, k8s version and operating system combination.
 	 * @param {string} kubernetesVersion 
 	 * @param {string} os 
@@ -96,7 +64,7 @@ export class Clusterawsadm extends ClientExecutable {
 		args.push("--region", (region ? region : config.aws_region));
 		if (os) { args.push("--os", os); }
 
-		return this.jsonExec({args, env});
+		return this.jsonExec( { args, env: this.awsconfig.toEnvObject() } );
 
 	}
 

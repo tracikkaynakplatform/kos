@@ -44,6 +44,44 @@ export class ClientExecutable {
 		this.path = `${dirCheck(DIRS.bin)}/${this.name}${platform.exeExt}`;
 	}
 
+
+	/**
+	 * 
+	 * @param {Any} response string representation of a json objecy
+	 * @param {*} resolve function to call on positive results
+	 * @param {*} reject function to call on errors
+	 */
+	 resolveJsonResponse(response, resolve, reject) {
+		if(response) {
+			try {
+					const obj = JSON.parse(response);
+					resolve(obj);
+			} catch(e) {
+					reject(`Error while parsing json response: ${e} \nResponse: ${response}`);
+			}
+		} else {
+			reject("Null Response");
+		}
+	}
+
+	/**
+	 * Executes with a json-request parameter and parses the resulting string as a json object.
+	 * @param {*} object consisting of execution arguments and environment variables. 
+	 * @returns 
+	 */
+	async jsonExec({args = [], env = {}}) {
+
+		const response = await this.exec(
+			[...args, '--output', 'json'], 
+			env
+		);
+
+		return new Promise((resolve, reject) => {
+			this.resolveJsonResponse(response, resolve, reject);
+		});		
+	}
+
+
 	/**
 	 * Runs the executable file and returns its stdout.
 	 * @param 	{Array<String>}		args	The arguments will pass to executable.
@@ -54,7 +92,7 @@ export class ClientExecutable {
 	 */
 	async exec(args = [], env = {}) {
 		const path = await this.check();
-		const _args = [];
+		let _args = [];
 
 		for (let i of args) if (i) _args.push(i);
 
