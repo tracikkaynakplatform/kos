@@ -44,20 +44,21 @@ export class ClientExecutable {
 		this.path = `${dirCheck(DIRS.bin)}/${this.name}${platform.exeExt}`;
 	}
 
-
 	/**
-	 * 
+	 *
 	 * @param {Any} response string representation of a json objecy
 	 * @param {*} resolve function to call on positive results
 	 * @param {*} reject function to call on errors
 	 */
-	 resolveJsonResponse(response, resolve, reject) {
-		if(response) {
+	resolveJsonResponse(response, resolve, reject) {
+		if (response) {
 			try {
-					const obj = JSON.parse(response);
-					resolve(obj);
-			} catch(e) {
-					reject(`Error while parsing json response: ${e} \nResponse: ${response}`);
+				const obj = JSON.parse(response);
+				resolve(obj);
+			} catch (e) {
+				reject(
+					`Error while parsing json response: ${e} \nResponse: ${response}`
+				);
 			}
 		} else {
 			reject("Null Response");
@@ -66,21 +67,16 @@ export class ClientExecutable {
 
 	/**
 	 * Executes with a json-request parameter and parses the resulting string as a json object.
-	 * @param {*} object consisting of execution arguments and environment variables. 
-	 * @returns 
+	 * @param {*} object consisting of execution arguments and environment variables.
+	 * @returns
 	 */
-	async jsonExec({args = [], env = {}}) {
-
-		const response = await this.exec(
-			[...args, '--output', 'json'], 
-			env
-		);
+	async jsonExec({ args = [], env = {} }) {
+		const response = await this.exec([...args, "--output", "json"], env);
 
 		return new Promise((resolve, reject) => {
 			this.resolveJsonResponse(response, resolve, reject);
-		});		
+		});
 	}
-
 
 	/**
 	 * Runs the executable file and returns its stdout.
@@ -88,7 +84,7 @@ export class ClientExecutable {
 	 * @param 	{Object}			env		Environment variables.
 	 * @returns {Promise<String>}			stdout of the executable file.
 	 * @throws								Throws exception if it can't find the executable file or
-	 * 										an error occured at execution of the file.
+	 * 										an error occured at execution.
 	 */
 	async exec(args = [], env = {}) {
 		const path = await this.check();
@@ -101,7 +97,7 @@ export class ClientExecutable {
 				env && env != {}
 					? `with ${Object.keys(env ?? {}).map(
 							(x) => `${x}=${env[x]}`
-						)}environment variables`
+					  )} environment variables`
 					: ""
 			}`
 		);
@@ -120,7 +116,6 @@ export class ClientExecutable {
 				}
 			);
 		});
-
 	}
 
 	/**
@@ -128,7 +123,7 @@ export class ClientExecutable {
 	 * @returns {Promise<String>}	Path of the executable file.
 	 * @throws						Throws exception if it can't find the executable file.
 	 */
-	async check({}={}) {
+	async check({} = {}) {
 		return new Promise((resolve, reject) => {
 			try {
 				resolve(findInPath(this.name));

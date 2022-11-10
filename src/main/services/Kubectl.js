@@ -37,14 +37,14 @@ export default class Kubectl extends ClientExecutable {
 
 	#parseOptions(args, options) {
 		let _args = [...args];
-		if (options.outputType === "json") _args.push("-o", "json");
-		if (options.label) args.push("-l", options.label);
-		if (options.allNamespaces) _args.push("-A");
+		if (options?.outputType === "json") _args.push("-o", "json");
+		if (options?.label) args.push("-l", options.label);
+		if (options?.allNamespaces) _args.push("-A");
 		return _args;
 	}
 
 	async #parseOutput(output, options) {
-		if (options.outputType === "json") return await JSON.parse(output);
+		if (options?.outputType === "json") return await JSON.parse(output);
 		return output;
 	}
 
