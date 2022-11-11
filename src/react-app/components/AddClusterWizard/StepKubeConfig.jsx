@@ -20,6 +20,7 @@ export default function StepKubeConfig(props) {
 				await wizard.updateData("config", kubeconfigData);
 				_goto("connecting");
 			}}
+			width={700}
 			title="Küme Bilgileri"
 			text={
 				<>
@@ -34,7 +35,7 @@ export default function StepKubeConfig(props) {
 			<TextField
 				onChange={(e) => setKubeconfigData(e.target.value)}
 				value={kubeconfigData}
-				sx={{ mt: 2, mb: 2, width: "700px" }}
+				fullWidth
 				label="kubeconfig içeriği"
 				multiline
 				rows={15}

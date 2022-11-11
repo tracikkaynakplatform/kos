@@ -7,7 +7,7 @@ export default function AddClusterPage() {
 	const nav = useNavigate();
 
 	return (
-		<TempLayout onClick={() => nav(-1)}>
+		<TempLayout onBackClicked={() => nav(-1)}>
 			<AddClusterWizard />
 		</TempLayout>
 	);

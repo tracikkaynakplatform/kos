@@ -14,12 +14,11 @@ export default function StepSelectAWSClusterType({ goToNamedStep, ...props }) {
 			text={
 				'EKS tarafından yönetilen bir küme oluşturmak için "EKS" seçeneğini seçin. Varsayılan yolla küme oluşturmak için"EC2" seçeneğiniz seçin.'
 			}
-			fields={[
-				{
+			fields={{
+				clusterType: {
 					type: "radio",
-					direction: "horizontal",
-					name: "clusterType",
-					values: [
+					value: "AWSProviderConfig",
+					items: [
 						{
 							label: "EKS",
 							value: "AWSProviderEKSConfig",
@@ -27,11 +26,10 @@ export default function StepSelectAWSClusterType({ goToNamedStep, ...props }) {
 						{
 							label: "EC2",
 							value: "AWSProviderConfig",
-							checked: true,
 						},
 					],
 				},
-			]}
+			}}
 			width={500}
 			{...props}
 		/>

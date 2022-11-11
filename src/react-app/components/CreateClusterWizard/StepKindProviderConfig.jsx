@@ -21,29 +21,28 @@ export default function StepKindProviderConfig({ goToNamedStep, ...props }) {
 			title="Kind - Docker Yapılandırması"
 			text="Oluşturmak istediğiniz kümenin bilgilerini giriniz."
 			width={400}
-			fields={[
-				{
+			fields={{
+				clusterName: {
 					title: "Küme Adı",
-					type: "string",
-					name: "clusterName",
+					type: "text",
 				},
-				{
+				kubVersion: {
 					title: "Kubernetes Versiyonu",
 					type: "select",
-					values: kubernetesVersions,
-					name: "kubVersion",
+					items: kubernetesVersions,
+					value: kubernetesVersions[0],
 				},
-				{
-					title: "Master Makina Sayısı",
+				masterCount: {
+					title: "Control Plane Adedi",
 					type: "number",
-					name: "masterCount",
+					value: 1,
 				},
-				{
-					title: "Worker Makina Sayısı",
+				workerCount: {
+					title: "Worker Adedi",
 					type: "number",
-					name: "workerCount",
+					value: 1,
 				},
-			]}
+			}}
 			{...props}
 		/>
 	);

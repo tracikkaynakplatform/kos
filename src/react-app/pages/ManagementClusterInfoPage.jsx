@@ -30,17 +30,16 @@ import { providerNames } from "../providers/provider-names";
 import { providerLogos } from "../providers/provider-logos";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "../hooks/useModal";
-import { useSnackbar } from "notistack";
 
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import ProviderChip from "../components/ProviderChip.jsx";
-import LoadingModal from "../components/LoadingModal.jsx";
 import QuestionModal from "../components/QuestionModal.jsx";
 import Loading from "../components/Snackbars/Loading.jsx";
 import clusterConfig from "../api/clusterConfig";
 import kubeConfig from "../api/kubeConfig";
 import kubectl from "../api/kubectl";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
+import clusterctl from "../api/clusterctl";
 
 const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -217,6 +216,21 @@ export default function ManagementClusterInfoPage() {
 												disabled={
 													x.status !== "Provisioned"
 												}
+												onClick={async () => {
+													await navigator.clipboard.writeText(
+														await clusterctl.getClusterConfig(
+															config,
+															x.name
+														)
+													);
+													snack(
+														"Kümenin kubeconfig içeriği panoya kopyalandı!",
+														{
+															variant: "info",
+															autoHideDuration: 2000,
+														}
+													);
+												}}
 											>
 												<CameraIcon />
 											</Button>

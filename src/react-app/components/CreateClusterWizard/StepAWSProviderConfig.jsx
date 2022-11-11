@@ -15,66 +15,62 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 				// TODO: Girdi doğrulama
 				for (let field of Object.keys(fields))
 					await wizard.updateData(field, fields[field]);
-				wizard.updateData('type', 'ec2');
+				wizard.updateData("type", "ec2");
 				goToNamedStep("AWSCreateCluster");
 			}}
 			title="AWS Küme Bilgileri"
-			fields={[
-				{
+			fields={{
+				clusterName: {
 					title: "Küme Adı",
-					type: "string",
-					name: "clusterName",
+					type: "text",
 					size: 6,
 				},
-				{
+				kubVersion: {
 					title: "Kubernetes Versiyonu",
 					type: "select",
-					values: kubernetesVersions,
-					name: "kubVersion",
+					items: kubernetesVersions,
+					value: kubernetesVersions[0],
 					size: 6,
 				},
-				{
-					title: "Master Makina Sayısı",
+				masterCount: {
+					title: "Control Plane Adedi",
 					type: "number",
-					name: "masterCount",
+					value: 1,
 					size: 6,
 				},
-				{
-					title: "Worker Makina Sayısı",
+				workerCount: {
+					title: "Worker Adedi",
 					type: "number",
-					name: "workerCount",
+					value: 1,
 					size: 6,
 				},
-				{
+				sshKeyName: {
 					title: "SSH Anahtarı",
-					type: "string",
-					name: "sshKeyName",
+					type: "text",
 					size: 6,
 				},
-				{
+				region: {
 					title: "Bölge",
 					type: "select",
-					values: regions,
-					name: "region",
+					items: regions,
+					value: regions[0],
 					size: 6,
 				},
-
-				{
-					title: "Master Makina Tipi",
+				masterMachineType: {
+					title: "Control Plane Türü",
 					type: "select",
-					values: machineTypes.map((x) => x.name),
-					name: "masterMachineType",
+					items: machineTypes.map((x) => x.name),
+					value: machineTypes.map((x) => x.name)[0],
 					size: 6,
 				},
-
-				{
-					title: "Worker Makina Tipi",
+				workerMachineType: {
+					title: "Worker Türü",
 					type: "select",
-					values: machineTypes.map((x) => x.name),
-					name: "workerMachineType",
+					items: machineTypes.map((x) => x.name),
+					value: machineTypes.map((x) => x.name)[0],
 					size: 6,
 				},
-			]}
+			}}
 			width={500}
 			{...props}
 		/>

@@ -2,18 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Box, Fab, TextField } from "@mui/material";
 import { Add, Search } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useModal } from "../hooks/useModal";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 import clusterConfig from "../api/clusterConfig";
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import ManagementClusterCard from "../components/ManagementClusterCard.jsx";
-import LoadingModal from "../components/LoadingModal.jsx";
 import Loading from "../components/Snackbars/Loading.jsx";
 
 export default function ManagementClustersPage() {
 	const [clusters, setClusters] = useState([]);
 	const nav = useNavigate();
-	const modal = useModal();
 	const { enqueueSnackbar: snack, closeSnackbar } = useCustomSnackbar();
 
 	useEffect(() => {
