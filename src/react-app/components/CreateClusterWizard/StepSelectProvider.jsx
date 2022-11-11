@@ -37,11 +37,11 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 			text="Oluşturulacak kümenin hangi altyapı sağlayıcısı kullanılarak
 			oluşturulacağını seçin."
 			width={500}
-			fields={[
-				{
+			fields={{
+				provider: {
 					title: "Altyapı Sağlayıcısı",
 					type: "select",
-					values: providers.map((p) => {
+					items: providers.map((p) => {
 						switch (p) {
 							case PROVIDER_TYPE.DOCKER:
 								return {
@@ -60,25 +60,9 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 								};
 						}
 					}),
-					name: "provider",
 				},
-			]}
+			}}
 			{...props}
-		>
-			{/* 	<FormControl fullWidth>
-				<InputLabel>{translate("provider")}</InputLabel>
-				<Select
-					value={provider}
-					label={translate("provider")}
-					onChange={(e) => setProvider(e.target.value)}
-				>
-					{providers.map((x, i) => (
-						<MenuItem value={x.key} key={i}>
-							{x.name}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl> */}
-		</StepInput>
+		/>
 	);
 }

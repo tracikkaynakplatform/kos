@@ -29,8 +29,7 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 							wizard.clusterName,
 							{ outputType: "json" }
 						);
-						cluster.spec.topology.version =
-							wizard.data.cpKubVersion.version;
+						cluster.spec.topology.version = wizard.data.kubVersion;
 
 						await kubectl.apply(
 							wizard.data.config,
@@ -43,10 +42,10 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 
 					if (wizard.data.provider == PROVIDER_TYPE.DOCKER)
 						cpTemplate.spec.template.spec.customImage =
-							wizard.data.cpKubVersion.id;
+							wizard.data.kubVersion;
 					else if (wizard.data.provider == PROVIDER_TYPE.AWS)
 						cpTemplate.spec.template.spec.ami = {
-							id: wizard.data.cpKubVersion.id,
+							id: wizard.data.kubVersion,
 						};
 
 					await kubectl.apply(
@@ -58,10 +57,10 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 
 					if (wizard.data.provider == PROVIDER_TYPE.DOCKER)
 						workerTemplate.spec.template.spec.customImage =
-							wizard.data.wKubVersion.id;
+							wizard.data.kubVersion;
 					else if (wizard.data.provider == PROVIDER_TYPE.AWS)
 						workerTemplate.spec.template.spec.ami = {
-							id: wizard.data.wKubVersion.id,
+							id: wizard.data.kubVersion,
 						};
 
 					await kubectl.apply(
@@ -82,8 +81,7 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 					).items[0];
 					kubeadmControlPlane.spec.machineTemplate.infrastructureRef.name =
 						cpTemplate.metadata.name;
-					kubeadmControlPlane.spec.version =
-						wizard.data.cpKubVersion.version;
+					kubeadmControlPlane.spec.version = wizard.data.kubVersion;
 
 					setInfo("KubeadmControlPlane nesnesi uygulanıyor");
 					await kubectl.apply(
@@ -108,7 +106,7 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 					machineDeployment.spec.template.spec.infrastructureRef.name =
 						workerTemplate.metadata.name;
 					machineDeployment.spec.template.spec.version =
-						wizard.data.wKubVersion.version;
+						wizard.data.kubVersion;
 
 					setInfo(
 						"Worker'lar için MachineDeployment nesneleri uygulanıyor"

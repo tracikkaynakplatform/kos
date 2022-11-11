@@ -14,52 +14,49 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 			onNextClick={async (fields) => {
 				for (let field of Object.keys(fields))
 					await wizard.updateData(field, fields[field]);
-				wizard.updateData('type', 'eks');
+				wizard.updateData("type", "eks");
 				goToNamedStep("AWSCreateCluster");
 			}}
 			title="AWS-EKS Küme Bilgileri"
 			text="Oluşturulacak EKS kümesinin detaylarını girin."
-			fields={[
-				{
+			fields={{
+				clusterName: {
 					title: "Küme Adı",
-					type: "string",
-					name: "clusterName",
+					type: "text",
 					size: 6,
 				},
-				{
+				kubVersion: {
 					title: "EKS Kubernetes Versiyonu",
 					type: "select",
-					values: eksVersions,
-					name: "kubVersion",
+					items: eksVersions,
+					value: eksVersions[0],
 					size: 6,
 				},
-				{
+				workerCount: {
 					title: "Worker Makina Sayısı",
 					type: "number",
-					name: "workerCount",
 					size: 6,
 				},
-				{
+				workerMachineType: {
 					title: "Worker Makina Tipi",
 					type: "select",
-					values: machineTypes.map((x) => x.name),
-					name: "workerMachineType",
+					items: machineTypes.map((x) => x.name),
+					value: machineTypes.map((x) => x.name)[0],
 					size: 6,
 				},
-				{
+				sshKeyName: {
 					title: "SSH Anahtarı",
-					type: "string",
-					name: "sshKeyName",
+					type: "text",
 					size: 6,
 				},
-				{
+				region: {
 					title: "Bölge",
 					type: "select",
-					values: regions,
-					name: "region",
+					items: regions,
+					value: regions[0],
 					size: 6,
 				},
-			]}
+			}}
 			width={500}
 			{...props}
 		/>
