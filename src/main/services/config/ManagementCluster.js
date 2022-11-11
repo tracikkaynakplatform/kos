@@ -77,6 +77,9 @@ export default class ManagementCluster {
 						case "AWSCluster":
 							provider = PROVIDER_TYPE.AWS;
 							break;
+						case "AWSManagedControlPlane":
+							provider = PROVIDER_TYPE.AWS_EKS;
+							break;
 					}
 					result.push({
 						name: i.metadata.name,

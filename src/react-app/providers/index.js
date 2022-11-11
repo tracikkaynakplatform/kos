@@ -5,6 +5,7 @@ export const PROVIDER_TYPE = {
 	GCP: 1,
 	DIGITAL_OCEAN: 2,
 	DOCKER: 3,
+	AWS_EKS: 4,
 };
 
 export const PROVIDER_CLASS = {
