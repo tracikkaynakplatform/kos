@@ -1,5 +1,3 @@
-// Servis tarafına dönülmesi durumunda buradaki API'ler değiştirilebilir.
-
 export async function get(config, resource, name, options) {
 	return await kubectlAPI.get(config, resource, name, options);
 }

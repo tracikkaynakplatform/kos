@@ -3,6 +3,8 @@ import kubeConfigAPIs from "./kubeConfig";
 import clusterConfigAPIs from "./clusterConfig";
 import clusterctlAPIs from "./clusterctl";
 import kubectlAPIs from "./kubectl";
+import awsAPIs from "./aws";
+import clusterawsadmAPIs from "./clusterawsadm";
 
 export const apis = [
 	{
@@ -20,6 +22,14 @@ export const apis = [
 	{
 		namespace: "clusterctlAPI",
 		apis: clusterctlAPIs,
+	},
+	{
+		namespace: "awsAPI",
+		apis: awsAPIs,
+	},
+	{
+		namespace: "clusterawsadmAPI",
+		apis: clusterawsadmAPIs,
 	},
 ];
 
