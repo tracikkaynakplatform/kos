@@ -1,37 +1,40 @@
-import React from "react";
-import StepInput from "../StepInput.jsx";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import React, { useState } from "react";
+import StepWizardWrapper from "../StepWizardWrapper.jsx";
 
 export default function StepSelectAWSClusterType({ goToNamedStep, ...props }) {
+	const [service, setService] = useState("AWSProviderConfig");
 	return (
-		<StepInput
+		<StepWizardWrapper
 			onBackClick={() => {
 				goToNamedStep("selectProvider");
 			}}
-			onNextClick={(fields) => {
-				goToNamedStep(fields.clusterType);
+			onNextClick={() => {
+				goToNamedStep(service);
 			}}
 			title="AWS Küme Tipi"
 			text={
-				'EKS tarafından yönetilen bir küme oluşturmak için "EKS" seçeneğini seçin. Varsayılan yolla küme oluşturmak için"EC2" seçeneğiniz seçin.'
+				"Küme oluşturmak için kullanmak istediğiniz AWS servisini seçiniz"
 			}
-			fields={{
-				clusterType: {
-					type: "radio",
-					value: "AWSProviderConfig",
-					items: [
-						{
-							label: "EKS",
-							value: "AWSProviderEKSConfig",
-						},
-						{
-							label: "EC2",
-							value: "AWSProviderConfig",
-						},
-					],
-				},
-			}}
 			width={500}
 			{...props}
-		/>
+		>
+			<RadioGroup
+				sx={{ flexDirection: "column" }}
+				defaultValue="AWSProviderConfig"
+				onChange={(e) => setService(e.target.value)}
+			>
+				<FormControlLabel
+					control={<Radio />}
+					value="AWSProviderEKSConfig"
+					label="EKS - Elastic Kubernetes Service"
+				/>
+				<FormControlLabel
+					control={<Radio />}
+					value="AWSProviderConfig"
+					label="EC2 - Elastic Compute Cloud"
+				/>
+			</RadioGroup>
+		</StepWizardWrapper>
 	);
 }

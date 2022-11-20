@@ -1,25 +1,26 @@
-import React, { useState } from "react";
-import { TextField, Typography } from "@mui/material";
+import React from "react";
 import { useWizard } from "../../hooks/useWizard";
-import Wrapper from "../StepWizardWrapper.jsx";
+import StepWizardWrapper from "../StepWizardWrapper.jsx";
 import kubeConfig from "../../api/kubeConfig";
+import { useForm } from "react-hook-form";
+import InputText from "../FormInputs/InputText.jsx";
 
 export default function StepKubeConfig(props) {
-	const [kubeconfigData, setKubeconfigData] = useState("");
 	const wizard = useWizard();
+	const { handleSubmit, control, setValue } = useForm();
 	const _goto = props.goToNamedStep;
 
 	return (
-		<Wrapper
+		<StepWizardWrapper
 			stepName={props.stepName}
 			disableBack
 			onLoad={async () =>
-				setKubeconfigData(await kubeConfig.defaultConfig())
+				setValue("config", await kubeConfig.defaultConfig())
 			}
-			onNextClick={async () => {
-				await wizard.updateData("config", kubeconfigData);
+			onNextClick={handleSubmit(async (fields) => {
+				await wizard.updateData("config", fields.config);
 				_goto("connecting");
-			}}
+			})}
 			width={700}
 			title="Küme Bilgileri"
 			text={
@@ -32,14 +33,12 @@ export default function StepKubeConfig(props) {
 				</>
 			}
 		>
-			<TextField
-				onChange={(e) => setKubeconfigData(e.target.value)}
-				value={kubeconfigData}
-				fullWidth
-				label="kubeconfig içeriği"
-				multiline
-				rows={15}
+			<InputText
+				control={control}
+				name="config"
+				label="kubeconfig dosya içeriği"
+				componentProps={{ multiline: true, rows: 15 }}
 			/>
-		</Wrapper>
+		</StepWizardWrapper>
 	);
 }

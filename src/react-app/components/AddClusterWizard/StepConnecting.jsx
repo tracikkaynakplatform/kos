@@ -5,10 +5,18 @@ import StepBaseLoading from "../StepBaseLoading.jsx";
 import kubectl from "../../api/kubectl";
 import clusterConfig from "../../api/clusterConfig";
 import kubeConfig from "../../api/kubeConfig";
+import { logger } from "../../logger";
 
 export default function StepConnecting(props) {
 	const [info, setInfo] = useState("");
 	const snack = useSnackbar().enqueueSnackbar;
+	const errSnack = (msg) => {
+		snack(msg, {
+			variant: "error",
+			autoHideDuration: 5000,
+		});
+		_goto("kubeConfig");
+	};
 	const wizard = useWizard();
 	const _goto = props.goToNamedStep;
 
@@ -21,10 +29,19 @@ export default function StepConnecting(props) {
 			stepName={props.stepName}
 			onLoad={async () => {
 				try {
-					setInfo("Yönetim kümesinin adı alınıyor...");
-					let manName = await kubectl.currentContext(
-						wizard.data.config
-					);
+					let manName;
+					try {
+						setInfo("Yönetim kümesinin adı alınıyor...");
+						manName = await kubectl.currentContext(
+							wizard.data.config
+						);
+					} catch (err) {
+						logger.error(err.message);
+						errSnack(
+							"Küme ile bağlantı sağlanamadı! kubeconfig dosyasının içeriğini kontrol edin."
+						);
+						return;
+					}
 
 					setInfo(
 						"Desteklenen altyapı sağlayıcılarının bilgisi alınıyor..."
@@ -34,10 +51,12 @@ export default function StepConnecting(props) {
 							wizard.data.config
 						);
 
-					if (supportedProviders.length == 0)
-						throw new Error(
+					if (supportedProviders.length == 0) {
+						errSnack(
 							"Desteklenen altyapı sağlayıcıları bulunamadı!\nKümenin bir yönetim kümesi olduğundan emin olun."
 						);
+						return;
+					}
 
 					setInfo(
 						"Yönetim kümesi kubeconfig dosyası kayıt ediliyor..."
@@ -48,11 +67,8 @@ export default function StepConnecting(props) {
 					);
 					_goto("end");
 				} catch (err) {
-					snack(err.message, {
-						variant: "error",
-						autoHideDuration: 5000,
-					});
-					_goto("kubeConfig");
+					logger.error(err.message);
+					errSnack("Bir hata oluştu");
 				}
 			}}
 		/>

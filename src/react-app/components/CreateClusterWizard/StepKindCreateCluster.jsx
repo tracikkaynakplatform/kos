@@ -5,6 +5,7 @@ import { useWizard } from "../../hooks/useWizard";
 import StepBaseLoading from "../StepBaseLoading.jsx";
 import kubectl from "../../api/kubectl";
 import clusterctl from "../../api/clusterctl";
+import { logger } from "../../logger";
 
 export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 	const [info, setInfo] = useState("");
@@ -90,7 +91,7 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 					);
 					_goto("addClusterComplete");
 				} catch (err) {
-					console.error(err);
+					logger.error(err.message);
 					snack(err.message, {
 						variant: "error",
 						autoHideDuration: 5000,
