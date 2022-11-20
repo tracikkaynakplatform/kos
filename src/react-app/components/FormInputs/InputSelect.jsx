@@ -22,7 +22,6 @@ export default function InputSelect({
 			control={control}
 			name={name}
 			render={({ field, fieldState: { error } }) => {
-				console.log(error);
 				return (
 					<FormControl fullWidth error={!!error}>
 						<InputLabel>{label}</InputLabel>

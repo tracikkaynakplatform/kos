@@ -16,15 +16,23 @@ export default function InputText({
 			defaultValue={defaultValue}
 			control={control}
 			name={name}
-			render={({ field, fieldState: { error } }) => {
+			render={({
+				field: { onChange, ...others },
+				fieldState: { error },
+			}) => {
 				return (
 					<TextField
-						{...field}
+						{...others}
 						fullWidth
 						label={label}
 						size={size}
 						variant="outlined"
 						error={!!error}
+						onChange={(e) => {
+							if (componentProps?.type === "number")
+								onChange(+e.target.value);
+							else onChange(e.target.value);
+						}}
 						helperText={error?.message}
 						{...componentProps}
 					/>
