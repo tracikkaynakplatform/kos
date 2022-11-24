@@ -19,9 +19,25 @@ export async function getCluster(managementClusterConfig, clusterName) {
 	);
 }
 
+export async function setClusterCredentials(
+	managementClusterName,
+	credentials
+) {
+	return await clusterConfigAPI.setClusterCredentials(
+		managementClusterName,
+		credentials
+	);
+}
+
+export async function getClusterCredentials(managementClusterName) {
+	return await clusterConfigAPI.getClusterCredentials(managementClusterName);
+}
+
 export default {
 	getManagementClusters,
 	getSupportedProviders,
 	getClusters,
 	getCluster,
+	getClusterCredentials,
+	setClusterCredentials,
 };
