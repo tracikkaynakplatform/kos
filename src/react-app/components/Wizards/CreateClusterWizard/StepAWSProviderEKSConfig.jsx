@@ -1,11 +1,11 @@
 import React from "react";
-import { eksVersions, machineTypes, regions } from "../../providers/aws";
-import { useWizard } from "../../hooks/useWizard";
+import { eksVersions, machineTypes, regions } from "../../../providers/aws";
+import { useWizard } from "../../../hooks/useWizard";
 import { Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
-import StepWizardWrapper from "../StepWizardWrapper.jsx";
-import InputText from "../FormInputs/InputText.jsx";
-import InputSelect from "../FormInputs/InputSelect.jsx";
+import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
+import InputText from "../../FormInputs/InputText.jsx";
+import InputSelect from "../../FormInputs/InputSelect.jsx";
 
 export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 	const { handleSubmit, control } = useForm();

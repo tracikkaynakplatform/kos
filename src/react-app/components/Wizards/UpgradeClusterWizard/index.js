@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Box } from "@mui/material";
-import { useWizard, WizardProvider } from "../../hooks/useWizard";
-import StepWizard from "../../lib/react-step-wizard";
+import { useWizard, WizardProvider } from "../../../hooks/useWizard";
+import StepWizard from "../../../lib/react-step-wizard";
 import StepGetClusterInfo from "./StepGetClusterInfo.jsx";
 import StepSelectVersion from "./StepSelectVersion.jsx";
 import StepApplyTemplates from "./StepApplyTemplates.jsx";

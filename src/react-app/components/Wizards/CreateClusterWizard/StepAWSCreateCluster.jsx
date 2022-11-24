@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useSnackbar } from "notistack";
-import { useWizard } from "../../hooks/useWizard";
-import clusterctl from "../../api/clusterctl";
-import kubectl from "../../api/kubectl";
-import StepBaseLoading from "../StepBaseLoading.jsx";
+import { useWizard } from "../../../hooks/useWizard";
+import clusterctl from "../../../api/clusterctl";
+import kubectl from "../../../api/kubectl";
+import StepBaseLoading from "../../Steps/StepBaseLoading.jsx";
 
 export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 	const [info, setInfo] = useState("");

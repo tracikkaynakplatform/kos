@@ -33,7 +33,7 @@ import { useModal } from "../hooks/useModal";
 
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import ProviderChip from "../components/ProviderChip.jsx";
-import QuestionModal from "../components/QuestionModal.jsx";
+import QuestionModal from "../components/Modals/QuestionModal.jsx";
 import Loading from "../components/Snackbars/Loading.jsx";
 import clusterConfig from "../api/clusterConfig";
 import kubeConfig from "../api/kubeConfig";

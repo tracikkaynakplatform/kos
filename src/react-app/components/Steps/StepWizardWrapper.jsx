@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Box, Button, Card, Typography } from "@mui/material";
-import { useWizard } from "../hooks/useWizard";
+import { useWizard } from "../../hooks/useWizard";
 
 export default function StepWizardWrapper({
 	disableBack,

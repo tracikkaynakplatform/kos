@@ -1,10 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useWizard } from "../../hooks/useWizard";
-import { kubernetesVersions } from "../../providers/docker";
-import InputSelect from "../FormInputs/InputSelect.jsx";
-import InputText from "../FormInputs/InputText.jsx";
-import StepWizardWrapper from "../StepWizardWrapper.jsx";
+import { useWizard } from "../../../hooks/useWizard";
+import { kubernetesVersions } from "../../../providers/docker";
+import InputSelect from "../../FormInputs/InputSelect.jsx";
+import InputText from "../../FormInputs/InputText.jsx";
+import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
 
 export default function StepKindProviderConfig({ goToNamedStep, ...props }) {
 	const wizard = useWizard();
