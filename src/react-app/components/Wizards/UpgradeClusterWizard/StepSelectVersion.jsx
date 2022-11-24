@@ -1,27 +1,21 @@
 import React from "react";
-import {
-	Typography,
-	CircularProgress,
-	Box,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-} from "@mui/material";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
-import { useWizard } from "../../hooks/useWizard";
-import { PROVIDER_TYPE } from "../../providers";
-import StepInput from "../StepInput.jsx";
+import { useWizard } from "../../../hooks/useWizard";
+import { PROVIDER_TYPE } from "../../../providers";
+import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
+import { useForm } from "react-hook-form";
+import InputSelect from "../../FormInputs/InputSelect.jsx";
 
 export default function StepSelectVersion({ goToNamedStep, ...props }) {
 	const [versions, setVersions] = useState([]);
 	const wizard = useWizard();
+	const { handleSubmit, control } = useForm();
 	const snack = useSnackbar().enqueueSnackbar;
 	const _goto = goToNamedStep;
 
 	return (
-		<StepInput
+		<StepWizardWrapper
 			disableBack
 			onLoad={async () => {
 				if (wizard.data.provider == PROVIDER_TYPE.DOCKER) {
@@ -56,7 +50,7 @@ export default function StepSelectVersion({ goToNamedStep, ...props }) {
 					]);
 				}
 			}}
-			onNextClick={async (fields) => {
+			onNextClick={handleSubmit(async (fields) => {
 				try {
 					// TODO: Girdileri doğrula
 					// TODO: Provider'ı tespit edip ona göre template'i düzenle
@@ -70,7 +64,7 @@ export default function StepSelectVersion({ goToNamedStep, ...props }) {
 						autoHideDuration: 5000,
 					});
 				}
-			}}
+			})}
 			title="Yükseltme bilgilerini girin"
 			fields={{
 				kubVersion: {
@@ -80,6 +74,8 @@ export default function StepSelectVersion({ goToNamedStep, ...props }) {
 				},
 			}}
 			{...props}
-		/>
+		>
+			<InputSelect name="kubVersion" control={control} items={versions} />
+		</StepWizardWrapper>
 	);
 }

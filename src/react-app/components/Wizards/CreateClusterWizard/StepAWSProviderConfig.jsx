@@ -1,10 +1,14 @@
 import React from "react";
-import { kubernetesVersions, machineTypes, regions } from "../../providers/aws";
-import { useWizard } from "../../hooks/useWizard";
-import StepWizardWrapper from "../StepWizardWrapper.jsx";
+import {
+	kubernetesVersions,
+	machineTypes,
+	regions,
+} from "../../../providers/aws";
+import { useWizard } from "../../../hooks/useWizard";
+import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
 import { Grid } from "@mui/material";
-import InputText from "../FormInputs/InputText.jsx";
-import InputSelect from "../FormInputs/InputSelect.jsx";
+import InputText from "../../FormInputs/InputText.jsx";
+import InputSelect from "../../FormInputs/InputSelect.jsx";
 import { useForm } from "react-hook-form";
 
 export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {

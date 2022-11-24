@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import CreateClusterWizard from "../components/CreateClusterWizard";
+import CreateClusterWizard from "../components/Wizards/CreateClusterWizard";
 import TempLayout from "../layouts/TempLayout.jsx";
 
 export default function CreateClusterPage() {

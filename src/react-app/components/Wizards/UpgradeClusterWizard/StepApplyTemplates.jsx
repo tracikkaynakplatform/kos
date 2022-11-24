@@ -1,11 +1,11 @@
 import React from "react";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
-import { useWizard } from "../../hooks/useWizard";
-import StepBaseLoading from "../StepBaseLoading.jsx";
+import { useWizard } from "../../../hooks/useWizard";
+import StepBaseLoading from "../../Steps/StepBaseLoading.jsx";
 import yaml from "js-yaml";
-import kubectl from "../../api/kubectl";
-import { PROVIDER_TYPE } from "../../providers";
+import kubectl from "../../../api/kubectl";
+import { PROVIDER_TYPE } from "../../../providers";
 
 export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 	const [info, setInfo] = useState("");

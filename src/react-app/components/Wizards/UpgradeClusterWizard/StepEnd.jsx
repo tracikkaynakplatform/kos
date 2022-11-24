@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
-import Wrapper from "../StepWizardWrapper.jsx";
+import Wrapper from "../../Steps/StepWizardWrapper.jsx";
 
 export default function StepEnd({ onFinish, ...props }) {
 	return (

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
-import { useWizard, WizardProvider } from "../../hooks/useWizard";
+import { useWizard, WizardProvider } from "../../../hooks/useWizard";
 import { Box } from "@mui/material";
-import StepWizard from "../../lib/react-step-wizard";
+import StepWizard from "../../../lib/react-step-wizard";
 import StepKubeConfig from "./StepKubeConfig.jsx";
 import StepConnecting from "./StepConnecting.jsx";
 import StepEnd from "./StepEnd.jsx";

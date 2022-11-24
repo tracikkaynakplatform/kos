@@ -1,5 +1,5 @@
 import React from "react";
-import Wrapper from "../StepWizardWrapper.jsx";
+import Wrapper from "../../Steps/StepWizardWrapper.jsx";
 
 export default function StepAddClusterComplete({ onFinish, ...props }) {
 	return (
