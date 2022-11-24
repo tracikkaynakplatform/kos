@@ -1,5 +1,5 @@
 import fs from "fs";
-import { dirCheck, DIRS } from "../utils/dir-check";
+import { dirCheck, DIRS } from "../../utils/dir-check";
 
 /**
  * Configuration manager of KOS.

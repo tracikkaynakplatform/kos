@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { eksVersions, machineTypes, regions } from "../../../providers/aws";
 import { useWizard } from "../../../hooks/useWizard";
 import { Grid } from "@mui/material";
@@ -6,13 +6,27 @@ import { useForm } from "react-hook-form";
 import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
 import InputText from "../../FormInputs/InputText.jsx";
 import InputSelect from "../../FormInputs/InputSelect.jsx";
+import { getAWSInfo } from "./aws";
 
 export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
+	const [regions, setRegions] = useState(["Yükleniyor..."]);
+	const [sshKeys, setSshKeys] = useState(["Yükleniyor..."]);
 	const { handleSubmit, control } = useForm();
 	const wizard = useWizard();
 
 	return (
 		<StepWizardWrapper
+			onLoad={async () => {
+				if (
+					regions[0] === "Yükleniyor..." ||
+					sshKeys[0] === "Yükleniyor..."
+				) {
+					let info = await getAWSInfo(wizard.manClusterName);
+
+					setRegions(info.regions);
+					setSshKeys(info.sshKeys?.map((x) => x.KeyName));
+				}
+			}}
 			onBackClick={() => {
 				goToNamedStep("selectAWSClusterType");
 			}}
@@ -59,24 +73,10 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 				</Grid>
 				<Grid item xs={6}>
 					<InputText
-						name="masterCount"
-						control={control}
-						label="Control Plane adedi"
-						componentProps={{ type: "number" }}
-						rules={{
-							required: "Lütfen adet giriniz",
-							min: {
-								value: 1,
-								message: "Lütfen adet giriniz",
-							},
-						}}
-					/>
-				</Grid>
-				<Grid item xs={6}>
-					<InputText
 						name="workerCount"
 						control={control}
 						label="Worker adedi"
+						defaultValue={1}
 						componentProps={{ type: "number" }}
 						rules={{
 							required: "Lütfen adet giriniz",
@@ -88,12 +88,18 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 					/>
 				</Grid>
 				<Grid item xs={6}>
-					<InputText
+					<InputSelect
 						name="sshKeyName"
 						control={control}
 						label="SSH anahtar adı"
+						items={sshKeys}
+						defaultValue={sshKeys[0]}
 						rules={{
-							required: "SSH anahtar adını giriniz",
+							required: "SSH anahtarını seçiniz",
+							validate: (x) =>
+								x != "Yükleniyor..."
+									? true
+									: "SSH anahtarını seçiniz",
 						}}
 					/>
 				</Grid>
@@ -119,12 +125,11 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 						control={control}
 						label="Bölge"
 						items={regions}
+						defaultValue={regions[0]}
 						rules={{
 							required: "Bölge giriniz",
-							minLength: {
-								value: 1,
-								message: "Bölge giriniz",
-							},
+							validate: (x) =>
+								x != "Yükleniyor..." ? true : "Bölge giriniz",
 						}}
 					/>
 				</Grid>

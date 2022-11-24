@@ -90,8 +90,6 @@ typings/
 out/
 
 # They are unnecessary to stay in git.
-config/
-bin/
 .kube
 .cluster-api
 
