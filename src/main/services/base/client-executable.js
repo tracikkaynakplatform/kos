@@ -84,7 +84,7 @@ export class ClientExecutable {
 	 * @param 	{Object}			env		Environment variables.
 	 * @returns {Promise<String>}			stdout of the executable file.
 	 * @throws								Throws exception if it can't find the executable file or
-	 * 										an error occured at execution.
+	 * 										an error occurred at execution.
 	 */
 	async exec(args = [], env = {}) {
 		const path = await this.check();
