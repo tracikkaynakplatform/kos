@@ -1,17 +1,14 @@
 import { access, constants, readFile, unlink, writeFile } from "fs";
 import { env } from "process";
 import { dirCheck, DIRS } from "../utils/dir-check";
+import { customAlphabet } from "nanoid";
+
+const tmpFileName = customAlphabet("1234567890abcdefghijklmnoprstuvyzqwx", 10);
 
 /**
  * Represents a kubeconfig file.
  */
 export class KubeConfig {
-	/**
-	 * The value that will be added to temporary config file's name to avoid conflicts.
-	 * @type {Number}
-	 */
-	static CONFIG_COUNT = 0;
-
 	/**
 	 * Instantiate a new KubeConfig object with a file name that has timestamp under `DIRS.config` directory.
 	 */
@@ -26,10 +23,7 @@ export class KubeConfig {
 		 * @property Path of the kubeconfig file.
 		 * @type {String}
 		 */
-		this.path = `${dirCheck(DIRS.config)}/kc-${
-			Date.now() + KubeConfig.CONFIG_COUNT
-		}.yaml`;
-		KubeConfig.CONFIG_COUNT++;
+		this.path = `${dirCheck(DIRS.config)}/kc-${tmpFileName()}.yaml`;
 	}
 
 	/**

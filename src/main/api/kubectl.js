@@ -1,3 +1,5 @@
+import { writeFileSync } from "original-fs";
+import tmp from "tmp";
 import { KubeConfig } from "../k8s/KubeConfig";
 import Kubectl from "../services/Kubectl";
 
@@ -40,10 +42,11 @@ export async function apply(config, yaml, ...args) {
 		let kctl = new Kubectl();
 		try {
 			await KubeConfig.tempConfig(kctl.config, config, async () => {
-				let yamlFile = new KubeConfig(); // TODO: tempfile sınıfı oluşturulacak.
-				await KubeConfig.tempConfig(yamlFile, yaml, async () => {
-					resolve(await kctl.apply(yamlFile.path, ...args));
-				});
+				const file = tmp.fileSync();
+				writeFileSync(file.name, yaml, { encoding: "utf-8" });
+				let result = await kctl.apply(file.name, ...args);
+				file.removeCallback();
+				resolve(result);
 			});
 		} catch (err) {
 			reject(err);
