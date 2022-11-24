@@ -1,5 +1,9 @@
 import { mkdirSync, constants, accessSync } from "fs";
-import { cwd } from "process";
+import { cwd, env } from "process";
+
+// import { platform } from "../services/base/platform";
+// TODO: check os for different home directory path
+export const basePath = env.HOME ? env.HOME + "/.kos" : cwd();
 
 /**
  * @description Needed directories for KOS.
@@ -22,6 +26,12 @@ export const DIRS = {
 	 * @type string
 	 */
 	managementClusters: "config/clusters/man-clusters",
+
+	/**
+	 * @property Root directory of the KOS configuration.
+	 * @type string
+	 */
+	kos: "",
 };
 
 /**
@@ -31,7 +41,7 @@ export const DIRS = {
  * @throws				Throws if directory doesn't exist and unable to create it.
  */
 export function dirCheck(dir) {
-	let path = `${cwd()}/${dir}`;
+	let path = `${basePath}/${dir}`;
 	try {
 		accessSync(path, constants.F_OK);
 	} catch (err) {
