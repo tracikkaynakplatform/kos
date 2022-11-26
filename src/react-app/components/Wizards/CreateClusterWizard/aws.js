@@ -1,7 +1,7 @@
 import aws from "../../../api/aws";
 import clusterConfig from "../../../api/clusterConfig";
 
-export async function getAWSInfo(managementClusterName) {
+export async function getAWSInfo(managementClusterName, region) {
 	const credentials = await clusterConfig.getClusterCredentials(
 		managementClusterName
 	);
@@ -11,7 +11,7 @@ export async function getAWSInfo(managementClusterName) {
 		sshKeys: await aws.listKeyPairs(
 			credentials,
 			"ec2",
-			credentials.AWS_REGION
+			region ?? credentials.AWS_REGION
 		),
 	};
 }

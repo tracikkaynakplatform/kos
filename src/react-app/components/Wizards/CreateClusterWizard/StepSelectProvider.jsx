@@ -11,8 +11,8 @@ import InputSelect from "../../FormInputs/InputSelect.jsx";
 
 export default function StepSelectProvider({ goToNamedStep, ...props }) {
 	const snack = useSnackbar().enqueueSnackbar;
-	const [providers, setProviders] = useState([]);
-	const { handleSubmit, control } = useForm();
+	const [providers, setProviders] = useState(["Yükleniyor..."]);
+	const { handleSubmit, control, setValue } = useForm();
 	const wizard = useWizard();
 	const _goto = goToNamedStep;
 
@@ -23,26 +23,8 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 					props.manClusterName
 				);
 				await wizard.updateData("config", config);
-				setProviders(await clusterConfig.getSupportedProviders(config));
-			}}
-			onNextClick={handleSubmit((values) => {
-				if (values?.provider === "") {
-					snack("Lütfen bir sağlayıcı seçin", { variant: "error" });
-					return;
-				}
-				_goto(values.provider);
-			})}
-			disableBack
-			title="Altyapı sağlayıcısı seçin"
-			text="Oluşturulacak kümenin hangi altyapı sağlayıcısı kullanılarak
-			oluşturulacağını seçin."
-			width={500}
-			{...props}
-		>
-			<InputSelect
-				name="provider"
-				control={control}
-				items={providers.map((p) => {
+				let prs = await clusterConfig.getSupportedProviders(config);
+				prs = prs.map((p) => {
 					switch (p) {
 						case PROVIDER_TYPE.DOCKER:
 							return {
@@ -60,8 +42,28 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 								value: "selectAWSClusterType",
 							};
 					}
-				})}
-			/>
+				});
+				setProviders(prs);
+				if (prs[0]?.value) setValue("provider", prs[0].value);
+			}}
+			onNextClick={handleSubmit((values) => {
+				if (
+					values?.provider === "" ||
+					values?.provider === "Yükleniyor..."
+				) {
+					snack("Lütfen bir sağlayıcı seçin", { variant: "error" });
+					return;
+				}
+				_goto(values.provider);
+			})}
+			disableBack
+			title="Altyapı sağlayıcısı seçin"
+			text="Oluşturulacak kümenin hangi altyapı sağlayıcısı kullanılarak
+			oluşturulacağını seçin."
+			width={500}
+			{...props}
+		>
+			<InputSelect name="provider" control={control} items={providers} />
 		</StepWizardWrapper>
 	);
 }
