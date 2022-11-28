@@ -12,6 +12,10 @@ export async function getSupportedProviders(managementClusterConfig) {
 	);
 }
 
+export async function isNameValid(managementClusterName) {
+	return await clusterConfigAPI.isNameValid(managementClusterName);
+}
+
 export async function getCluster(managementClusterConfig, clusterName) {
 	return await clusterConfigAPI.getCluster(
 		managementClusterConfig,
@@ -40,4 +44,5 @@ export default {
 	getCluster,
 	getClusterCredentials,
 	setClusterCredentials,
+	isNameValid,
 };

@@ -71,6 +71,17 @@ export async function getClusterCredentials(managementClusterName) {
 	}
 }
 
+export async function isNameValid(managementClusterName) {
+	// TODO: Add other validation methods
+	const path = dirCheck(DIRS.managementClusters);
+	const files = fs
+		.readdirSync(path)
+		.filter((x) => x.endsWith(".kubeconfig"))
+		.map((x) => x.substring(0, x.lastIndexOf(".")));
+	for (let file of files) if (file == managementClusterName) return false;
+	return true;
+}
+
 export default [
 	getManagementClusters,
 	getSupportedProviders,
@@ -78,4 +89,5 @@ export default [
 	getCluster,
 	getClusterCredentials,
 	setClusterCredentials,
+	isNameValid,
 ];
