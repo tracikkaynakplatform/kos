@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./styles/index.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, HashRouter } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 import { ModalProvider } from "./hooks/useModal.js";
 
@@ -16,10 +16,10 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<SnackbarProvider maxSnack={5}>
 		<ModalProvider>
-			<BrowserRouter>
+			<HashRouter>
 				<Routes>
 					<Route
-						path="/main_window"
+						path="/"
 						exact
 						element={<ManagementClustersPage />}
 					/>
@@ -48,7 +48,7 @@ root.render(
 						element={<UpgradeClusterPage />}
 					/>
 				</Routes>
-			</BrowserRouter>
+			</HashRouter>
 		</ModalProvider>
 	</SnackbarProvider>
 );
