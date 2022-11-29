@@ -37,6 +37,10 @@ export async function getClusterCredentials(managementClusterName) {
 	return await clusterConfigAPI.getClusterCredentials(managementClusterName);
 }
 
+export async function deleteCluster(managementClusterName) {
+	return await clusterConfigAPI.deleteCluster(managementClusterName);
+}
+
 export default {
 	getManagementClusters,
 	getSupportedProviders,
@@ -45,4 +49,5 @@ export default {
 	getClusterCredentials,
 	setClusterCredentials,
 	isNameValid,
+	deleteCluster,
 };

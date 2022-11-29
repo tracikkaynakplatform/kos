@@ -82,6 +82,24 @@ export async function isNameValid(managementClusterName) {
 	return true;
 }
 
+export async function deleteCluster(managementClusterName) {
+	const path = dirCheck(DIRS.managementClusters);
+	const files = fs
+		.readdirSync(path)
+		.filter((x) => x.endsWith(".kubeconfig"))
+		.map((x) => x.substring(0, x.lastIndexOf(".")));
+	for (let file of files) {
+		if (file === managementClusterName) {
+			try {
+				let credPath = `${path}/${file}.cred`;
+				fs.accessSync(credPath);
+				fs.unlinkSync(credPath);
+			} catch (err) {}
+			fs.unlinkSync(`${path}/${file}.kubeconfig`);
+		}
+	}
+}
+
 export default [
 	getManagementClusters,
 	getSupportedProviders,
@@ -90,4 +108,5 @@ export default [
 	getClusterCredentials,
 	setClusterCredentials,
 	isNameValid,
+	deleteCluster,
 ];
