@@ -5,8 +5,7 @@ import { PROVIDER_TYPE } from "../../../../main/providers";
 import clusterConfig from "../../../api/clusterConfig";
 import kubeConfig from "../../../api/kubeConfig";
 import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
-import { useForm, Controller } from "react-hook-form";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useForm } from "react-hook-form";
 import InputSelect from "../../FormInputs/InputSelect.jsx";
 
 export default function StepSelectProvider({ goToNamedStep, ...props }) {

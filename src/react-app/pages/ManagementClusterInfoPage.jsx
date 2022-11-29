@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import {
-	Box,
 	Paper,
 	Table,
 	TableContainer,
@@ -23,7 +22,7 @@ import {
 	Camera as CameraIcon,
 	Add as AddIcon,
 	ArrowBack as ArrowBackIcon,
-	Replay,
+	Replay as ReplayIcon,
 } from "@mui/icons-material";
 
 import { providerNames } from "../providers/provider-names";
@@ -40,6 +39,7 @@ import kubeConfig from "../api/kubeConfig";
 import kubectl from "../api/kubectl";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 import clusterctl from "../api/clusterctl";
+import { logger } from "../logger";
 
 const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -102,21 +102,8 @@ export default function ManagementClusterInfoPage() {
 
 	return (
 		<DashboardLayout>
-			<Box
-				sx={{
-					display: "flex",
-					justifyContent: "center",
-					flexDirection: "column",
-					gap: "20px",
-					p: 3,
-				}}
-			>
-				<Box
-					sx={{
-						width: "100%",
-						display: "flex",
-					}}
-				>
+			<div className="flex justify-center flex-col gap-10 p-5">
+				<div className="w-full flex">
 					<Fab
 						color="primary"
 						sx={{
@@ -128,51 +115,68 @@ export default function ManagementClusterInfoPage() {
 					>
 						<ArrowBackIcon />
 					</Fab>
-				</Box>
-				<Typography variant="h4">{name}</Typography>
-				<Box
-					sx={{
-						display: "flex",
-						justifyContent: "space-between",
-						alignItems: "center",
-						ml: 1,
-						mr: 1,
-					}}
-				>
-					<Typography
-						sx={{
-							fontSize: "18px",
+				</div>
+				<div className="items-center flex justify-between">
+					<h4 className="font-sans text-3xl">{name}</h4>
+					<Fab
+						color="primary"
+						variant="contained"
+						onClick={() => {
+							modal.showModal(QuestionModal, {
+								yesButtonColor: "error",
+								message: `${name} isimli yönetim kümesini kaldırmak istediğinize emin misiniz? Eğer ilerleyen zamanlarda bu yönetim kümesini KOS ile birlikte kullanmak isterseniz tekrardan eklemeniz gerekecek.`,
+								yesButtonText: "Sil",
+								noButtonText: "Vazgeç",
+
+								onYesClick: async () => {
+									modal.closeModal();
+									let loading = snack(
+										`${name} yönetim kümesi siliniyor...`,
+										{ persist: true },
+										Loading
+									);
+									try {
+										await clusterConfig.deleteCluster(name);
+										nav("/management-clusters", {
+											replace: true,
+										});
+									} catch (err) {
+										logger.error(err.message);
+										snack("Bir hata oluştu!", {
+											variant: "error",
+										});
+									}
+									closeSnackbar(loading);
+								},
+								onNoClick: () => modal.closeModal(),
+							});
 						}}
 					>
-						İşyükü kümeleri
-					</Typography>
-					<Box
-						sx={{
-							display: "flex",
-							gap: "20px",
-							width: "400px",
-							height: "40px",
-						}}
-					>
+						<DeleteIcon />
+					</Fab>
+				</div>
+				<div className="flex justify-between items-center ml-1 mr-1">
+					<div className="font-sans">İşyükü kümeleri</div>
+					<div className="flex gap-5 w-[400px] h-[40px]">
 						<Button
 							onClick={() => refreshClusters()}
 							variant="contained"
 						>
-							<Replay />
+							<ReplayIcon />
 						</Button>
 						<Button
 							sx={{
 								textTransform: "none",
-								fontSize: "18px",
-								width: "350px",
+								fontSize: "20px",
+								flexGrow: 1,
 							}}
 							onClick={() => nav(`/create-cluster/${name}`)}
 							variant="contained"
 						>
 							Yeni küme ekle <AddIcon />
 						</Button>
-					</Box>
-				</Box>
+					</div>
+				</div>
 				<TableContainer
 					sx={{
 						display: "flex",
@@ -311,7 +315,7 @@ export default function ManagementClusterInfoPage() {
 						</TableBody>
 					</Table>
 				</TableContainer>
-			</Box>
+			</div>
 		</DashboardLayout>
 	);
 }
