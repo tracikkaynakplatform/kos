@@ -1,25 +1,16 @@
 import React from "react";
-import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import Wrapper from "../../Steps/StepWizardWrapper.jsx";
+import StepWizardWrapper from "../../Steps/StepWizardWrapper";
 
 export default function StepEnd() {
 	const nav = useNavigate();
 	return (
-		<Wrapper
+		<StepWizardWrapper
 			disableBack
 			onNextClick={() => nav("/management-clusters", { replace: true })}
-		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				Küme ekleme başarılı!
-			</Typography>
-		</Wrapper>
+			title="Küme ekleme başaralı!"
+			text="Yönetim kümeniz başarılı bir şekilde eklendi. Detaylı bilgi için Yönetim Kümeleri sayfasına bakabilirsiniz."
+			width={400}
+		/>
 	);
 }

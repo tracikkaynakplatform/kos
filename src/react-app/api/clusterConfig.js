@@ -12,6 +12,10 @@ export async function getSupportedProviders(managementClusterConfig) {
 	);
 }
 
+export async function isNameValid(managementClusterName) {
+	return await clusterConfigAPI.isNameValid(managementClusterName);
+}
+
 export async function getCluster(managementClusterConfig, clusterName) {
 	return await clusterConfigAPI.getCluster(
 		managementClusterConfig,
@@ -19,9 +23,33 @@ export async function getCluster(managementClusterConfig, clusterName) {
 	);
 }
 
+export async function setClusterConfiguration(
+	managementClusterName,
+	credentials
+) {
+	return await clusterConfigAPI.setClusterConfiguration(
+		managementClusterName,
+		credentials
+	);
+}
+
+export async function getClusterConfiguration(managementClusterName) {
+	return await clusterConfigAPI.getClusterConfiguration(
+		managementClusterName
+	);
+}
+
+export async function deleteCluster(managementClusterName) {
+	return await clusterConfigAPI.deleteCluster(managementClusterName);
+}
+
 export default {
 	getManagementClusters,
 	getSupportedProviders,
 	getClusters,
 	getCluster,
+	getClusterConfiguration,
+	setClusterConfiguration,
+	isNameValid,
+	deleteCluster,
 };

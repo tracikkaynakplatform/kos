@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import UpgradeClusterWizard from "../components/Wizards/UpgradeClusterWizard";
-import TempLayout from "../layouts/TempLayout.jsx";
+import TempLayout from "../layouts/TempLayout";
 
 export default function UpgradeClusterPage() {
 	const nav = useNavigate();

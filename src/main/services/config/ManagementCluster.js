@@ -77,7 +77,7 @@ export default class ManagementCluster {
 						case "AWSCluster":
 							provider = PROVIDER_TYPE.AWS;
 							break;
-						case "AWSManagedControlPlane":
+						case "AWSManagedCluster":
 							provider = PROVIDER_TYPE.AWS_EKS;
 							break;
 					}

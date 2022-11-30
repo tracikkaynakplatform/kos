@@ -1,22 +1,55 @@
 import React from "react";
-import {
-	kubernetesVersions,
-	machineTypes,
-	regions,
-} from "../../../providers/aws";
+import { kubernetesVersions, machineTypes } from "../../../providers/aws";
 import { useWizard } from "../../../hooks/useWizard";
 import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
 import { Grid } from "@mui/material";
 import InputText from "../../FormInputs/InputText.jsx";
 import InputSelect from "../../FormInputs/InputSelect.jsx";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { getAWSInfo } from "./aws";
+import { logger } from "../../../logger";
+import { useSnackbar } from "notistack";
 
 export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
-	const { handleSubmit, control } = useForm();
+	const [regions, setRegions] = useState(["Yükleniyor..."]);
+	const [sshKeys, setSshKeys] = useState(["Yükleniyor..."]);
+	const snack = useSnackbar().enqueueSnackbar;
+	const { handleSubmit, control, setValue } = useForm();
 	const wizard = useWizard();
+
+	const updateOptions = async (region) => {
+		try {
+			let info = await getAWSInfo(
+				wizard.manClusterName,
+				region ?? regions[0]
+			);
+
+			if (!region) {
+				setRegions(info.regions);
+				setValue("region", info.regions[0]);
+			}
+
+			setSshKeys(info.sshKeys?.map((x) => x.KeyName));
+			setValue("sshKeyName", info.sshKeys[0]?.KeyName ?? "");
+		} catch (err) {
+			logger.error(err.message);
+			snack("Bir hata oluştu! Seyir defterini inceleyin.", {
+				variant: "error",
+				autoHideDuration: 5000,
+			});
+		}
+	};
 
 	return (
 		<StepWizardWrapper
+			onLoad={async () => {
+				if (
+					regions[0] === "Yükleniyor..." ||
+					sshKeys[0] === "Yükleniyor..."
+				)
+					await updateOptions();
+			}}
 			onBackClick={() => {
 				goToNamedStep("selectAWSClusterType");
 			}}
@@ -65,6 +98,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 						name="masterCount"
 						control={control}
 						label="Control Plane adedi"
+						defaultValue={1}
 						componentProps={{ type: "number" }}
 						rules={{
 							required: "Lütfen adet giriniz",
@@ -79,6 +113,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 					<InputText
 						name="workerCount"
 						control={control}
+						defaultValue={1}
 						label="Worker adedi"
 						componentProps={{ type: "number" }}
 						rules={{
@@ -91,12 +126,18 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 					/>
 				</Grid>
 				<Grid item xs={6}>
-					<InputText
+					<InputSelect
 						name="sshKeyName"
 						control={control}
 						label="SSH anahtar adı"
+						items={sshKeys}
+						defaultValue={sshKeys[0]}
 						rules={{
-							required: "SSH anahtar adını giriniz",
+							required: "SSH anahtarını seçiniz",
+							validate: (x) =>
+								x != "Yükleniyor..."
+									? true
+									: "SSH anahtarını seçiniz",
 						}}
 					/>
 				</Grid>
@@ -139,12 +180,16 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 						control={control}
 						label="Bölge"
 						items={regions}
+						defaultValue={regions[0]}
 						rules={{
 							required: "Bölge giriniz",
-							minLength: {
-								value: 1,
-								message: "Bölge giriniz",
+							onChange: async (e, val = e.target.value) => {
+								await setSshKeys(["Yükleniyor..."]);
+								setValue("sshKeyName", "Yükleniyor...");
+								await updateOptions(val);
 							},
+							validate: (x) =>
+								x != "Yükleniyor..." ? true : "Bölge giriniz",
 						}}
 					/>
 				</Grid>

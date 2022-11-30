@@ -38,11 +38,6 @@ function Sidebar() {
 				<List>
 					<ListButton
 						to="/main_window"
-						icon={HomeIcon}
-						label="Ana Sayfa"
-					/>
-					<ListButton
-						to="/management-clusters"
 						icon={StorageIcon}
 						label="Yönetim Kümeleri"
 					/>

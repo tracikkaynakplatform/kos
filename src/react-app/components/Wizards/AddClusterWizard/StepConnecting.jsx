@@ -4,7 +4,6 @@ import { useWizard } from "../../../hooks/useWizard";
 import StepBaseLoading from "../../Steps/StepBaseLoading.jsx";
 import kubectl from "../../../api/kubectl";
 import clusterConfig from "../../../api/clusterConfig";
-import kubeConfig from "../../../api/kubeConfig";
 import { logger } from "../../../logger";
 
 export default function StepConnecting(props) {
@@ -57,15 +56,8 @@ export default function StepConnecting(props) {
 						);
 						return;
 					}
-
-					setInfo(
-						"Yönetim kümesi kubeconfig dosyası kayıt ediliyor..."
-					);
-					await kubeConfig.saveManagementConfig(
-						wizard.data.config,
-						manName
-					);
-					_goto("end");
+					wizard.updateData("clusterName", manName);
+					_goto("enterClusterName");
 				} catch (err) {
 					logger.error(err.message);
 					errSnack("Bir hata oluştu");

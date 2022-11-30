@@ -15,6 +15,9 @@ module.exports = [
 				presets: ["@babel/preset-react"],
 			},
 		},
+		resolve: {
+			extensions: [".js", ".jsx"],
+		},
 	},
 	{
 		test: /\.(png|jpe?g|gif)$/i,

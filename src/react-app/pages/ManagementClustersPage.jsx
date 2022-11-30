@@ -48,18 +48,8 @@ export default function ManagementClustersPage() {
 			>
 				<Add />
 			</Fab>
-			<Box
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-				}}
-			>
-				<Box
-					sx={{
-						display: "flex",
-						alignItems: "center",
-					}}
-				>
+			<div className="flex flex-col">
+				<div className="flex items-center">
 					<TextField
 						sx={{
 							m: 3,
@@ -78,15 +68,8 @@ export default function ManagementClustersPage() {
 					>
 						<Search />
 					</Fab>
-				</Box>
-				<Box
-					sx={{
-						display: "flex",
-						flexWrap: "normal",
-						gap: "20px",
-						m: 2,
-					}}
-				>
+				</div>
+				<div className="flex flex-wrap gap-[12px] m-3">
 					{clusters.map((x, i) => (
 						<ManagementClusterCard
 							key={i}
@@ -94,8 +77,8 @@ export default function ManagementClustersPage() {
 							{...x}
 						/>
 					))}
-				</Box>
-			</Box>
+				</div>
+			</div>
 		</DashboardLayout>
 	);
 }
