@@ -11,6 +11,7 @@ import ManagementClusterInfoPage from "./pages/ManagementClusterInfoPage.jsx";
 import UpgradeClusterPage from "./pages/UpgradeClusterPage.jsx";
 import CreateClusterPage from "./pages/CreateClusterPage.jsx";
 import { logger } from "./logger.js";
+import ManagementClusterConfigPage from "./pages/ManagementClusterConfigPage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -26,6 +27,10 @@ root.render(
 					<Route
 						path="/cluster/:name"
 						element={<ManagementClusterInfoPage />}
+					/>
+					<Route
+						path="/cluster/config/:name"
+						element={<ManagementClusterConfigPage />}
 					/>
 					<Route
 						path="/management-clusters"

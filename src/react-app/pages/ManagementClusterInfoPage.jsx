@@ -23,6 +23,7 @@ import {
 	Add as AddIcon,
 	ArrowBack as ArrowBackIcon,
 	Replay as ReplayIcon,
+	Edit as EditIcon,
 } from "@mui/icons-material";
 
 import { providerNames } from "../providers/provider-names";
@@ -118,42 +119,52 @@ export default function ManagementClusterInfoPage() {
 				</div>
 				<div className="items-center flex justify-between">
 					<h4 className="font-sans text-3xl">{name}</h4>
-					<Fab
-						color="primary"
-						variant="contained"
-						onClick={() => {
-							modal.showModal(QuestionModal, {
-								yesButtonColor: "error",
-								message: `${name} isimli yönetim kümesini kaldırmak istediğinize emin misiniz? Eğer ilerleyen zamanlarda bu yönetim kümesini KOS ile birlikte kullanmak isterseniz tekrardan eklemeniz gerekecek.`,
-								yesButtonText: "Sil",
-								noButtonText: "Vazgeç",
+					<div className="flex gap-5">
+						<Fab
+							color="primary"
+							onClick={() => {
+								modal.showModal(QuestionModal, {
+									yesButtonColor: "error",
+									message: `${name} isimli yönetim kümesini kaldırmak istediğinize emin misiniz? Eğer ilerleyen zamanlarda bu yönetim kümesini KOS ile birlikte kullanmak isterseniz tekrardan eklemeniz gerekecek.`,
+									yesButtonText: "Sil",
+									noButtonText: "Vazgeç",
 
-								onYesClick: async () => {
-									modal.closeModal();
-									let loading = snack(
-										`${name} yönetim kümesi siliniyor...`,
-										{ persist: true },
-										Loading
-									);
-									try {
-										await clusterConfig.deleteCluster(name);
-										nav("/management-clusters", {
-											replace: true,
-										});
-									} catch (err) {
-										logger.error(err.message);
-										snack("Bir hata oluştu!", {
-											variant: "error",
-										});
-									}
-									closeSnackbar(loading);
-								},
-								onNoClick: () => modal.closeModal(),
-							});
-						}}
-					>
-						<DeleteIcon />
-					</Fab>
+									onYesClick: async () => {
+										modal.closeModal();
+										let loading = snack(
+											`${name} yönetim kümesi siliniyor...`,
+											{ persist: true },
+											Loading
+										);
+										try {
+											await clusterConfig.deleteCluster(
+												name
+											);
+											nav("/management-clusters", {
+												replace: true,
+											});
+										} catch (err) {
+											logger.error(err.message);
+											snack("Bir hata oluştu!", {
+												variant: "error",
+											});
+										}
+										closeSnackbar(loading);
+									},
+									onNoClick: () => modal.closeModal(),
+								});
+							}}
+						>
+							<DeleteIcon />
+						</Fab>
+						<Fab
+							color="primary"
+							variant="circular"
+							onClick={() => nav(`/cluster/config/${name}`)}
+						>
+							<EditIcon />
+						</Fab>
+					</div>
 				</div>
 				<div className="flex justify-between items-center ml-1 mr-1">
 					<div className="font-sans">İşyükü kümeleri</div>
