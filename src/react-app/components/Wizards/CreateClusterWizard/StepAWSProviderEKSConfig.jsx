@@ -1,32 +1,43 @@
 import React, { useState } from "react";
-import { eksVersions, machineTypes, regions } from "../../../providers/aws";
+import { eksVersions, machineTypes } from "../../../providers/aws";
 import { useWizard } from "../../../hooks/useWizard";
 import { Grid } from "@mui/material";
 import { useForm } from "react-hook-form";
 import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
 import InputText from "../../FormInputs/InputText.jsx";
 import InputSelect from "../../FormInputs/InputSelect.jsx";
+import { logger } from "../../../logger";
 import { getAWSInfo } from "./aws";
+import { useSnackbar } from "notistack";
 
 export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 	const [regions, setRegions] = useState(["Yükleniyor..."]);
 	const [sshKeys, setSshKeys] = useState(["Yükleniyor..."]);
+	const snack = useSnackbar().enqueueSnackbar;
 	const { handleSubmit, control, setValue } = useForm();
 	const wizard = useWizard();
 
 	const updateOptions = async (region) => {
-		let info = await getAWSInfo(
-			wizard.manClusterName,
-			region ?? regions[0]
-		);
+		try {
+			let info = await getAWSInfo(
+				wizard.manClusterName,
+				region ?? regions[0]
+			);
 
-		if (!region) {
-			setRegions(info.regions);
-			setValue("region", info.regions[0]);
+			if (!region) {
+				setRegions(info.regions);
+				setValue("region", info.regions[0]);
+			}
+
+			setSshKeys(info.sshKeys?.map((x) => x.KeyName));
+			setValue("sshKeyName", info.sshKeys[0]?.KeyName ?? "");
+		} catch (err) {
+			logger.error(err.message);
+			snack("Bir hata oluştu! Seyir defterini inceleyin.", {
+				variant: "error",
+				autoHideDuration: 5000,
+			});
 		}
-
-		setSshKeys(info.sshKeys?.map((x) => x.KeyName));
-		setValue("sshKeyName", info.sshKeys[0]?.KeyName ?? "");
 	};
 
 	return (
