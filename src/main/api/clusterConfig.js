@@ -44,28 +44,28 @@ export async function getSupportedProviders(managementClusterConfig) {
 	return manCluster.supportedProviders;
 }
 
-export async function setClusterCredentials(
+export async function setClusterConfiguration(
 	managementClusterName,
 	credentials
 ) {
 	const path = dirCheck(DIRS.managementClusters);
 	fs.writeFileSync(
-		`${path}/${managementClusterName}.cred`,
+		`${path}/${managementClusterName}.json`,
 		JSON.stringify(credentials),
 		{ encoding: "utf-8" }
 	);
 }
 
-export async function getClusterCredentials(managementClusterName) {
+export async function getClusterConfiguration(managementClusterName) {
 	const path = dirCheck(DIRS.managementClusters);
 	const files = fs
 		.readdirSync(path)
-		.filter((x) => x.endsWith(".cred"))
+		.filter((x) => x.endsWith(".json"))
 		.map((x) => x.substring(0, x.lastIndexOf(".")));
 	for (let file of files) {
 		if (file == managementClusterName) {
 			return JSON.parse(
-				fs.readFileSync(`${path}/${file}.cred`, { encoding: "utf-8" })
+				fs.readFileSync(`${path}/${file}.json`, { encoding: "utf-8" })
 			);
 		}
 	}
@@ -105,8 +105,8 @@ export default [
 	getSupportedProviders,
 	getClusters,
 	getCluster,
-	getClusterCredentials,
-	setClusterCredentials,
+	getClusterConfiguration,
+	setClusterConfiguration,
 	isNameValid,
 	deleteCluster,
 ];

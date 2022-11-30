@@ -23,18 +23,20 @@ export async function getCluster(managementClusterConfig, clusterName) {
 	);
 }
 
-export async function setClusterCredentials(
+export async function setClusterConfiguration(
 	managementClusterName,
 	credentials
 ) {
-	return await clusterConfigAPI.setClusterCredentials(
+	return await clusterConfigAPI.setClusterConfiguration(
 		managementClusterName,
 		credentials
 	);
 }
 
-export async function getClusterCredentials(managementClusterName) {
-	return await clusterConfigAPI.getClusterCredentials(managementClusterName);
+export async function getClusterConfiguration(managementClusterName) {
+	return await clusterConfigAPI.getClusterConfiguration(
+		managementClusterName
+	);
 }
 
 export async function deleteCluster(managementClusterName) {
@@ -46,8 +48,8 @@ export default {
 	getSupportedProviders,
 	getClusters,
 	getCluster,
-	getClusterCredentials,
-	setClusterCredentials,
+	getClusterConfiguration,
+	setClusterConfiguration,
 	isNameValid,
 	deleteCluster,
 };
