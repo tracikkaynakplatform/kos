@@ -51,6 +51,7 @@ export default function StepKindProviderConfig({ goToNamedStep, ...props }) {
 					control={control}
 					label="Kubernetes versiyonu"
 					items={kubernetesVersions}
+					defaultValue={kubernetesVersions[0]}
 					rules={{
 						required: "Versiyon giriniz",
 						minLength: {
@@ -63,6 +64,7 @@ export default function StepKindProviderConfig({ goToNamedStep, ...props }) {
 					name="masterCount"
 					control={control}
 					label="Control Plane adedi"
+					defaultValue={1}
 					componentProps={{ type: "number" }}
 					rules={{
 						required: "Lütfen adet giriniz",
@@ -77,6 +79,7 @@ export default function StepKindProviderConfig({ goToNamedStep, ...props }) {
 					name="workerCount"
 					control={control}
 					label="Worker adedi"
+					defaultValue={1}
 					componentProps={{ type: "number" }}
 					rules={{
 						required: "Lütfen adet giriniz",

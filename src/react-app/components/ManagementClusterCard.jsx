@@ -1,68 +1,38 @@
 import React from "react";
-import { Card, Typography, Box, Divider, Link as MUILink } from "@mui/material";
 import { providerNames } from "../providers/provider-names";
 import { providerLogos } from "../providers/provider-logos";
-import { Link } from "react-router-dom";
-import ProviderChip from "./ProviderChip.jsx";
+import { ProviderChip } from "./ProviderChip";
+import { useNavigate } from "react-router-dom";
 
-export default function ManagementClusterCard({
+export function ManagementClusterCard({
 	name,
 	clusters,
 	href,
 	supportedProviders,
 }) {
+	const nav = useNavigate();
 	return (
-		<Card
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				width: "325px",
-				height: "300px",
-			}}
+		<div
+			className="flex flex-col w-[325px] h-[300px] shadow-xl rounded-lg border-[0.1px] border-emerald-400 transition-all duration-300 hover:bg-gray-100 hover:cursor-pointer p-4 gap-1"
+			onClick={() => nav(href)}
 		>
-			<MUILink component={Link} to={href} m={2} underline="hover">
-				<Typography
-					sx={{
-						fontSize: "20px",
-						fontWeight: "bold",
-						color: "black",
-					}}
-				>
-					{name}
-				</Typography>
-			</MUILink>
-			<Divider />
-			<Box
-				sx={{
-					flexGrow: 1,
-					p: 2,
-				}}
-			>
-				<Typography mb={1}>Desteklenen Altyapılar</Typography>
-				<Box
-					sx={{
-						display: "flex",
-						flexWrap: "wrap",
-						gap: "10px",
-					}}
-				>
+			<div className="font-bold text-black text-xl">{name}</div>
+			<hr />
+			<div className="flex-grow p-1">
+				Desteklenen Altyapılar
+				<div className="flex flex-wrap gap-3 mt-3">
 					{supportedProviders?.map((x, i) => (
 						<ProviderChip
 							key={i}
 							name={providerNames[x]}
 							logo={providerLogos[x]}
 						/>
-					)) ?? <Typography>Yok</Typography>}
-				</Box>
-			</Box>
-			<Divider />
-			<Box
-				sx={{
-					p: 2,
-					overflowY: "auto",
-				}}
-			>
-				<Typography mb={1}>Kümeler</Typography>
+					))}
+				</div>
+			</div>
+			<hr />
+			<div className="p-2 overflow-y-auto">
+				<div mb={1}>Kümeler</div>
 				{clusters && clusters.length > 0 ? (
 					clusters?.map((x, i) => (
 						<ProviderChip
@@ -74,18 +44,11 @@ export default function ManagementClusterCard({
 						/>
 					))
 				) : (
-					<Typography
-						sx={{
-							width: "100%",
-							textAlign: "center",
-							alignItems: "center",
-							fontStyle: "italic",
-						}}
-					>
+					<div className="w-full text-center italic items-center font-sans">
 						Henüz küme oluşturulmamış...
-					</Typography>
+					</div>
 				)}
-			</Box>
-		</Card>
+			</div>
+		</div>
 	);
 }

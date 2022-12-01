@@ -11,9 +11,7 @@ import {
 	Typography,
 	styled,
 	tableCellClasses,
-	Button,
 	ButtonGroup,
-	Fab,
 } from "@mui/material";
 
 import {
@@ -31,16 +29,17 @@ import { providerLogos } from "../providers/provider-logos";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "../hooks/useModal";
 
-import DashboardLayout from "../layouts/DashboardLayout.jsx";
-import ProviderChip from "../components/ProviderChip.jsx";
-import QuestionModal from "../components/Modals/QuestionModal.jsx";
-import Loading from "../components/Snackbars/Loading.jsx";
+import { DashboardLayout } from "../layouts/DashboardLayout";
+import { ProviderChip } from "../components/ProviderChip";
+import QuestionModal from "../components/Modals/QuestionModal";
+import { Loading } from "../components/Snackbars/Loading";
 import clusterConfig from "../api/clusterConfig";
 import kubeConfig from "../api/kubeConfig";
 import kubectl from "../api/kubectl";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 import clusterctl from "../api/clusterctl";
 import { logger } from "../logger";
+import { Button } from "../components/UI/Button";
 
 const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -105,23 +104,19 @@ export default function ManagementClusterInfoPage() {
 		<DashboardLayout>
 			<div className="flex justify-center flex-col gap-10 p-5">
 				<div className="w-full flex">
-					<Fab
-						color="primary"
-						sx={{
-							margin: 0,
-							top: "auto",
-							left: "auto",
-						}}
+					<Button
+						variant="fab"
+						className="top-auto left-auto"
 						onClick={() => nav(-1)}
 					>
 						<ArrowBackIcon />
-					</Fab>
+					</Button>
 				</div>
 				<div className="items-center flex justify-between">
 					<h4 className="font-sans text-3xl">{name}</h4>
 					<div className="flex gap-5">
-						<Fab
-							color="primary"
+						<Button
+							variant="fab"
 							onClick={() => {
 								modal.showModal(QuestionModal, {
 									yesButtonColor: "error",
@@ -156,45 +151,30 @@ export default function ManagementClusterInfoPage() {
 							}}
 						>
 							<DeleteIcon />
-						</Fab>
-						<Fab
-							color="primary"
-							variant="circular"
+						</Button>
+						<Button
+							variant="fab"
 							onClick={() => nav(`/cluster/config/${name}`)}
 						>
 							<EditIcon />
-						</Fab>
+						</Button>
 					</div>
 				</div>
 				<div className="flex justify-between items-center ml-1 mr-1">
 					<div className="font-sans">İşyükü kümeleri</div>
 					<div className="flex gap-5 w-[400px] h-[40px]">
-						<Button
-							onClick={() => refreshClusters()}
-							variant="contained"
-						>
+						<Button onClick={() => refreshClusters()}>
 							<ReplayIcon />
 						</Button>
 						<Button
-							sx={{
-								textTransform: "none",
-								fontSize: "20px",
-								flexGrow: 1,
-							}}
+							className="flex-grow"
 							onClick={() => nav(`/create-cluster/${name}`)}
-							variant="contained"
 						>
 							Yeni küme ekle <AddIcon />
 						</Button>
 					</div>
 				</div>
-				<TableContainer
-					sx={{
-						display: "flex",
-						flexDirection: "column",
-					}}
-					component={Paper}
-				>
+				<TableContainer component={Paper}>
 					<Table>
 						<TableHead>
 							<TableRow>
@@ -206,7 +186,7 @@ export default function ManagementClusterInfoPage() {
 						</TableHead>
 						<TableBody>
 							{clusters.map((x, i) => (
-								<StyledTableRow key={i}>
+								<TableRow key={i}>
 									<StyledTableCell>{x.name}</StyledTableCell>
 									<StyledTableCell>
 										<ProviderChip
@@ -225,103 +205,91 @@ export default function ManagementClusterInfoPage() {
 												return "Siliniyor";
 										})()}
 									</StyledTableCell>
-									<StyledTableCell>
-										<ButtonGroup variant="contained">
-											<Button
-												disabled={
-													x.status !== "Provisioned"
-												}
-												onClick={async () => {
-													await navigator.clipboard.writeText(
-														await clusterctl.getClusterConfig(
-															config,
-															x.name
-														)
-													);
-													snack(
-														"Kümenin kubeconfig içeriği panoya kopyalandı!",
-														{
-															variant: "info",
-															autoHideDuration: 2000,
-														}
-													);
-												}}
-											>
-												<CameraIcon />
-											</Button>
-											<Button
-												onClick={() => {
-													nav(
-														`/upgrade-cluster/${name}/${x.name}`,
-														{ replace: true }
-													);
-												}}
-												disabled={
-													x.status !== "Provisioned"
-												}
-											>
-												<UpgradeIcon />
-											</Button>
-											<Button
-												disabled={
-													x.status === "Deleting"
-												}
-												onClick={async () => {
-													modal.showModal(
-														QuestionModal,
-														{
-															yesButtonColor:
-																"error",
-															message: `${x.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`,
-															yesButtonText:
-																"Sil",
-															noButtonText:
-																"Vazgeç",
+									<StyledTableCell
+										sx={{
+											display: "flex",
+											gap: "5px",
+											justifyContent: "center",
+										}}
+									>
+										<Button
+											disabled={
+												x.status !== "Provisioned"
+											}
+											onClick={async () => {
+												await navigator.clipboard.writeText(
+													await clusterctl.getClusterConfig(
+														config,
+														x.name
+													)
+												);
+												snack(
+													"Kümenin kubeconfig içeriği panoya kopyalandı!",
+													{
+														variant: "info",
+														autoHideDuration: 2000,
+													}
+												);
+											}}
+										>
+											<CameraIcon />
+										</Button>
+										<Button
+											onClick={() => {
+												nav(
+													`/upgrade-cluster/${name}/${x.name}`,
+													{ replace: true }
+												);
+											}}
+											disabled={
+												x.status !== "Provisioned"
+											}
+										>
+											<UpgradeIcon />
+										</Button>
+										<Button
+											disabled={x.status === "Deleting"}
+											onClick={async () => {
+												modal.showModal(QuestionModal, {
+													yesButtonColor: "error",
+													message: `${x.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`,
+													yesButtonText: "Sil",
+													noButtonText: "Vazgeç",
 
-															onYesClick:
-																async () => {
-																	modal.closeModal();
-																	const info =
-																		snack(
-																			`"${x.name}" kümesi siliniyor`,
-																			{
-																				variant:
-																					"info",
-																				persist: true,
-																			}
-																		);
-																	try {
-																		await kubectl.delete_(
-																			config,
-																			"cluster",
-																			x.name
-																		);
-																	} catch (err) {
-																		snack(
-																			err.message,
-																			{
-																				variant:
-																					"error",
-																				autoHideDuration: 5000,
-																			}
-																		);
-																	} finally {
-																		closeSnackbar(
-																			info
-																		);
-																	}
-																},
-															onNoClick: () =>
-																modal.closeModal(),
+													onYesClick: async () => {
+														modal.closeModal();
+														const info = snack(
+															`"${x.name}" kümesi siliniyor`,
+															{
+																variant: "info",
+																persist: true,
+															}
+														);
+														try {
+															await kubectl.delete_(
+																config,
+																"cluster",
+																x.name
+															);
+														} catch (err) {
+															snack(err.message, {
+																variant:
+																	"error",
+																autoHideDuration: 5000,
+															});
+														} finally {
+															closeSnackbar(info);
 														}
-													);
-												}}
-											>
-												<DeleteIcon />
-											</Button>
-										</ButtonGroup>
+													},
+													onNoClick: () =>
+														modal.closeModal(),
+												});
+											}}
+										>
+											<DeleteIcon />
+										</Button>
 									</StyledTableCell>
-								</StyledTableRow>
+								</TableRow>
 							))}
 						</TableBody>
 					</Table>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Fab, TextField } from "@mui/material";
-import { Add, Search } from "@mui/icons-material";
+import { TextField } from "@mui/material";
+import { Add as AddIcon, Search as SearchIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 import clusterConfig from "../api/clusterConfig";
-import DashboardLayout from "../layouts/DashboardLayout.jsx";
-import ManagementClusterCard from "../components/ManagementClusterCard.jsx";
-import Loading from "../components/Snackbars/Loading.jsx";
+import { DashboardLayout } from "../layouts/DashboardLayout";
+import { ManagementClusterCard } from "../components/ManagementClusterCard";
+import { Loading } from "../components/Snackbars/Loading";
+import { Button } from "../components/UI/Button";
 
 export default function ManagementClustersPage() {
 	const [clusters, setClusters] = useState([]);
@@ -34,20 +35,13 @@ export default function ManagementClustersPage() {
 
 	return (
 		<DashboardLayout>
-			<Fab
-				color="primary"
-				sx={{
-					margin: 0,
-					top: "auto",
-					right: 20,
-					bottom: 20,
-					left: "auto",
-					position: "fixed",
-				}}
+			<Button
+				className="fixed left-auto top-auto bottom-5 right-5 m-0 h-16 w-16"
+				variant="fab"
 				onClick={() => nav("/add-cluster")}
 			>
-				<Add />
-			</Fab>
+				<AddIcon />
+			</Button>
 			<div className="flex flex-col">
 				<div className="flex items-center">
 					<TextField
@@ -61,13 +55,9 @@ export default function ManagementClustersPage() {
 						label="Ara..."
 						variant="outlined"
 					/>
-					<Fab
-						sx={{ mr: "10px" }}
-						color="primary"
-						variant="contained"
-					>
-						<Search />
-					</Fab>
+					<Button className="w-16 h-16 mr-3 shadow-2xl" variant="fab">
+						<SearchIcon />
+					</Button>
 				</div>
 				<div className="flex flex-wrap gap-[12px] m-3">
 					{clusters.map((x, i) => (

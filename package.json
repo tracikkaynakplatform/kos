@@ -98,6 +98,7 @@
     "@mui/styled-engine-sc": "^5.10.1",
     "@reduxjs/toolkit": "^1.8.5",
     "apexcharts": "^3.35.5",
+    "classnames": "^2.3.2",
     "electron-squirrel-startup": "^1.0.0",
     "file-loader": "^6.2.0",
     "js-yaml": "^4.1.0",

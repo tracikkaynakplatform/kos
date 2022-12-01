@@ -1,12 +1,10 @@
 import React from "react";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
-import { Button, Fab } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import DashboardLayout from "../layouts/DashboardLayout";
+import { DashboardLayout } from "../layouts/DashboardLayout";
 import { useState } from "react";
 import { useEffect } from "react";
 import kubeConfig from "../api/kubeConfig";
-import { useSnackbar } from "notistack";
 import clusterConfig from "../api/clusterConfig";
 import { PROVIDER_TYPE } from "../providers";
 import { providerNames } from "../providers/provider-names";
@@ -14,8 +12,9 @@ import { providerLogos } from "../providers/provider-logos";
 import { useForm } from "react-hook-form";
 import { logger } from "../logger";
 import InputText from "../components/FormInputs/InputText";
+import { Button } from "../components/UI/Button";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
-import Loading from "../components/Snackbars/Loading";
+import { Loading } from "../components/Snackbars/Loading";
 
 function InputRow({ name, label, control }) {
 	return (
@@ -114,9 +113,9 @@ export default function ManagementClusterConfigPage() {
 	return (
 		<DashboardLayout>
 			<div className="flex flex-col gap-5 p-5">
-				<Fab color="primary" variant="circular" onClick={() => nav(-1)}>
+				<Button variant="fab" onClick={() => nav(-1)}>
 					<ArrowBackIcon />
-				</Fab>
+				</Button>
 				{supportedProviders.map((x, i) => {
 					let content;
 					let providerName = providerNames[x];
@@ -168,13 +167,7 @@ export default function ManagementClusterConfigPage() {
 					);
 				})}
 				<Button
-					sx={{
-						textTransform: "none",
-						width: "100px",
-						fontSize: "20px",
-						alignSelf: "center",
-					}}
-					variant="contained"
+					className="w-32 text-lg self-center"
 					onClick={handleSave}
 				>
 					Kaydet

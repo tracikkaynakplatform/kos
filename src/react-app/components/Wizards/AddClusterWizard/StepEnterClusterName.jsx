@@ -18,7 +18,6 @@ export default function StepEnterClusterName(props) {
 	return (
 		<StepWizardWrapper
 			stepName={props.stepName}
-			disableBack
 			onLoad={async () => {
 				setValue(
 					"name",
@@ -41,6 +40,9 @@ export default function StepEnterClusterName(props) {
 					snack("Bir hata oluştu!", { variant: "error" });
 				}
 			})}
+			onBackClick={() => {
+				_goto("kubeConfig");
+			}}
 			width={400}
 			title="Küme Bilgileri"
 			text="Eklemek olduğunuz yönetim kümesi için bir isim giriniz."

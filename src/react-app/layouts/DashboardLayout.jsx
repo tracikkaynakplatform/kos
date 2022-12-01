@@ -1,66 +1,33 @@
 import React from "react";
-import { Drawer, Box, List, ListItemButton, Typography } from "@mui/material";
-import { Home as HomeIcon, Storage as StorageIcon } from "@mui/icons-material";
+import { Storage as StorageIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { sidebarWidth } from "../config";
 
-function Sidebar() {
-	const navigate = useNavigate();
-	const ListButton = ({ icon: Icon, label, to }) => (
-		<ListItemButton
-			onClick={() => (to ? navigate(to, { replace: true }) : null)}
-			sx={{
-				display: "flex",
-				flexDirection: "row",
-				gap: "20px",
-				mt: "10px",
-				mb: "10px",
-			}}
+function SidebarButton({ to, icon: Icon, label }) {
+	const nav = useNavigate();
+	return (
+		<li
+			className="flex items-center gap-3 transition-all duration-300 hover:bg-gray-100 hover:cursor-pointer w-full p-3"
+			onClick={() => nav(to, { replace: true })}
 		>
 			<Icon />
-			<Typography>{label}</Typography>
-		</ListItemButton>
-	);
-
-	return (
-		<Drawer
-			sx={{
-				width: sidebarWidth,
-				flexShrink: 0,
-				[`& .MuiDrawer-paper`]: {
-					width: sidebarWidth,
-					boxSizing: "border-box",
-				},
-			}}
-			variant="permanent"
-		>
-			<Box sx={{ overflow: "auto" }}>
-				<List>
-					<ListButton
-						to="/main_window"
-						icon={StorageIcon}
-						label="Yönetim Kümeleri"
-					/>
-				</List>
-			</Box>
-		</Drawer>
+			<div>{label}</div>
+		</li>
 	);
 }
 
-export default function DashboardLayout({ children }) {
+export function DashboardLayout({ children }) {
 	return (
-		<Box sx={{ display: "flex" }}>
-			<Sidebar />
-			<Box
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					flexGrow: 1,
-					height: "100vh",
-				}}
-			>
-				{children}
-			</Box>
-		</Box>
+		<div className="flex">
+			<div className="h-screen w-64 border-r-2 border-gray-200">
+				<ul className="pt-5 flex flex-col w-full items-center">
+					<SidebarButton
+						to="/"
+						icon={StorageIcon}
+						label="Yönetim Kümeleri"
+					/>
+				</ul>
+			</div>
+			<div className="flex flex-col flex-grow h-screen">{children}</div>
+		</div>
 	);
 }
