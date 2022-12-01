@@ -1,9 +1,9 @@
 import React from "react";
-import Wrapper from "../../Steps/StepWizardWrapper.jsx";
+import { StepWizardWrapper } from "../../../Steps";
 
 export default function StepAddClusterComplete({ onFinish, ...props }) {
 	return (
-		<Wrapper
+		<StepWizardWrapper
 			onNextClick={() => onFinish()}
 			disableBack
 			width={500}

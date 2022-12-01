@@ -1,10 +1,10 @@
 import React from "react";
-import { Typography, Box } from "@mui/material";
-import Wrapper from "../../Steps/StepWizardWrapper.jsx";
+import { Typography } from "@mui/material";
+import { StepWizardWrapper } from "../../../Steps";
 
 export default function StepEnd({ onFinish, ...props }) {
 	return (
-		<Wrapper
+		<StepWizardWrapper
 			disableBack
 			onNextClick={async () => {
 				onFinish?.();
@@ -21,23 +21,13 @@ export default function StepEnd({ onFinish, ...props }) {
 			>
 				Yükseltme tamamlandı
 			</Typography>
-			<Box
-				sx={{
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					flexDirection: "column",
-					gap: "10px",
-					width: "500px",
-					mb: "10px",
-				}}
-			>
+			<div className="flex justify-center items-center flex-col gap-3 w-[500px] mb-[10px]">
 				<Typography>
 					Küme yükseltme işlemi başarıyla sonuçlandı. Kümenin
 					yükseltme durumuyla ilgili bilgiyi detay sayfasından
 					alabilirsiniz.
 				</Typography>
-			</Box>
-		</Wrapper>
+			</div>
+		</StepWizardWrapper>
 	);
 }

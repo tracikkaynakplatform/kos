@@ -1,5 +1,5 @@
-import classNames from "classnames";
 import React, { forwardRef } from "react";
+import classNames from "classnames";
 
 export const BUTTON_COLOR = {
 	error: {
@@ -40,3 +40,5 @@ export const Button = forwardRef(
 		);
 	}
 );
+
+export default Button;

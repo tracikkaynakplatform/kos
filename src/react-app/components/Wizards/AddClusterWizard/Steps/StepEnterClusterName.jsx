@@ -1,13 +1,11 @@
 import React from "react";
-import { useWizard } from "../../../hooks/useWizard";
-import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
+import { useWizard } from "../../../../hooks/useWizard";
+import { StepWizardWrapper } from "../../../Steps";
 import { useForm } from "react-hook-form";
-import InputText from "../../FormInputs/InputText.jsx";
-import kubectl from "../../../api/kubectl";
-import clusterConfig from "../../../api/clusterConfig";
+import { InputText } from "../../../FormInputs";
 import { useSnackbar } from "notistack";
-import kubeConfig from "../../../api/kubeConfig";
-import { logger } from "../../../logger";
+import { logger } from "../../../../logger";
+import { clusterConfig, kubectl } from "../../../../api";
 
 export default function StepEnterClusterName(props) {
 	const wizard = useWizard();

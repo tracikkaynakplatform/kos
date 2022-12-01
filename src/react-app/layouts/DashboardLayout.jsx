@@ -15,7 +15,7 @@ function SidebarButton({ to, icon: Icon, label }) {
 	);
 }
 
-export function DashboardLayout({ children }) {
+export default function DashboardLayout({ children }) {
 	return (
 		<div className="flex">
 			<div className="h-screen w-64 border-r-2 border-gray-200">

@@ -21,3 +21,5 @@ export const Loading = forwardRef(({ message }, ref) => {
 		</SnackbarContent>
 	);
 });
+
+export default Loading;

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useWizard } from "../../hooks/useWizard";
-import { Button } from "../UI/Button";
+import { Button } from "../UI";
 
 export default function StepWizardWrapper({
 	disableBack,

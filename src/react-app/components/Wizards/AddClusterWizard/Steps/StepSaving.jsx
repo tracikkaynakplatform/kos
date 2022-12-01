@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useWizard } from "../../../hooks/useWizard";
-import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
+import { useWizard } from "../../../../hooks/useWizard";
 import { useSnackbar } from "notistack";
-import kubeConfig from "../../../api/kubeConfig";
-import { logger } from "../../../logger";
-import StepBaseLoading from "../../Steps/StepBaseLoading";
+import { kubeConfig } from "../../../../api";
+import { logger } from "../../../../logger";
+import { StepBaseLoading } from "../../../Steps";
 
 export default function StepSaving(props) {
 	const [info, setInfo] = useState("Kümeniz KOS'a ekleniyor...");

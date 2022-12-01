@@ -1,20 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { DashboardLayout } from "../layouts/DashboardLayout";
-import { useState } from "react";
-import { useEffect } from "react";
-import kubeConfig from "../api/kubeConfig";
-import clusterConfig from "../api/clusterConfig";
-import { PROVIDER_TYPE } from "../providers";
-import { providerNames } from "../providers/provider-names";
-import { providerLogos } from "../providers/provider-logos";
+import { DashboardLayout } from "../layouts";
+import { kubeConfig, clusterConfig } from "../api";
+import { PROVIDER_TYPE, providerNames, providerLogos } from "../providers";
 import { useForm } from "react-hook-form";
 import { logger } from "../logger";
-import InputText from "../components/FormInputs/InputText";
+import { InputText } from "../components/FormInputs";
 import { Button } from "../components/UI/Button";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
-import { Loading } from "../components/Snackbars/Loading";
+import { Loading } from "../components/Snackbars";
 
 function InputRow({ name, label, control }) {
 	return (

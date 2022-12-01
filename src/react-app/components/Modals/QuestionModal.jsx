@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, BUTTON_COLOR } from "../UI/Button";
-import BaseModal from "./BaseModal";
+import { BaseModal } from "./";
 
 export default function QuestionModal({
 	message,

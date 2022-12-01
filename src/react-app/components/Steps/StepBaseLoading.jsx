@@ -1,11 +1,11 @@
 import React from "react";
-import { CircularProgress, Box } from "@mui/material";
-import Wrapper from "./StepWizardWrapper.jsx";
+import { CircularProgress } from "@mui/material";
+import { StepWizardWrapper } from "./";
 
 export default function StepBaseLoading({ info, title, ...props }) {
 	return (
-		<Wrapper title={title} text={info} {...props}>
+		<StepWizardWrapper title={title} text={info} {...props}>
 			<CircularProgress />
-		</Wrapper>
+		</StepWizardWrapper>
 	);
 }

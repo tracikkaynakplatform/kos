@@ -1,16 +1,15 @@
 import React, { useState } from "react";
-import { eksVersions, machineTypes } from "../../../providers/aws";
-import { useWizard } from "../../../hooks/useWizard";
+import { kubernetesVersions, machineTypes } from "../../../../providers/aws";
+import { useWizard } from "../../../../hooks/useWizard";
+import { StepWizardWrapper } from "../../../Steps";
 import { Grid } from "@mui/material";
+import { InputText, InputSelect } from "../../../FormInputs";
 import { useForm } from "react-hook-form";
-import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
-import InputText from "../../FormInputs/InputText.jsx";
-import InputSelect from "../../FormInputs/InputSelect.jsx";
-import { logger } from "../../../logger";
-import { getAWSInfo } from "./aws";
+import { getAWSInfo } from "../aws";
+import { logger } from "../../../../logger";
 import { useSnackbar } from "notistack";
 
-export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
+export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 	const [regions, setRegions] = useState(["Yükleniyor..."]);
 	const [sshKeys, setSshKeys] = useState(["Yükleniyor..."]);
 	const snack = useSnackbar().enqueueSnackbar;
@@ -55,11 +54,10 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 			onNextClick={handleSubmit(async (fields) => {
 				for (let field of Object.keys(fields))
 					await wizard.updateData(field, fields[field]);
-				wizard.updateData("type", "eks");
+				wizard.updateData("type", "ec2");
 				goToNamedStep("AWSCreateCluster");
 			})}
-			title="AWS-EKS Küme Bilgileri"
-			text="Oluşturulacak EKS kümesinin detaylarını girin."
+			title="AWS Küme Bilgileri"
 			width={500}
 			{...props}
 		>
@@ -83,7 +81,7 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 						name="kubVersion"
 						control={control}
 						label="Kubernetes versiyonu"
-						items={eksVersions}
+						items={kubernetesVersions}
 						rules={{
 							required: "Versiyon giriniz",
 							minLength: {
@@ -95,10 +93,26 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 				</Grid>
 				<Grid item xs={6}>
 					<InputText
+						name="masterCount"
+						control={control}
+						label="Control Plane adedi"
+						defaultValue={1}
+						componentProps={{ type: "number" }}
+						rules={{
+							required: "Lütfen adet giriniz",
+							min: {
+								value: 1,
+								message: "Lütfen adet giriniz",
+							},
+						}}
+					/>
+				</Grid>
+				<Grid item xs={6}>
+					<InputText
 						name="workerCount"
 						control={control}
-						label="Worker adedi"
 						defaultValue={1}
+						label="Worker adedi"
 						componentProps={{ type: "number" }}
 						rules={{
 							required: "Lütfen adet giriniz",
@@ -141,6 +155,23 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 						}}
 					/>
 				</Grid>
+
+				<Grid item xs={6}>
+					<InputSelect
+						name="masterMachineType"
+						control={control}
+						label="Control Plane makina tipi"
+						items={machineTypes.map((x) => x.name)}
+						rules={{
+							required: "Makina tipini giriniz",
+							minLength: {
+								value: 1,
+								message: "Makina tipini giriniz",
+							},
+						}}
+					/>
+				</Grid>
+
 				<Grid item xs={6}>
 					<InputSelect
 						name="region"

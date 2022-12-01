@@ -1,10 +1,9 @@
 import React from "react";
-import { providerNames } from "../providers/provider-names";
-import { providerLogos } from "../providers/provider-logos";
-import { ProviderChip } from "./ProviderChip";
+import { providerNames, providerLogos } from "../../providers";
 import { useNavigate } from "react-router-dom";
+import ProviderChip from "./ProviderChip";
 
-export function ManagementClusterCard({
+export default function ManagementClusterCard({
 	name,
 	clusters,
 	href,

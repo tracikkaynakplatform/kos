@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useSnackbar } from "notistack";
-import { useWizard } from "../../../hooks/useWizard";
-import StepBaseLoading from "../../Steps/StepBaseLoading.jsx";
-import kubectl from "../../../api/kubectl";
-import clusterConfig from "../../../api/clusterConfig";
-import { logger } from "../../../logger";
+import { useWizard } from "../../../../hooks/useWizard";
+import { StepBaseLoading } from "../../../Steps";
+import { logger } from "../../../../logger";
+import { clusterConfig, kubectl } from "../../../../api";
 
 export default function StepConnecting(props) {
 	const [info, setInfo] = useState("");

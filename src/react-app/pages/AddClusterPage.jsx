@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import AddClusterWizard from "../components/Wizards/AddClusterWizard";
-import TempLayout from "../layouts/TempLayout.jsx";
+import { TempLayout } from "../layouts";
+import { AddClusterWizard } from "../components/Wizards";
 
 export default function AddClusterPage() {
 	const nav = useNavigate();

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import {
 	Paper,
 	Table,
@@ -11,9 +10,7 @@ import {
 	Typography,
 	styled,
 	tableCellClasses,
-	ButtonGroup,
 } from "@mui/material";
-
 import {
 	Delete as DeleteIcon,
 	Upgrade as UpgradeIcon,
@@ -23,23 +20,16 @@ import {
 	Replay as ReplayIcon,
 	Edit as EditIcon,
 } from "@mui/icons-material";
-
-import { providerNames } from "../providers/provider-names";
-import { providerLogos } from "../providers/provider-logos";
+import { clusterConfig, kubeConfig, kubectl, clusterctl } from "../api";
+import { providerNames, providerLogos } from "../providers";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "../hooks/useModal";
-
-import { DashboardLayout } from "../layouts/DashboardLayout";
-import { ProviderChip } from "../components/ProviderChip";
-import QuestionModal from "../components/Modals/QuestionModal";
-import { Loading } from "../components/Snackbars/Loading";
-import clusterConfig from "../api/clusterConfig";
-import kubeConfig from "../api/kubeConfig";
-import kubectl from "../api/kubectl";
+import { DashboardLayout } from "../layouts";
+import { QuestionModal } from "../components/Modals";
+import { Loading } from "../components/Snackbars";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
-import clusterctl from "../api/clusterctl";
 import { logger } from "../logger";
-import { Button } from "../components/UI/Button";
+import { Button, ProviderChip } from "../components/UI";
 
 const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {

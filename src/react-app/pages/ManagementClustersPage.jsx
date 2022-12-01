@@ -3,11 +3,10 @@ import { TextField } from "@mui/material";
 import { Add as AddIcon, Search as SearchIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
-import clusterConfig from "../api/clusterConfig";
-import { DashboardLayout } from "../layouts/DashboardLayout";
-import { ManagementClusterCard } from "../components/ManagementClusterCard";
-import { Loading } from "../components/Snackbars/Loading";
-import { Button } from "../components/UI/Button";
+import { clusterConfig } from "../api";
+import { DashboardLayout } from "../layouts";
+import { ManagementClusterCard, Button } from "../components/UI";
+import { Loading } from "../components/Snackbars";
 
 export default function ManagementClustersPage() {
 	const [clusters, setClusters] = useState([]);

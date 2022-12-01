@@ -1,8 +1,8 @@
 import React from "react";
-import unknownLogo from "../public/assets/images/logos/unknown_32x32.png";
+import unknownLogo from "../../public/assets/images/logos/unknown_32x32.png";
 import { Avatar, Badge, Chip } from "@mui/material";
 
-export function ProviderChip({ logo, name, status, href }) {
+export default function ProviderChip({ logo, name, status, href }) {
 	let badgeColor = "success";
 
 	switch (status) {

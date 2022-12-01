@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import StepWizardWrapper from "../../Steps/StepWizardWrapper";
+import { StepWizardWrapper } from "../../../Steps";
 
 export default function StepEnd() {
 	const nav = useNavigate();

@@ -1,11 +1,9 @@
 import React from "react";
 import { useSnackbar } from "notistack";
-import { useWizard } from "../../../hooks/useWizard";
-import StepBaseLoading from "../../Steps/StepBaseLoading.jsx";
-import { PROVIDER_CLASS } from "../../../providers";
-import kubectl from "../../../api/kubectl";
-import kubeConfig from "../../../api/kubeConfig";
-import clusterConfig from "../../../api/clusterConfig";
+import { useWizard } from "../../../../hooks/useWizard";
+import { StepBaseLoading } from "../../../Steps";
+import { PROVIDER_CLASS } from "../../../../providers";
+import { clusterConfig, kubectl, kubeConfig } from "../../../../api";
 
 export default function StepGetClusterInfo({
 	onError,
