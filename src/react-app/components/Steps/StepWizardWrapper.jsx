@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { Box, Button, Card, Typography } from "@mui/material";
 import { useWizard } from "../../hooks/useWizard";
+import { Button } from "../UI";
 
 export default function StepWizardWrapper({
 	disableBack,
@@ -20,59 +20,29 @@ export default function StepWizardWrapper({
 		if (wizard.stepName == stepName) onLoad?.();
 	}, [wizard.stepName]);
 	return (
-		<Card
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				width: (width ?? 300) + "px",
-				p: 2,
-				...sx,
-			}}
+		<div
+			className="flex flex-col p-4 shadow-xl rounded-lg border-2 border-gray-100"
+			style={{ width: (width ?? 300) + "px", ...sx }}
 		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				{title}
-			</Typography>
-			{!!text ? <Typography>{text}</Typography> : null}
-			<Box
-				sx={{
-					mt: "10px",
-					mb: "10px",
-					display: "flex",
-					gap: "10px",
-				}}
-			>
-				{children}
-			</Box>
-			<Box
-				sx={{
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "flex-end",
-					gap: "10px",
-				}}
-			>
+			<div className="text-xl font-bold pb-4 pt-4">{title}</div>
+			{!!text ? <div>{text}</div> : null}
+			<div className="mt-3 mb-3 flex gap-3">{children}</div>
+			<div className="flex justify-end gap-3">
 				<Button
+					className="w-20"
 					disabled={!!disableBack}
 					onClick={onBackClick}
-					variant="contained"
 				>
 					Geri
 				</Button>
 				<Button
+					className="w-20"
 					disabled={!!disableNext}
 					onClick={onNextClick}
-					variant="contained"
 				>
 					İleri
 				</Button>
-			</Box>
-		</Card>
+			</div>
+		</div>
 	);
 }

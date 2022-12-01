@@ -1,17 +1,18 @@
+import "./styles/index.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./styles/index.css";
-import { BrowserRouter, Route, Routes, HashRouter } from "react-router-dom";
+import { Route, Routes, HashRouter } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
-import { ModalProvider } from "./hooks/useModal.js";
-
-import AddClusterPage from "./pages/AddClusterPage.jsx";
-import ManagementClustersPage from "./pages/ManagementClustersPage.jsx";
-import ManagementClusterInfoPage from "./pages/ManagementClusterInfoPage.jsx";
-import UpgradeClusterPage from "./pages/UpgradeClusterPage.jsx";
-import CreateClusterPage from "./pages/CreateClusterPage.jsx";
-import { logger } from "./logger.js";
-import ManagementClusterConfigPage from "./pages/ManagementClusterConfigPage";
+import { ModalProvider } from "./hooks/useModal";
+import { logger } from "./logger";
+import {
+	AddClusterPage,
+	CreateClusterPage,
+	ManagementClustersPage,
+	ManagementClusterInfoPage,
+	ManagementClusterConfigPage,
+	UpgradeClusterPage,
+} from "./pages";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

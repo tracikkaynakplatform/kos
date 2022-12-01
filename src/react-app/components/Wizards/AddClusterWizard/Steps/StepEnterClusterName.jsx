@@ -1,13 +1,11 @@
 import React from "react";
-import { useWizard } from "../../../hooks/useWizard";
-import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
+import { useWizard } from "../../../../hooks/useWizard";
+import { StepWizardWrapper } from "../../../Steps";
 import { useForm } from "react-hook-form";
-import InputText from "../../FormInputs/InputText.jsx";
-import kubectl from "../../../api/kubectl";
-import clusterConfig from "../../../api/clusterConfig";
+import { InputText } from "../../../FormInputs";
 import { useSnackbar } from "notistack";
-import kubeConfig from "../../../api/kubeConfig";
-import { logger } from "../../../logger";
+import { logger } from "../../../../logger";
+import { clusterConfig, kubectl } from "../../../../api";
 
 export default function StepEnterClusterName(props) {
 	const wizard = useWizard();
@@ -18,7 +16,6 @@ export default function StepEnterClusterName(props) {
 	return (
 		<StepWizardWrapper
 			stepName={props.stepName}
-			disableBack
 			onLoad={async () => {
 				setValue(
 					"name",
@@ -41,6 +38,9 @@ export default function StepEnterClusterName(props) {
 					snack("Bir hata oluştu!", { variant: "error" });
 				}
 			})}
+			onBackClick={() => {
+				_goto("kubeConfig");
+			}}
 			width={400}
 			title="Küme Bilgileri"
 			text="Eklemek olduğunuz yönetim kümesi için bir isim giriniz."

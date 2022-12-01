@@ -1,9 +1,9 @@
 import React from "react";
-import { useWizard } from "../../../hooks/useWizard";
-import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
-import kubeConfig from "../../../api/kubeConfig";
+import { useWizard } from "../../../../hooks/useWizard";
+import { StepWizardWrapper } from "../../../Steps";
 import { useForm } from "react-hook-form";
-import InputText from "../../FormInputs/InputText.jsx";
+import { InputText } from "../../../FormInputs";
+import { kubeConfig } from "../../../../api/";
 
 export default function StepKubeConfig(props) {
 	const wizard = useWizard();

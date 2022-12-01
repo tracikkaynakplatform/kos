@@ -1,11 +1,10 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useSnackbar } from "notistack";
-import { useWizard } from "../../../hooks/useWizard";
-import { PROVIDER_TYPE } from "../../../providers";
-import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
+import { useWizard } from "../../../../hooks/useWizard";
+import { PROVIDER_TYPE } from "../../../../providers";
+import { StepWizardWrapper } from "../../../Steps";
 import { useForm } from "react-hook-form";
-import InputSelect from "../../FormInputs/InputSelect.jsx";
+import { InputSelect } from "../../../FormInputs";
 
 export default function StepSelectVersion({ goToNamedStep, ...props }) {
 	const [versions, setVersions] = useState([]);

@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import { Card, CardContent, CircularProgress, Typography } from "@mui/material";
 import { SnackbarContent } from "notistack";
 
-const Loading = forwardRef(({ message }, ref) => {
+export const Loading = forwardRef(({ message }, ref) => {
 	return (
 		<SnackbarContent ref={ref}>
 			<Card

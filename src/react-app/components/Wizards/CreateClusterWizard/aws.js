@@ -1,5 +1,4 @@
-import aws from "../../../api/aws";
-import clusterConfig from "../../../api/clusterConfig";
+import { clusterConfig, aws } from "../../../api";
 
 export async function getAWSInfo(managementClusterName, region) {
 	let credentials = await clusterConfig.getClusterConfiguration(

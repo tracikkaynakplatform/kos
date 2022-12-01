@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useSnackbar } from "notistack";
-import { useWizard } from "../../../hooks/useWizard";
-import { PROVIDER_TYPE } from "../../../../main/providers";
-import clusterConfig from "../../../api/clusterConfig";
-import kubeConfig from "../../../api/kubeConfig";
-import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
+import { useWizard } from "../../../../hooks/useWizard";
+import { PROVIDER_TYPE } from "../../../../providers";
+import { kubeConfig, clusterConfig } from "../../../../api";
+import { StepWizardWrapper } from "../../../Steps";
 import { useForm } from "react-hook-form";
-import InputSelect from "../../FormInputs/InputSelect.jsx";
+import { InputSelect } from "../../../FormInputs";
 
 export default function StepSelectProvider({ goToNamedStep, ...props }) {
 	const snack = useSnackbar().enqueueSnackbar;

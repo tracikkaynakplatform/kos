@@ -1,4 +1,5 @@
 import React from "react";
+import { Controller } from "react-hook-form";
 import {
 	FormControl,
 	FormHelperText,
@@ -6,7 +7,6 @@ import {
 	MenuItem,
 	Select,
 } from "@mui/material";
-import { Controller } from "react-hook-form";
 
 export default function InputSelect({
 	name,

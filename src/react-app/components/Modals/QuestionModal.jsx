@@ -1,6 +1,6 @@
 import React from "react";
-import { Box, Typography, Button } from "@mui/material";
-import BaseModal from "./BaseModal.jsx";
+import { Button, BUTTON_COLOR } from "../UI/Button";
+import { BaseModal } from "./";
 
 export default function QuestionModal({
 	message,
@@ -14,30 +14,19 @@ export default function QuestionModal({
 }) {
 	return (
 		<BaseModal {...props}>
-			<Typography sx={{ fontSize: "20px" }}>{message}</Typography>
-			<Box
-				sx={{
-					display: "flex",
-					width: "100%",
-					justifyContent: "flex-end",
-					gap: "30px",
-				}}
-			>
-				<Button
-					onClick={onYesClick}
-					color={yesButtonColor}
-					variant="contained"
-				>
+			<div className="text-xl">{message}</div>
+			<div className="flex w-full justify-end gap-5">
+				<Button className="w-20" onClick={onYesClick}>
 					{yesButtonText ?? "Tamam"}
 				</Button>
 				<Button
+					color={BUTTON_COLOR.error}
+					className="w-20"
 					onClick={onNoClick}
-					color={noButtonColor}
-					variant="contained"
 				>
 					{noButtonText ?? "İptal"}
 				</Button>
-			</Box>
+			</div>
 		</BaseModal>
 	);
 }

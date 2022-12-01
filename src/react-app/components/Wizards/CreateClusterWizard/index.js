@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
 import { Box } from "@mui/material";
 import { useWizard, WizardProvider } from "../../../hooks/useWizard";
+import {
+	StepAddClusterComplete,
+	StepAWSCreateCluster,
+	StepAWSProviderConfig,
+	StepAWSProviderEKSConfig,
+	StepKindCreateCluster,
+	StepKindProviderConfig,
+	StepSelectAWSClusterType,
+	StepSelectProvider,
+} from "./Steps";
 import StepWizard from "../../../lib/react-step-wizard";
-import StepSelectProvider from "./StepSelectProvider.jsx";
-import StepKindProviderConfig from "./StepKindProviderConfig.jsx";
-import StepAddClusterCompleted from "./StepAddClusterComplete.jsx";
-import StepKindCreateCluster from "./StepKindCreateCluster.jsx";
-import StepAWSProviderConfig from "./StepAWSProviderConfig.jsx";
-import StepAWSCreateCluster from "./StepAWSCreateCluster.jsx";
-import StepSelectAWSClusterType from "./StepSelectAWSClusterType.jsx";
-import StepAWSProviderEKSConfig from "./StepAWSProviderEKSConfig.jsx";
 
 function Content({ onFinish }) {
 	const wizard = useWizard();
@@ -38,7 +40,7 @@ function Content({ onFinish }) {
 			<StepAWSProviderEKSConfig stepName="AWSProviderEKSConfig" />
 			<StepAWSCreateCluster stepName="AWSCreateCluster" />
 
-			<StepAddClusterCompleted
+			<StepAddClusterComplete
 				stepName="addClusterComplete"
 				onFinish={onFinish}
 			/>

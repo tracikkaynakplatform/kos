@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { useWizard, WizardProvider } from "../../../hooks/useWizard";
 import { Box } from "@mui/material";
-import StepWizard from "../../../lib/react-step-wizard";
-import StepKubeConfig from "./StepKubeConfig";
-import StepConnecting from "./StepConnecting";
-import StepEnterClusterName from "./StepEnterClusterName";
-import StepSaving from "./StepSaving";
-import StepEnd from "./StepEnd";
+import { StepWizard } from "../../../lib/react-step-wizard";
+import {
+	StepConnecting,
+	StepEnterClusterName,
+	StepSaving,
+	StepEnd,
+	StepKubeConfig,
+} from "./Steps";
 
 function Content() {
 	const wizard = useWizard();

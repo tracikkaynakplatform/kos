@@ -1,23 +1,18 @@
 import React from "react";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
-import { Fab } from "@mui/material";
+import { Button } from "../components/UI/Button";
 
 export default function TempLayout({ children, backEnabled, onBackClicked }) {
 	return (
 		<>
-			<Fab
-				color="primary"
+			<Button
+				variant="fab"
 				disabled={!!backEnabled ? !!!backEnabled : false}
-				sx={{
-					margin: 0,
-					top: "auto",
-					left: "auto",
-					position: "fixed",
-				}}
+				className="top-10 left-10 fixed w-16 h-16"
 				onClick={onBackClicked ?? (() => {})}
 			>
 				<ArrowBackIcon />
-			</Fab>
+			</Button>
 			{children}
 		</>
 	);

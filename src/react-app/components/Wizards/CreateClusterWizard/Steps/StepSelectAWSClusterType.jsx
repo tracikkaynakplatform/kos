@@ -1,6 +1,6 @@
-import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
 import React, { useState } from "react";
-import StepWizardWrapper from "../../Steps/StepWizardWrapper.jsx";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { StepWizardWrapper } from "../../../Steps";
 
 export default function StepSelectAWSClusterType({ goToNamedStep, ...props }) {
 	const [service, setService] = useState("AWSProviderConfig");
