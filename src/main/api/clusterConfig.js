@@ -91,7 +91,7 @@ export async function deleteCluster(managementClusterName) {
 	for (let file of files) {
 		if (file === managementClusterName) {
 			try {
-				let credPath = `${path}/${file}.cred`;
+				let credPath = `${path}/${file}.json`;
 				fs.accessSync(credPath);
 				fs.unlinkSync(credPath);
 			} catch (err) {}
