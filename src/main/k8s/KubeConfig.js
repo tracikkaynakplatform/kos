@@ -1,4 +1,4 @@
-import { access, constants, readFile, unlink, writeFile } from "fs";
+import { access, constants, readFile, unlink, writeFile, chmodSync } from "fs";
 import { env } from "process";
 import { dirCheck, DIRS } from "../utils/dir-check";
 import { customAlphabet } from "nanoid";
@@ -55,6 +55,7 @@ export class KubeConfig {
 		return new Promise((resolve, reject) => {
 			writeFile(this.path, this.config, (err) => {
 				if (err) return reject(err);
+				chmodSync(this.path, 0o600);
 				resolve();
 			});
 		});

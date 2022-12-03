@@ -49,11 +49,11 @@ export async function setClusterConfiguration(
 	credentials
 ) {
 	const path = dirCheck(DIRS.managementClusters);
-	fs.writeFileSync(
-		`${path}/${managementClusterName}.json`,
-		JSON.stringify(credentials),
-		{ encoding: "utf-8" }
-	);
+	const filePath = `${path}/${managementClusterName}.json`;
+	fs.writeFileSync(filePath, JSON.stringify(credentials), {
+		encoding: "utf-8",
+	});
+	fs.chmodSync(filePath, 0o600);
 }
 
 export async function getClusterConfiguration(managementClusterName) {
@@ -91,7 +91,7 @@ export async function deleteCluster(managementClusterName) {
 	for (let file of files) {
 		if (file === managementClusterName) {
 			try {
-				let credPath = `${path}/${file}.cred`;
+				let credPath = `${path}/${file}.json`;
 				fs.accessSync(credPath);
 				fs.unlinkSync(credPath);
 			} catch (err) {}
