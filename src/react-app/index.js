@@ -12,6 +12,7 @@ import {
 	ManagementClusterInfoPage,
 	ManagementClusterConfigPage,
 	UpgradeClusterPage,
+	DownloadExecutables,
 } from "./pages";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -20,10 +21,10 @@ root.render(
 		<ModalProvider>
 			<HashRouter>
 				<Routes>
+					<Route path="/" exact element={<DownloadExecutables />} />
 					<Route
-						path="/"
-						exact
-						element={<ManagementClustersPage />}
+						path="/services/download-exes"
+						element={<DownloadExecutables />}
 					/>
 					<Route
 						path="/cluster/:name"

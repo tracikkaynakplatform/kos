@@ -5,6 +5,7 @@ import clusterctlAPIs from "./clusterctl";
 import kubectlAPIs from "./kubectl";
 import awsAPIs from "./aws";
 import clusterawsadmAPIs from "./clusterawsadm";
+import servicesAPIs from "./services";
 
 export const apis = [
 	{
@@ -30,6 +31,10 @@ export const apis = [
 	{
 		namespace: "clusterawsadmAPI",
 		apis: clusterawsadmAPIs,
+	},
+	{
+		namespace: "servicesAPI",
+		apis: servicesAPIs,
 	},
 ];
 
