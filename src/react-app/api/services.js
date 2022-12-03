@@ -3,5 +3,10 @@ export async function prepareKubectl() {
 }
 
 export async function checkKubectl() {
-	return await servicesAPI.checkKubectl();
+	return (await servicesAPI.checkKubectl()).status;
 }
+
+export default {
+	prepareKubectl,
+	checkKubectl,
+};

@@ -12,6 +12,7 @@ import {
 	ManagementClusterInfoPage,
 	ManagementClusterConfigPage,
 	UpgradeClusterPage,
+	DownloadExecutables,
 } from "./pages";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -24,6 +25,10 @@ root.render(
 						path="/"
 						exact
 						element={<ManagementClustersPage />}
+					/>
+					<Route
+						path="/services/download-exes"
+						element={<DownloadExecutables />}
 					/>
 					<Route
 						path="/cluster/:name"
