@@ -1,12 +1,12 @@
-export async function prepareKubectl() {
-	return await servicesAPI.prepareKubectl();
+export async function prepareService(name) {
+	return await servicesAPI.prepareService(name);
 }
 
-export async function checkKubectl() {
-	return (await servicesAPI.checkKubectl()).status;
+export async function checkService(name) {
+	return await servicesAPI.checkService(name);
 }
 
 export default {
-	prepareKubectl,
-	checkKubectl,
+	prepareService,
+	checkService,
 };

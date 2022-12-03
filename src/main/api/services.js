@@ -1,10 +1,25 @@
 import { logger } from "../logger";
 import Kubectl from "../services/Kubectl";
+import Clusterctl from "../services/Clusterctl";
+import { Aws } from "../services/aws";
+import { Clusterawsadm } from "../services/clusterawsadm";
 
-export async function checkKubectl() {
+function getExeType(name) {
+	switch (name) {
+		case "kubectl":
+			return new Kubectl();
+		case "clusterctl":
+			return new Clusterctl();
+		case "clusterawsadm":
+			return new Clusterawsadm();
+		case "aws":
+			return new Aws();
+	}
+}
+
+export async function checkService(name) {
 	try {
-		let kctl = new Kubectl();
-		await kctl.check();
+		await getExeType(name).check();
 		return { status: true };
 	} catch (err) {
 		logger.error(err.message);
@@ -12,10 +27,9 @@ export async function checkKubectl() {
 	}
 }
 
-export async function prepareKubectl() {
+export async function prepareService(name) {
 	try {
-		let kctl = new Kubectl();
-		await kctl.download();
+		await getExeType(name).download();
 		return { status: "ok" };
 	} catch (err) {
 		logger.error(err.message);
@@ -23,4 +37,4 @@ export async function prepareKubectl() {
 	}
 }
 
-export default [checkKubectl, prepareKubectl];
+export default [checkService, prepareService];

@@ -5,12 +5,12 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { services } from "../api";
 
-async function tryToPrepare(foo) {
+async function tryToPrepare(foo, serviceName) {
 	let tryCount = 0;
 	let maxTry = 5;
 
-	while (tryCount < maxTry && (await foo()).status != "ok") continue;
-
+	while (tryCount < maxTry && (await foo(serviceName)).status != "ok")
+		tryCount++;
 	if (tryCount != maxTry) return true;
 	return false;
 }
@@ -18,20 +18,24 @@ async function tryToPrepare(foo) {
 export default function DownloadExecutables() {
 	const [message, setMessage] = useState("");
 	const nav = useNavigate();
+	const exes = ["kubectl", "clusterawsadm", "clusterctl"];
+
+	const checkExe = async (name) => {
+		setMessage(`${name} varlığı denetleniyor`);
+
+		if (!(await services.checkService(name)).status) {
+			setMessage(`${name} indiriliyor`);
+
+			while (!(await tryToPrepare(services.prepareService, name)))
+				setMessage(`${name} indirmesi başarısız! yeniden deneniyor`);
+		}
+		console.log(name);
+	};
 
 	useEffect(() => {
 		(async () => {
-			setMessage("kubectl varlığı denetleniyor");
-
-			if (!(await services.checkKubectl())) {
-				setMessage("kubectl indiriliyor");
-
-				while (!(await tryToPrepare(services.prepareKubectl)))
-					setMessage(
-						"kubectl indirmesi başarısız! yeniden deneniyor"
-					);
-			}
-			nav("/");
+			for (let exe of exes) await checkExe(exe);
+			nav("/management-clusters");
 		})();
 	}, []);
 

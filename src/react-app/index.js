@@ -21,11 +21,7 @@ root.render(
 		<ModalProvider>
 			<HashRouter>
 				<Routes>
-					<Route
-						path="/"
-						exact
-						element={<ManagementClustersPage />}
-					/>
+					<Route path="/" exact element={<DownloadExecutables />} />
 					<Route
 						path="/services/download-exes"
 						element={<DownloadExecutables />}

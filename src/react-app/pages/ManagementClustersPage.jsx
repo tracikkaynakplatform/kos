@@ -3,7 +3,7 @@ import { TextField } from "@mui/material";
 import { Add as AddIcon, Search as SearchIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
-import { clusterConfig, services } from "../api";
+import { clusterConfig } from "../api";
 import { DashboardLayout } from "../layouts";
 import { ManagementClusterCard, Button } from "../components/UI";
 import { Loading } from "../components/Snackbars";
@@ -15,12 +15,6 @@ export default function ManagementClustersPage() {
 
 	useEffect(() => {
 		(async () => {
-			let isServiceActive = await services.checkKubectl();
-			if (!isServiceActive) {
-				nav("/services/download-exes", { replace: true });
-				return;
-			}
-
 			let loading = snack(
 				"Yönetim kümeleri yükleniyor",
 				{ persist: true },
