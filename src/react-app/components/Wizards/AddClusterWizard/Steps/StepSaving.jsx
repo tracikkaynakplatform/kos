@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useWizard } from "../../../../hooks/useWizard";
 import { useSnackbar } from "notistack";
-import { kubeConfig } from "../../../../api";
+import { clusterConfig, kubeConfig } from "../../../../api";
 import { logger } from "../../../../logger";
 import { StepBaseLoading } from "../../../Steps";
+import { PROVIDER_CLASS, PROVIDER_TYPE } from "../../../../providers";
+import { envVariables } from "../../../../providers/aws";
+import { getEnv } from "../../../../api/env";
 
 export default function StepSaving(props) {
 	const [info, setInfo] = useState("Kümeniz KOS'a ekleniyor...");
@@ -21,6 +24,27 @@ export default function StepSaving(props) {
 					await kubeConfig.saveManagementConfig(
 						wizard.data.config,
 						wizard.data.name
+					);
+
+					// Default configuration
+					let configuration = { provider: {} };
+					for (let provider of wizard.data.supportedProviders) {
+						switch (provider) {
+							case PROVIDER_TYPE.AWS:
+								let awsConfig = {};
+								for (let config of envVariables)
+									awsConfig[config.name] =
+										(await getEnv(config.name)) ?? "";
+
+								configuration.provider[
+									PROVIDER_CLASS[PROVIDER_TYPE.AWS]
+								] = awsConfig;
+								break;
+						}
+					}
+					await clusterConfig.setClusterConfiguration(
+						wizard.data.clusterName,
+						configuration
 					);
 					_goto("end");
 				} catch (err) {

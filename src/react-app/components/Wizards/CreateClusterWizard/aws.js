@@ -1,4 +1,6 @@
-import { clusterConfig, aws } from "../../../api";
+import { useSnackbar } from "notistack";
+import { clusterConfig, aws, env, services } from "../../../api";
+import { envVariables } from "../../../providers/aws";
 
 export async function getAWSInfo(managementClusterName, region) {
 	let credentials = await clusterConfig.getClusterConfiguration(
@@ -6,6 +8,11 @@ export async function getAWSInfo(managementClusterName, region) {
 	);
 
 	credentials = credentials.provider.AWS;
+
+	for (let config of envVariables)
+		if (credentials[config.name] == "")
+			credentials[config.name] = await env.getEnv(config.name);
+
 	return {
 		regions: await aws.listRegions(credentials),
 		sshKeys: await aws.listKeyPairs(
