@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import { DashboardLayout } from "../layouts";
-import { kubeConfig, clusterConfig } from "../api";
+import { kubeConfig, clusterConfig, env } from "../api";
 import { PROVIDER_TYPE, providerNames, providerLogos } from "../providers";
 import { useForm } from "react-hook-form";
 import { logger } from "../logger";
@@ -10,11 +10,12 @@ import { InputText } from "../components/FormInputs";
 import { Button } from "../components/UI/Button";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 import { Loading } from "../components/Snackbars";
+import { envVariables } from "../providers/aws";
 
 function InputRow({ name, label, control }) {
 	return (
 		<div className="flex justify-between items-center">
-			<div className="w-64">{label}</div>
+			<div className="w-72">{label}</div>
 			<InputText
 				rules={{
 					required: "Lütfen değer giriniz",
@@ -97,10 +98,9 @@ export default function ManagementClusterConfigPage() {
 			const fields = getValues();
 			for (let field of Object.keys(fields)) {
 				const [providerName, fieldName] = parseField(field);
-				setValue(
-					field,
-					currentConfig?.provider[providerName]?.[fieldName]
-				);
+				const value =
+					currentConfig?.provider[providerName]?.[fieldName];
+				setValue(field, value || (await env.getEnv(fieldName)) || "");
 			}
 		})();
 	}, [supportedProviders]);
@@ -121,26 +121,14 @@ export default function ManagementClusterConfigPage() {
 						case PROVIDER_TYPE.AWS_EKS:
 							content = (
 								<div className="flex flex-col gap-3">
-									<InputRow
-										control={control}
-										name="AWS_AWS_ACCESS_KEY_ID" /* Every configuration row must starts with provider name that depend on */
-										label="Erişim Anahtarı"
-									/>
-									<InputRow
-										control={control}
-										name="AWS_AWS_SECRET_ACCESS_KEY"
-										label="Gizli Erişim Anahtarı"
-									/>
-									<InputRow
-										control={control}
-										name="AWS_AWS_B64ENCODED_CREDENTIALS"
-										label="Base64 Kimlik Bilgileri"
-									/>
-									<InputRow
-										control={control}
-										name="AWS_AWS_REGION"
-										label="Bölge"
-									/>
+									{envVariables.map((x, i) => (
+										<InputRow
+											key={i}
+											control={control}
+											name={"AWS_" + x.name}
+											label={x.name}
+										/>
+									))}
 								</div>
 							);
 							break;
