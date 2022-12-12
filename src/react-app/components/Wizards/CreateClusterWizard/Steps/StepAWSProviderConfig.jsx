@@ -8,16 +8,29 @@ import { useForm } from "react-hook-form";
 import { getAWSInfo } from "../aws";
 import { logger } from "../../../../logger";
 import { useSnackbar } from "notistack";
+import { useModal } from "../../../../hooks/useModal";
+import { services } from "../../../../api";
+import MessageModal from "../../../Modals/MessageModal";
 
 export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 	const [regions, setRegions] = useState(["Yükleniyor..."]);
 	const [sshKeys, setSshKeys] = useState(["Yükleniyor..."]);
 	const snack = useSnackbar().enqueueSnackbar;
 	const { handleSubmit, control, setValue } = useForm();
+	const modal = useModal();
 	const wizard = useWizard();
 
 	const updateOptions = async (region) => {
 		try {
+			if (!(await services.checkService("aws")).status) {
+				modal.showModal(MessageModal, {
+					message:
+						"aws-cli aracı bulunamadı lütfen https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html adresinde tarif ediliği şekilde kurun ve YOL üzerine ekleyin.",
+				});
+				goToNamedStep("selectAWSClusterType");
+				return;
+			}
+
 			let info = await getAWSInfo(
 				wizard.manClusterName,
 				region ?? regions[0]
@@ -32,10 +45,13 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 			setValue("sshKeyName", info.sshKeys[0]?.KeyName ?? "");
 		} catch (err) {
 			logger.error(err.message);
-			snack("Bir hata oluştu! Seyir defterini inceleyin.", {
-				variant: "error",
-				autoHideDuration: 5000,
-			});
+			snack(
+				"Bir hata oluştu! Altyapı sağlayıcısının yapılandırmasını kontrol edin.",
+				{
+					variant: "error",
+					autoHideDuration: 5000,
+				}
+			);
 		}
 	};
 
