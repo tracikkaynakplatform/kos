@@ -1,5 +1,6 @@
 import { KubeConfig } from "../k8s/KubeConfig";
 import { DIRS, dirCheck } from "../utils/dir-check";
+import { exportHelper } from "./exportHelper";
 
 export async function defaultConfig() {
 	return await KubeConfig.defaultConfig();
@@ -32,9 +33,9 @@ export async function loadManagementConfig(name) {
 }
 
 export default [
-	defaultConfig,
-	defaultConfigPath,
-	saveManagementConfig,
-	saveConfig,
-	loadManagementConfig,
+	exportHelper("defaultConfig", defaultConfig),
+	exportHelper("defaultConfigPath", defaultConfigPath),
+	exportHelper("saveManagementConfig", saveManagementConfig),
+	exportHelper("saveConfig", saveConfig),
+	exportHelper("loadManagementConfig", loadManagementConfig),
 ];

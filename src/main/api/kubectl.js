@@ -2,6 +2,7 @@ import { writeFileSync } from "original-fs";
 import tmp from "tmp";
 import { KubeConfig } from "../k8s/KubeConfig";
 import Kubectl from "../services/Kubectl";
+import { exportHelper } from "./exportHelper";
 
 async function execKube(config, callback) {
 	let result = null;
@@ -54,4 +55,10 @@ export async function apply(config, yaml, ...args) {
 	});
 }
 
-export default [get, currentContext, apply, applyFile, delete_];
+export default [
+	exportHelper("get", get),
+	exportHelper("currentContext", currentContext),
+	exportHelper("apply", apply),
+	exportHelper("applyFile", applyFile),
+	exportHelper("delete_", delete_),
+];

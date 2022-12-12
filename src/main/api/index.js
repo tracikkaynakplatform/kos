@@ -44,12 +44,16 @@ export const apis = [
 ];
 
 export function initApis() {
-	apis.map((apiGroup) => {
-		apiGroup.apis.map((api) =>
-			ipcMain.handle(
-				`${apiGroup.namespace}:${api.name}`,
-				async (_, args) => await api(...args)
-			)
-		);
+	apis.forEach((apiGroup) => {
+		const apiNames = new Set();
+		apiGroup.apis.forEach((api) => {
+			if (!apiNames.has(api.name)) {
+				ipcMain.handle(
+					`${apiGroup.namespace}:${api.name}`,
+					async (_, args) => await api.api(...args)
+				);
+				apiNames.add(api.name);
+			}
+		});
 	});
 }

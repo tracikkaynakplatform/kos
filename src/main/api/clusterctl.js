@@ -1,5 +1,6 @@
 import { KubeConfig } from "../k8s/KubeConfig";
 import Clusterctl from "../services/Clusterctl";
+import { exportHelper } from "./exportHelper";
 
 export async function generateCluster(managementClusterConfig, ...args) {
 	let result = null;
@@ -25,4 +26,7 @@ export async function getClusterConfig(managementClusterConfig, clusterName) {
 	return result;
 }
 
-export default [getClusterConfig, generateCluster];
+export default [
+	exportHelper("getClusterConfig", getClusterConfig),
+	exportHelper("generateCluster", generateCluster),
+];

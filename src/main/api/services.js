@@ -3,6 +3,7 @@ import Kubectl from "../services/Kubectl";
 import Clusterctl from "../services/Clusterctl";
 import { Aws } from "../services/aws";
 import { Clusterawsadm } from "../services/clusterawsadm";
+import { exportHelper } from "./exportHelper";
 
 function getExeType(name) {
 	switch (name) {
@@ -37,4 +38,7 @@ export async function prepareService(name) {
 	}
 }
 
-export default [checkService, prepareService];
+export default [
+	exportHelper("checkService", checkService),
+	exportHelper("prepareService", prepareService),
+];

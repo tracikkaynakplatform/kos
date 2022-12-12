@@ -1,5 +1,6 @@
 import { Clusterawsadm } from "../services/clusterawsadm";
 import { AwsConfig } from "../k8s/awsConfig";
+import { exportHelper } from "./exportHelper";
 
 export async function listPublicAMIs(
 	configENV,
@@ -16,4 +17,4 @@ export async function listPublicAMIs(
 	return await cadm.listPublicAMIs(kubernetesVersion, os, region, env);
 }
 
-export default [listPublicAMIs];
+export default [exportHelper("listPublicAMIs", listPublicAMIs)];

@@ -1,5 +1,6 @@
 import { Aws } from "../services/aws";
 import { AwsConfig } from "../k8s/awsConfig";
+import { exportHelper } from "./exportHelper";
 
 export async function listRegions(configENV, service = "ec2") {
 	let config = AwsConfig.fromEnv(configENV);
@@ -13,4 +14,7 @@ export async function listKeyPairs(configENV, service = "ec2", region = null) {
 	return await aws.listKeyPairs(service, region);
 }
 
-export default [listRegions, listKeyPairs];
+export default [
+	exportHelper("listRegions", listRegions),
+	exportHelper("listKeyPairs", listKeyPairs),
+];
