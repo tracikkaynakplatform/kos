@@ -8,7 +8,12 @@ export function ModalProvider({ children }) {
 	const closeModal = () => setModal(null);
 	const showModal = (Modal, modalProps, onClose, children) => {
 		setModal(
-			<Modal open={true} onClose={onClose} {...(modalProps ?? {})}>
+			<Modal
+				closeModal={closeModal}
+				open={true}
+				onClose={onClose}
+				{...(modalProps ?? {})}
+			>
 				{children}
 			</Modal>
 		);
