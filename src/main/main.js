@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, Menu} from "electron";
 import { initApis } from "./api";
 
 const createWindow = () => {
@@ -11,7 +11,32 @@ const createWindow = () => {
 	});
 	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 	mainWindow.webContents.openDevTools();
+
+	const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
+	 Menu.setApplicationMenu(mainMenu);
 };
+
+const mainMenuTemplate = [
+	{
+	  label : "Menu",
+	  submenu : [
+		{
+		  label : "Çıkış",
+		  accelerator : process.platform == "darwin" ? "Command+Q": "Ctrl+Q",
+		  role : "quit"
+		}
+	  ]
+	}
+  ]
+   
+  if (process.platform == "darwin"){
+	mainMenuTemplate.unshift({
+	  label :app.getName(),
+	  role : "TODO"
+	})
+  }
+
+
 
 if (require("electron-squirrel-startup")) app.quit();
 app.whenReady().then(() => initApis()); // API'lerin yüklenmesi ve kullanıma hazır hale gelmesi.
