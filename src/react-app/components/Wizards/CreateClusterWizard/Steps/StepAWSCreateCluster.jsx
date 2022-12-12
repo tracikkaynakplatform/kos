@@ -3,12 +3,14 @@ import { useSnackbar } from "notistack";
 import { useWizard } from "../../../../hooks/useWizard";
 import { clusterctl, kubectl } from "../../../../api";
 import { StepBaseLoading } from "../../../Steps";
+import { useLayout } from "../../../../hooks/useLayout";
 
 export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 	const [info, setInfo] = useState("");
 	const wizard = useWizard();
 	const snack = useSnackbar().enqueueSnackbar;
 	const _goto = goToNamedStep;
+	const layout = useLayout();
 	const waitForCluster = async () => {
 		await new Promise(async (resolve, reject) => {
 			const interval = setInterval(async () => {
@@ -56,6 +58,7 @@ export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 			onLoad={async () => {
 				let yaml;
 				try {
+					layout.disableBack();
 					setInfo(
 						"Küme oluşturmak için yaml dosyası üretiliyor... (clusterctl generate)"
 					);
@@ -108,6 +111,7 @@ export default function StepAWSCreateCluster({ goToNamedStep, ...props }) {
 					}
 					_goto("addClusterComplete");
 				} catch (err) {
+					layout.enableBack();
 					snack(err.message, {
 						variant: "error",
 						autoHideDuration: 5000,
