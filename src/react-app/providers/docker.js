@@ -1,5 +1,4 @@
 export const kubernetesVersions = [
-	"v1.22.15",
 	"v1.23.12",
 	"v1.23.13",
 	"v1.24.4",

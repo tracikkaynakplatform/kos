@@ -215,7 +215,7 @@ export default function ManagementClusterInfoPage() {
 										>
 											<CameraIcon />
 										</Button>
-										<Button
+										{/* <Button
 											onClick={() => {
 												nav(
 													`/upgrade-cluster/${name}/${x.name}`,
@@ -227,7 +227,7 @@ export default function ManagementClusterInfoPage() {
 											}
 										>
 											<UpgradeIcon />
-										</Button>
+										</Button> */}
 										<Button
 											disabled={x.status === "Deleting"}
 											onClick={async () => {
@@ -239,11 +239,11 @@ export default function ManagementClusterInfoPage() {
 
 													onYesClick: async () => {
 														modal.closeModal();
-														const info = snack(
+														snack(
 															`"${x.name}" kümesi siliniyor`,
 															{
 																variant: "info",
-																persist: true,
+																autoHideDuration: 2000,
 															}
 														);
 														try {
@@ -252,14 +252,13 @@ export default function ManagementClusterInfoPage() {
 																"cluster",
 																x.name
 															);
+															refreshClusters();
 														} catch (err) {
 															snack(err.message, {
 																variant:
 																	"error",
 																autoHideDuration: 5000,
 															});
-														} finally {
-															closeSnackbar(info);
 														}
 													},
 													onNoClick: () =>

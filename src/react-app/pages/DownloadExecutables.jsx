@@ -29,7 +29,6 @@ export default function DownloadExecutables() {
 			while (!(await tryToPrepare(services.prepareService, name)))
 				setMessage(`${name} indirmesi başarısız! yeniden deneniyor`);
 		}
-		console.log(name);
 	};
 
 	useEffect(() => {
