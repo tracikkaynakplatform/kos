@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { ArrowBack as ArrowBackIcon } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { DashboardLayout } from "../layouts";
+import { TempLayout } from "../layouts";
 import { kubeConfig, clusterConfig, env } from "../api";
 import { PROVIDER_TYPE, providerNames, providerLogos } from "../providers";
 import { useForm } from "react-hook-form";
@@ -106,11 +105,9 @@ export default function ManagementClusterConfigPage() {
 	}, [supportedProviders]);
 
 	return (
-		<DashboardLayout>
+		<TempLayout>
+			<div className="h-28" />
 			<div className="flex flex-col gap-5 p-5">
-				<Button variant="fab" onClick={() => nav(-1)}>
-					<ArrowBackIcon />
-				</Button>
 				{supportedProviders.map((x, i) => {
 					let content;
 					let providerName = providerNames[x];
@@ -156,6 +153,6 @@ export default function ManagementClusterConfigPage() {
 					Kaydet
 				</Button>
 			</div>
-		</DashboardLayout>
+		</TempLayout>
 	);
 }
