@@ -6,6 +6,7 @@ import kubeConfig from "./kubeConfig";
 import kubectl from "./kubectl";
 import services from "./services";
 import env from "./env";
+import os from "./os";
 
 export {
 	aws,
@@ -16,4 +17,5 @@ export {
 	kubeConfig,
 	kubectl,
 	services,
+	os,
 };

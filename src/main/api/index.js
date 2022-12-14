@@ -7,6 +7,7 @@ import awsAPIs from "./aws";
 import clusterawsadmAPIs from "./clusterawsadm";
 import servicesAPIs from "./services";
 import envAPIs from "./env";
+import osAPIs from "./os";
 
 export const apis = [
 	{
@@ -40,6 +41,10 @@ export const apis = [
 	{
 		namespace: "envAPI",
 		apis: envAPIs,
+	},
+	{
+		namespace: "osAPI",
+		apis: osAPIs,
 	},
 ];
 

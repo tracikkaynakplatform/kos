@@ -5,12 +5,10 @@ import { StepWizardWrapper } from "../../../Steps";
 import { Grid } from "@mui/material";
 import { InputText, InputSelect } from "../../../FormInputs";
 import { useForm } from "react-hook-form";
-import { getAWSInfo } from "../aws";
+import { checkAWSCli, getAWSInfo } from "../aws";
 import { logger } from "../../../../logger";
 import { useSnackbar } from "notistack";
 import { useModal } from "../../../../hooks/useModal";
-import { services } from "../../../../api";
-import MessageModal from "../../../Modals/MessageModal";
 
 export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 	const [regions, setRegions] = useState(["Yükleniyor..."]);
@@ -22,14 +20,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 
 	const updateOptions = async (region) => {
 		try {
-			if (!(await services.checkService("aws")).status) {
-				modal.showModal(MessageModal, {
-					message:
-						"aws-cli aracı bulunamadı lütfen https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html adresinde tarif ediliği şekilde kurun ve YOL üzerine ekleyin.",
-				});
-				goToNamedStep("selectAWSClusterType");
-				return;
-			}
+			if (!(await checkAWSCli(goToNamedStep, modal))) return;
 
 			let info = await getAWSInfo(
 				wizard.manClusterName,
