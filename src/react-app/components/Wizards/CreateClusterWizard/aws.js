@@ -1,6 +1,35 @@
-import { useSnackbar } from "notistack";
-import { clusterConfig, aws, env, services } from "../../../api";
+import React from "react";
+import { clusterConfig, aws, env, services, os } from "../../../api";
 import { envVariables } from "../../../providers/aws";
+import MessageModal from "../../Modals/MessageModal";
+
+export async function checkAWSCli(goToNamedStep, modal) {
+	if (!(await services.checkService("aws")).status) {
+		modal.showModal(MessageModal, {
+			message: (
+				<div>
+					aws-cli aracı bulunamadı. Lütfen KOS'u yeniden başlatmayı
+					deneyin veya{" "}
+					<a
+						className="inline-block"
+						onClick={() =>
+							os.openLink(
+								"https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html"
+							)
+						}
+					>
+						bu adreste
+					</a>{" "}
+					tarif ediliği şekilde aws-cli aracını kurun ve YOL üzerine
+					ekleyin.
+				</div>
+			),
+		});
+		goToNamedStep("selectAWSClusterType");
+		return false;
+	}
+	return true;
+}
 
 export async function getAWSInfo(managementClusterName, region) {
 	let credentials = await clusterConfig.getClusterConfiguration(

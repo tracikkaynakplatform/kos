@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+a {
+	color: rgb(47, 83, 243);
+}
+
+a:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
