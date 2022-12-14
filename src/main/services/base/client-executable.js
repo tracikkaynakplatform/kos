@@ -172,11 +172,5 @@ export class ClientExecutable {
 		const data = await this.getOsObject();
 		await downloadFile(data.browser_download_url, this.path);
 		chmodSync(this.path, 0o755);
-		return new Promise((resolve, reject) => {
-			chmod(this.path, 0o755, (err) => {
-				if (err) return reject(err);
-				resolve(this.path);
-			});
-		});
 	}
 }
