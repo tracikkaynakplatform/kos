@@ -1,7 +1,26 @@
 import React from "react";
 import { clusterConfig, aws, env, services, os } from "../../../api";
+import { logger } from "../../../logger";
 import { envVariables } from "../../../providers/aws";
 import MessageModal from "../../Modals/MessageModal";
+
+export async function checkConfig(
+	goToNamedStep,
+	modal,
+	manClusterName,
+	region
+) {
+	const info = await getAWSInfo(manClusterName, region);
+	if (!info) {
+		modal.showModal(MessageModal, {
+			message:
+				"AWS sağlayıcısı için gerekli yapılandırma bulunamadı. Lütfen yönetim kümesinin detay sayfasından AWS sağlayıcısının yapılandırmasını girin.",
+		});
+		goToNamedStep("selectAWSClusterType");
+		return;
+	}
+	return info;
+}
 
 export async function checkAWSCli(goToNamedStep, modal) {
 	if (!(await services.checkService("aws")).status) {
@@ -36,7 +55,12 @@ export async function getAWSInfo(managementClusterName, region) {
 		managementClusterName
 	);
 
-	credentials = credentials.provider.AWS;
+	try {
+		credentials = credentials.provider.AWS;
+	} catch (err) {
+		logger.error(err.message);
+		return;
+	}
 
 	for (let config of envVariables)
 		if (credentials[config.name] == "")

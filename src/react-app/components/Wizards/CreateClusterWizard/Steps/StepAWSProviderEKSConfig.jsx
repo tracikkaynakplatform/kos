@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { StepWizardWrapper } from "../../../Steps";
 import { InputText, InputSelect } from "../../../FormInputs";
 import { logger } from "../../../../logger";
-import { checkAWSCli, getAWSInfo } from "../aws";
+import { checkAWSCli, checkConfig, getAWSInfo } from "../aws";
 import { useSnackbar } from "notistack";
 import { useModal } from "../../../../hooks/useModal";
 
@@ -22,10 +22,13 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 		try {
 			if (!(await checkAWSCli(goToNamedStep, modal))) return;
 
-			let info = await getAWSInfo(
+			const info = await checkConfig(
+				goToNamedStep,
+				modal,
 				wizard.manClusterName,
 				region ?? regions[0]
 			);
+			if (!info) return;
 
 			if (!region) {
 				setRegions(info.regions);
