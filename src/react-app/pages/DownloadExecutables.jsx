@@ -12,14 +12,17 @@ async function tryToPrepare(foo, serviceName) {
 	let tryCount = 1;
 	let maxTry = 5;
 
-	while (tryCount <= maxTry && (await foo(serviceName)).status != "ok") {
+	while (tryCount <= maxTry) {
+		if ((await foo(serviceName)).status == "ok") break;
 		tryCount++;
 		logger.error(
 			`${tryCount}/${maxTry} ${serviceName} couldn't download! Trying again...`
 		);
 	}
-	logger.log(`${serviceName} downloaded!`);
-	if (tryCount != maxTry) return true;
+	if (tryCount != maxTry + 1) {
+		logger.log(`${serviceName} downloaded!`);
+		return true;
+	}
 	return false;
 }
 
@@ -48,18 +51,25 @@ export default function DownloadExecutables() {
 				if (!(await tryToPrepare(services.prepareService, "aws")))
 					modal.showModal(MessageModal, {
 						message: (
-							<>
-								aws-cli aracı indirmesi başarısız oldu. KOS'u
-								yeniden başlatmayı veya aws-cli aracını{" "}
-								<a href="https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html">
-									burada
-								</a>
-								tarif edildiği şekilde sisteminize kurarak PATH
-								üzerine ekleyin.
+							<div>
+								aws-cli aracı bulunamadı. Lütfen KOS'u yeniden
+								başlatmayı deneyin veya{" "}
+								<a
+									className="inline-block"
+									onClick={() =>
+										os.openLink(
+											"https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html"
+										)
+									}
+								>
+									bu adreste
+								</a>{" "}
+								tarif ediliği şekilde aws-cli aracını kurun ve
+								YOL üzerine ekleyin.
 								<br />
 								AWS sağlayıcısı üzerinde küme oluşturmak için
 								aws-cli aracını kurmanız gerekiyor.
-							</>
+							</div>
 						),
 					});
 			}
