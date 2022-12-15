@@ -6,13 +6,19 @@ import { useNavigate } from "react-router-dom";
 import { services } from "../api";
 import { useModal } from "../hooks/useModal";
 import { MessageModal } from "../components/Modals";
+import { logger } from "../../main/logger";
 
 async function tryToPrepare(foo, serviceName) {
-	let tryCount = 0;
+	let tryCount = 1;
 	let maxTry = 5;
 
-	while (tryCount < maxTry && (await foo(serviceName)).status != "ok")
+	while (tryCount <= maxTry && (await foo(serviceName)).status != "ok") {
 		tryCount++;
+		logger.error(
+			`${tryCount}/${maxTry} ${serviceName} couldn't download! Trying again...`
+		);
+	}
+	logger.log(`${serviceName} downloaded!`);
 	if (tryCount != maxTry) return true;
 	return false;
 }
@@ -63,13 +69,17 @@ export default function DownloadExecutables() {
 
 	return (
 		<div className="h-screen w-screen flex justify-center items-center">
-			<div className="shadow-2xl bg-white border-2 border-baltic-200 rounded-lg flex flex-col items-center gap-10 p-5 justify-center">
-				KOS işlemleri gerçekleştirmek için {exes.join(", ")} ve aws-cli
-				çalıştırılabilir dosyalarına ihtiyaç duyuyor.
-				<br />
-				<br />
-				Çalıştırılabilir dosyalar indiriliyor...
-				<div>{message}</div>
+			<div className="shadow-2xl w-[40%] bg-white border-2 border-baltic-200 rounded-lg flex flex-col items-center gap-10 p-5 justify-center">
+				<div className="flex flex-col gap-5">
+					<h1 className="text-xl font-bold">
+						Çalıştırılabilir dosyalar indiriliyor...
+					</h1>
+					<p>
+						KOS işlemleri gerçekleştirmek için {exes.join(", ")} ve
+						aws-cli çalıştırılabilir dosyalarına ihtiyaç duyuyor.
+					</p>
+				</div>
+				<div className="font-bold italic">{message}...</div>
 				<div className="w-full">
 					<LinearProgress variant="indeterminate" color="primary" />
 				</div>
