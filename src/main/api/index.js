@@ -6,6 +6,8 @@ import kubectlAPIs from "./kubectl";
 import awsAPIs from "./aws";
 import clusterawsadmAPIs from "./clusterawsadm";
 import servicesAPIs from "./services";
+import envAPIs from "./env";
+import osAPIs from "./os";
 
 export const apis = [
 	{
@@ -36,15 +38,27 @@ export const apis = [
 		namespace: "servicesAPI",
 		apis: servicesAPIs,
 	},
+	{
+		namespace: "envAPI",
+		apis: envAPIs,
+	},
+	{
+		namespace: "osAPI",
+		apis: osAPIs,
+	},
 ];
 
 export function initApis() {
-	apis.map((apiGroup) => {
-		apiGroup.apis.map((api) =>
-			ipcMain.handle(
-				`${apiGroup.namespace}:${api.name}`,
-				async (_, args) => await api(...args)
-			)
-		);
+	apis.forEach((apiGroup) => {
+		const apiNames = new Set();
+		apiGroup.apis.forEach((api) => {
+			if (!apiNames.has(api.name)) {
+				ipcMain.handle(
+					`${apiGroup.namespace}:${api.name}`,
+					async (_, args) => await api.api(...args)
+				);
+				apiNames.add(api.name);
+			}
+		});
 	});
 }

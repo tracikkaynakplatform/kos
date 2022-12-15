@@ -25,11 +25,11 @@ export async function getCluster(managementClusterConfig, clusterName) {
 
 export async function setClusterConfiguration(
 	managementClusterName,
-	credentials
+	configuration
 ) {
 	return await clusterConfigAPI.setClusterConfiguration(
 		managementClusterName,
-		credentials
+		configuration
 	);
 }
 

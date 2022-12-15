@@ -4,12 +4,14 @@ import { useWizard } from "../../../../hooks/useWizard";
 import { StepBaseLoading } from "../../../Steps";
 import { clusterctl, kubectl } from "../../../../api";
 import { logger } from "../../../../logger";
+import { useLayout } from "../../../../hooks/useLayout";
 
 export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 	const [info, setInfo] = useState("");
 	const wizard = useWizard();
 	const snack = useSnackbar().enqueueSnackbar;
 	const _goto = goToNamedStep;
+	const layout = useLayout();
 
 	return (
 		<StepBaseLoading
@@ -19,6 +21,7 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 			disableBack
 			onLoad={async () => {
 				try {
+					layout.disableBack();
 					setInfo(
 						"Küme oluşturmak için yaml dosyası üretiliyor... (clusterctl generate)"
 					);
@@ -89,6 +92,7 @@ export default function StepKindCreateCluster({ goToNamedStep, ...props }) {
 					);
 					_goto("addClusterComplete");
 				} catch (err) {
+					layout.enableBack();
 					logger.error(err.message);
 					snack(err.message, {
 						variant: "error",

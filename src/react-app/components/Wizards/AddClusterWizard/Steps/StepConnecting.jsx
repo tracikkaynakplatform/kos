@@ -56,6 +56,7 @@ export default function StepConnecting(props) {
 						return;
 					}
 					wizard.updateData("clusterName", manName);
+					wizard.updateData("supportedProviders", supportedProviders);
 					_goto("enterClusterName");
 				} catch (err) {
 					logger.error(err.message);

@@ -2,6 +2,7 @@ import ManagementCluster from "../services/config/ManagementCluster";
 import fs from "fs";
 import { KubeConfig } from "../k8s/KubeConfig";
 import { dirCheck, DIRS } from "../utils/dir-check";
+import { exportHelper } from "./exportHelper";
 
 export async function getManagementClusters() {
 	return await ManagementCluster.getManagementClusters();
@@ -101,12 +102,12 @@ export async function deleteCluster(managementClusterName) {
 }
 
 export default [
-	getManagementClusters,
-	getSupportedProviders,
-	getClusters,
-	getCluster,
-	getClusterConfiguration,
-	setClusterConfiguration,
-	isNameValid,
-	deleteCluster,
+	exportHelper("getManagementClusters", getManagementClusters),
+	exportHelper("getSupportedProviders", getSupportedProviders),
+	exportHelper("getClusters", getClusters),
+	exportHelper("getCluster", getCluster),
+	exportHelper("getClusterConfiguration", getClusterConfiguration),
+	exportHelper("setClusterConfiguration", setClusterConfiguration),
+	exportHelper("isNameValid", isNameValid),
+	exportHelper("deleteCluster", deleteCluster),
 ];

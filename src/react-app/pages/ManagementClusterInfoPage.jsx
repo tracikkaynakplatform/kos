@@ -16,7 +16,6 @@ import {
 	Upgrade as UpgradeIcon,
 	Camera as CameraIcon,
 	Add as AddIcon,
-	ArrowBack as ArrowBackIcon,
 	Replay as ReplayIcon,
 	Edit as EditIcon,
 } from "@mui/icons-material";
@@ -24,7 +23,7 @@ import { clusterConfig, kubeConfig, kubectl, clusterctl } from "../api";
 import { providerNames, providerLogos } from "../providers";
 import { useNavigate, useParams } from "react-router-dom";
 import { useModal } from "../hooks/useModal";
-import { DashboardLayout } from "../layouts";
+import { TempLayout } from "../layouts";
 import { QuestionModal } from "../components/Modals";
 import { Loading } from "../components/Snackbars";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
@@ -91,17 +90,9 @@ export default function ManagementClusterInfoPage() {
 	}, []);
 
 	return (
-		<DashboardLayout>
+		<TempLayout>
+			<div className="h-20" />
 			<div className="flex justify-center flex-col gap-10 p-5">
-				<div className="w-full flex">
-					<Button
-						variant="fab"
-						className="top-auto left-auto"
-						onClick={() => nav(-1)}
-					>
-						<ArrowBackIcon />
-					</Button>
-				</div>
 				<div className="items-center flex justify-between">
 					<h4 className="font-sans text-3xl">{name}</h4>
 					<div className="flex gap-5">
@@ -224,7 +215,7 @@ export default function ManagementClusterInfoPage() {
 										>
 											<CameraIcon />
 										</Button>
-										<Button
+										{/* <Button
 											onClick={() => {
 												nav(
 													`/upgrade-cluster/${name}/${x.name}`,
@@ -236,7 +227,7 @@ export default function ManagementClusterInfoPage() {
 											}
 										>
 											<UpgradeIcon />
-										</Button>
+										</Button> */}
 										<Button
 											disabled={x.status === "Deleting"}
 											onClick={async () => {
@@ -248,11 +239,11 @@ export default function ManagementClusterInfoPage() {
 
 													onYesClick: async () => {
 														modal.closeModal();
-														const info = snack(
+														snack(
 															`"${x.name}" kümesi siliniyor`,
 															{
 																variant: "info",
-																persist: true,
+																autoHideDuration: 2000,
 															}
 														);
 														try {
@@ -261,14 +252,13 @@ export default function ManagementClusterInfoPage() {
 																"cluster",
 																x.name
 															);
+															refreshClusters();
 														} catch (err) {
 															snack(err.message, {
 																variant:
 																	"error",
 																autoHideDuration: 5000,
 															});
-														} finally {
-															closeSnackbar(info);
 														}
 													},
 													onNoClick: () =>
@@ -285,6 +275,6 @@ export default function ManagementClusterInfoPage() {
 					</Table>
 				</TableContainer>
 			</div>
-		</DashboardLayout>
+		</TempLayout>
 	);
 }

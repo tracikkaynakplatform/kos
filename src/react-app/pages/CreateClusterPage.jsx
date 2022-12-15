@@ -8,7 +8,7 @@ export default function CreateClusterPage() {
 	const { manClusterName } = useParams();
 
 	return (
-		<TempLayout onBackClicked={() => nav(-1)}>
+		<TempLayout>
 			<CreateClusterWizard
 				onFinish={() => {
 					nav("/management-clusters");

@@ -13,7 +13,10 @@ export const BUTTON_COLOR = {
 };
 
 export const Button = forwardRef(
-	({ children, className, variant, disabled, color, ...props }, ref) => {
+	(
+		{ children, className, variant, onClick, disabled, color, ...props },
+		ref
+	) => {
 		if (!!!color) color = BUTTON_COLOR.primary;
 		return (
 			<button
@@ -32,6 +35,9 @@ export const Button = forwardRef(
 						className
 					)
 				}
+				onClick={(...args) => {
+					if (!!!disabled) onClick?.(...args);
+				}}
 				ref={ref}
 				{...props}
 			>

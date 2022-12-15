@@ -16,12 +16,26 @@ export const machineTypes = [
 	},
 ];
 
-export const regions = ["eu-west-1"];
 export const kubernetesVersions = [
+	"1.23.12",
+	"1.23.13",
+	"1.24.4",
 	"1.24.6",
-	"1.23.0",
-	"1.22.0",
-	"1.21.0",
-	"1.20.0",
+	"1.24.7",
 ];
 export const eksVersions = ["1.20.0", "1.21.0", "1.22.0", "1.23.0"];
+
+export const envVariables = [
+	{
+		name: "AWS_ACCESS_KEY_ID",
+		label: "Erişim Anahtarı",
+	},
+	{
+		name: "AWS_SECRET_ACCESS_KEY",
+		label: "Gizli Erişim Anahtarı",
+	},
+	{
+		name: "AWS_REGION",
+		label: "Bölge",
+	},
+];

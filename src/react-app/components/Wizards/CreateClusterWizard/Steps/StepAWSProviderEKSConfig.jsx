@@ -6,22 +6,29 @@ import { useForm } from "react-hook-form";
 import { StepWizardWrapper } from "../../../Steps";
 import { InputText, InputSelect } from "../../../FormInputs";
 import { logger } from "../../../../logger";
-import { getAWSInfo } from "../aws";
+import { checkAWSCli, checkConfig, getAWSInfo } from "../aws";
 import { useSnackbar } from "notistack";
+import { useModal } from "../../../../hooks/useModal";
 
 export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 	const [regions, setRegions] = useState(["Yükleniyor..."]);
 	const [sshKeys, setSshKeys] = useState(["Yükleniyor..."]);
 	const snack = useSnackbar().enqueueSnackbar;
+	const modal = useModal();
 	const { handleSubmit, control, setValue } = useForm();
 	const wizard = useWizard();
 
 	const updateOptions = async (region) => {
 		try {
-			let info = await getAWSInfo(
+			if (!(await checkAWSCli(goToNamedStep, modal))) return;
+
+			const info = await checkConfig(
+				goToNamedStep,
+				modal,
 				wizard.manClusterName,
 				region ?? regions[0]
 			);
+			if (!info) return;
 
 			if (!region) {
 				setRegions(info.regions);
@@ -32,10 +39,13 @@ export default function StepAWSProviderEKSConfig({ goToNamedStep, ...props }) {
 			setValue("sshKeyName", info.sshKeys[0]?.KeyName ?? "");
 		} catch (err) {
 			logger.error(err.message);
-			snack("Bir hata oluştu! Seyir defterini inceleyin.", {
-				variant: "error",
-				autoHideDuration: 5000,
-			});
+			snack(
+				"Bir hata oluştu! Altyapı sağlayıcısının yapılandırmasını kontrol edin..",
+				{
+					variant: "error",
+					autoHideDuration: 5000,
+				}
+			);
 		}
 	};
 
