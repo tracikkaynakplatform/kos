@@ -10,7 +10,8 @@ const createWindow = () => {
 		},
 	});
 	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-	mainWindow.webContents.openDevTools();
+	if (process.env.NODE_ENV === "development")
+		mainWindow.webContents.openDevTools();
 
 	const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
 	 Menu.setApplicationMenu(mainMenu);
