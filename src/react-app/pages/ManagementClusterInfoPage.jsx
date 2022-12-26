@@ -41,13 +41,6 @@ const StyledTableCell = styled(TableCell)(() => ({
 	},
 }));
 
-const StyledTableRow = styled(TableRow)(() => ({
-	transition: "all 0.5s",
-	"&:hover": {
-		boxShadow: "0 0 13px -7px",
-	},
-}));
-
 function HeaderCell({ children }) {
 	return (
 		<TableCell>
@@ -72,6 +65,77 @@ export default function ManagementClusterInfoPage() {
 	const { name } = useParams();
 	const modal = useModal();
 	const nav = useNavigate();
+
+	/* Handlers */
+	const handleCopyClusterConfig = async () => {
+		async () => {
+			await navigator.clipboard.writeText(
+				await clusterctl.getClusterConfig(config, x.name)
+			);
+			snack("Kümenin kubeconfig içeriği panoya kopyalandı!", {
+				variant: "info",
+				autoHideDuration: 2000,
+			});
+		};
+	};
+	const handleDeleteCluster = () => {
+		async () => {
+			modal.showModal(QuestionModal, {
+				yesButtonColor: "error",
+				message: `${x.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`,
+				yesButtonText: "Sil",
+				noButtonText: "Vazgeç",
+
+				onYesClick: async () => {
+					modal.closeModal();
+					snack(`"${x.name}" kümesi siliniyor`, {
+						variant: "info",
+						autoHideDuration: 2000,
+					});
+					try {
+						await kubectl.delete_(config, "cluster", x.name);
+						refreshClusters();
+					} catch (err) {
+						snack(err.message, {
+							variant: "error",
+							autoHideDuration: 5000,
+						});
+					}
+				},
+				onNoClick: () => modal.closeModal(),
+			});
+		};
+	};
+	const handleDeleteManagementCluster = () => {
+		modal.showModal(QuestionModal, {
+			yesButtonColor: "error",
+			message: `${name} isimli yönetim kümesini kaldırmak istediğinize emin misiniz? Eğer ilerleyen zamanlarda bu yönetim kümesini KOS ile birlikte kullanmak isterseniz tekrardan eklemeniz gerekecek.`,
+			yesButtonText: "Sil",
+			noButtonText: "Vazgeç",
+
+			onYesClick: async () => {
+				modal.closeModal();
+				let loading = snack(
+					`${name} yönetim kümesi siliniyor...`,
+					{ persist: true },
+					Loading
+				);
+				try {
+					await clusterConfig.deleteCluster(name);
+					nav("/management-clusters", {
+						replace: true,
+					});
+				} catch (err) {
+					logger.error(err.message);
+					snack("Bir hata oluştu!", {
+						variant: "error",
+					});
+				}
+				closeSnackbar(loading);
+			},
+			onNoClick: () => modal.closeModal(),
+		});
+	};
 
 	const refreshClusters = async () => {
 		let loading = snack("Kümeler yükleniyor", { persist: true }, Loading);
@@ -98,38 +162,7 @@ export default function ManagementClusterInfoPage() {
 					<div className="flex gap-5">
 						<Button
 							variant="fab"
-							onClick={() => {
-								modal.showModal(QuestionModal, {
-									yesButtonColor: "error",
-									message: `${name} isimli yönetim kümesini kaldırmak istediğinize emin misiniz? Eğer ilerleyen zamanlarda bu yönetim kümesini KOS ile birlikte kullanmak isterseniz tekrardan eklemeniz gerekecek.`,
-									yesButtonText: "Sil",
-									noButtonText: "Vazgeç",
-
-									onYesClick: async () => {
-										modal.closeModal();
-										let loading = snack(
-											`${name} yönetim kümesi siliniyor...`,
-											{ persist: true },
-											Loading
-										);
-										try {
-											await clusterConfig.deleteCluster(
-												name
-											);
-											nav("/management-clusters", {
-												replace: true,
-											});
-										} catch (err) {
-											logger.error(err.message);
-											snack("Bir hata oluştu!", {
-												variant: "error",
-											});
-										}
-										closeSnackbar(loading);
-									},
-									onNoClick: () => modal.closeModal(),
-								});
-							}}
+							onClick={handleDeleteManagementCluster}
 						>
 							<DeleteIcon />
 						</Button>
@@ -177,14 +210,13 @@ export default function ManagementClusterInfoPage() {
 										/>
 									</StyledTableCell>
 									<StyledTableCell>
-										{(() => {
-											if (x.status === "Provisioning")
-												return "Sağlanıyor";
-											if (x.status === "Provisioned")
-												return "Hazırlandı";
-											if (x.status === "Deleting")
-												return "Siliniyor";
-										})()}
+										{x.status === "Provisioning"
+											? "Sağlanıyor"
+											: x.status === "Provisioned"
+											? "Hazırlandı"
+											: x.status === "Deleting"
+											? "Siliniyor"
+											: "Bilinmiyor"}
 									</StyledTableCell>
 									<StyledTableCell
 										sx={{
@@ -197,74 +229,13 @@ export default function ManagementClusterInfoPage() {
 											disabled={
 												x.status !== "Provisioned"
 											}
-											onClick={async () => {
-												await navigator.clipboard.writeText(
-													await clusterctl.getClusterConfig(
-														config,
-														x.name
-													)
-												);
-												snack(
-													"Kümenin kubeconfig içeriği panoya kopyalandı!",
-													{
-														variant: "info",
-														autoHideDuration: 2000,
-													}
-												);
-											}}
+											onClick={handleCopyClusterConfig}
 										>
 											<CameraIcon />
 										</Button>
-										{/* <Button
-											onClick={() => {
-												nav(
-													`/upgrade-cluster/${name}/${x.name}`,
-													{ replace: true }
-												);
-											}}
-											disabled={
-												x.status !== "Provisioned"
-											}
-										>
-											<UpgradeIcon />
-										</Button> */}
 										<Button
 											disabled={x.status === "Deleting"}
-											onClick={async () => {
-												modal.showModal(QuestionModal, {
-													yesButtonColor: "error",
-													message: `${x.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`,
-													yesButtonText: "Sil",
-													noButtonText: "Vazgeç",
-
-													onYesClick: async () => {
-														modal.closeModal();
-														snack(
-															`"${x.name}" kümesi siliniyor`,
-															{
-																variant: "info",
-																autoHideDuration: 2000,
-															}
-														);
-														try {
-															await kubectl.delete_(
-																config,
-																"cluster",
-																x.name
-															);
-															refreshClusters();
-														} catch (err) {
-															snack(err.message, {
-																variant:
-																	"error",
-																autoHideDuration: 5000,
-															});
-														}
-													},
-													onNoClick: () =>
-														modal.closeModal(),
-												});
-											}}
+											onClick={handleDeleteCluster}
 										>
 											<DeleteIcon />
 										</Button>

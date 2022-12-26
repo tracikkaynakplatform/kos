@@ -31,8 +31,8 @@ export default function ManagementClusterCard({
 			</div>
 			<hr />
 			<div className="p-2 overflow-y-auto">
-				<div mb={1}>Kümeler</div>
-				{clusters && clusters.length > 0 ? (
+				<div>Kümeler</div>
+				{clusters?.length > 0 ? (
 					clusters?.map((x, i) => (
 						<ProviderChip
 							key={i}
