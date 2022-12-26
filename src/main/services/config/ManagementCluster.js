@@ -71,9 +71,6 @@ export default class ManagementCluster {
 						case "DockerCluster":
 							provider = PROVIDER_TYPE.DOCKER;
 							break;
-						case "DOCluster":
-							provider = PROVIDER_TYPE.DIGITAL_OCEAN;
-							break;
 						case "AWSCluster":
 							provider = PROVIDER_TYPE.AWS;
 							break;
@@ -112,9 +109,6 @@ export default class ManagementCluster {
 					switch (i.metadata.namespace) {
 						case "capd-system":
 							providers.push(PROVIDER_TYPE.DOCKER);
-							break;
-						case "capdo-system":
-							providers.push(PROVIDER_TYPE.DIGITAL_OCEAN);
 							break;
 						case "capa-system":
 							providers.push(PROVIDER_TYPE.AWS);
