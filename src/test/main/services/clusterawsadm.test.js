@@ -25,14 +25,14 @@ test(`testing public AMI listing via clusterawsadm`, async () => {
   const clusterawsadm = new Clusterawsadm(awsConfig);
 
   let imageList = await clusterawsadm.listPublicAMIs( {
-    kubernetesVersion : "1.25.2",
-    // os : "ubuntu-20.04",
+    //kubernetesVersion : "1.25.2",
+     os : "ubuntu-20.04",
   } );
 
   expect(isNonEmptyString(awsConfig.aws_b64encoded_credentials)).toBeTruthy();
   expect(imageList.kind == 'AWSAMIList').toBeTruthy();
   expect(imageList.items.length > 0).toBeTruthy();
 
-  // logger.debug(`imageList = ${JSON.stringify(imageList,null,'\t')}`);
+  logger.debug(`imageList = ${JSON.stringify(imageList,null,'\t')}`);
 });
 

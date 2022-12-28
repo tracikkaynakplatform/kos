@@ -14,6 +14,7 @@ export class AwsConfig extends Config {
   // export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
   // export AWS_DEFAULT_REGION=us-west-2
 
+
   constructor(
       region = "eu-west-1", 
       access_key = "", 
@@ -29,6 +30,12 @@ export class AwsConfig extends Config {
     this.aws_session_token = session_token;
     this.aws_b64encoded_credentials = null;
   }
+
+  static IS_SYNCHED = {
+    AWS_REGION : true,
+    AWS_ACCESS_KEY_ID: true,
+    AWS_SECRET_ACCESS_KEY : true,
+  };
 
   toEnvObject() {
     return {
@@ -74,4 +81,23 @@ export class AwsConfig extends Config {
     return awsConfig;
   }
 
-}
+  /**
+   * Returns a .property formatted string form of the object, consisting of `property=value` lines.
+   * @param {bool} isSkipUndefined if set to true, empty properties are skipped. Defaults to false. 
+   * @returns a .property formatted string form of the object, consisting of `property=value` lines
+   */
+  toPropertiesString(isSkipUndefined=false) {
+    let env='';
+    const env_obj = this.toEnvObject();
+
+    for (key in Object.keys(env_obj)) {
+      if ( AwsConfig.IS_SYNCHED[key] && (!isSkipUndefined || env[key]) ) {
+        env += `${key}=${env[key]}`;
+      }
+    }
+
+    return env;
+  }
+
+};
+
