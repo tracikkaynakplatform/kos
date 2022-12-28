@@ -1,10 +1,10 @@
-import { execFile } from "child_process";
+import { execFile, execFileSync } from "child_process";
 import { ClientExecutable } from "./base/client-executable";
 import { logger } from "../logger";
 import { downloadFile } from "../utils/download-file";
 import { dirCheck, DIRS } from "../utils/dir-check";
 import decompress from "decompress";
-import { rmSync } from "original-fs";
+import { renameSync, rmSync, unlinkSync, writeFileSync } from "fs";
 import { platform } from "./base/platform";
 
 /**
@@ -14,29 +14,73 @@ import { platform } from "./base/platform";
  */
 export class Aws extends ClientExecutable {
 	constructor(awsconfig) {
-		super(
-			// containes only tags:
-			platform.osFamily === "linux" // Currently it supports only Linux systems.
-				? "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
-				: "",
-			"aws"
-		);
+		switch (platform.osFamily) {
+			case "linux":
+				super(
+					"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip",
+					"aws"
+				);
+				this.path = `${dirCheck(DIRS.bin)}/aws/dist/aws`;
+				break;
+			case "darwin":
+				super("https://awscli.amazonaws.com/AWSCLIV2.pkg", "aws");
+				this.path = `${dirCheck(DIRS.bin)}/aws/aws`;
+				break;
+		}
 		this.awsconfig = awsconfig;
-		this.path = `${dirCheck(DIRS.bin)}/aws/dist/aws`;
 	}
 
 	async download() {
-		if (platform.osFamily !== "linux")
+		if (platform.osFamily !== "linux" && platform.osFamily !== "darwin")
 			throw new Error(
-				"KOS doesn't support auto-download feature for aws-cli on other operating systems expect Linux."
+				"KOS doesn't support auto-download feature for aws-cli on other operating systems expect Linux and Mac OS X"
 			);
 
 		const binPath = dirCheck(DIRS.bin);
-		const zipPath = `${binPath}/awscli.zip`;
+		switch (platform.osFamily) {
+			case "linux":
+				const zipPath = `${binPath}/awscli.zip`;
 
-		await downloadFile(this.url, zipPath);
-		await decompress(zipPath, `${binPath}`);
-		await rmSync(zipPath);
+				await downloadFile(this.url, zipPath);
+				await decompress(zipPath, `${binPath}`);
+				await rmSync(zipPath);
+				break;
+			case "darwin":
+				const pkgPath = `${binPath}/awscli.pkg`;
+				const xmlPath = `${binPath}/choise.xml`;
+				await downloadFile(this.url, pkgPath);
+				writeFileSync(
+					xmlPath,
+					`
+				<?xml version="1.0" encoding="UTF-8"?>
+				<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+				<plist version="1.0">
+				<array>
+					<dict>
+					<key>choiceAttribute</key>
+					<string>customLocation</string>
+					<key>attributeSetting</key>
+					<string>${binPath}</string>
+					<key>choiceIdentifier</key>
+					<string>default</string>
+					</dict>
+				</array>
+				</plist>
+				`
+				);
+				execFileSync("installer", [
+					"-pkg",
+					pkgPath,
+					"-target",
+					"CurrentUserHomeDirectory",
+					"-applyChoiceChangesXML",
+					xmlPath,
+				]);
+				rmSync(xmlPath);
+				rmSync(pkgPath);
+				renameSync(`${binPath}/aws-cli`, `${binPath}/aws`);
+				break;
+		}
 	}
 
 	/**
