@@ -33,7 +33,7 @@ export class Aws extends ClientExecutable {
 	async download() {
 		if (platform.osFamily !== "linux" && platform.osFamily !== "darwin")
 			throw new Error(
-				"KOS doesn't support auto-download feature for aws-cli on other operating systems expect Linux and Mac OS X"
+				"KOS doesn't support auto-download feature for aws-cli for client operating systems other than Linux and MacOS."
 			);
 
 		const binPath = dirCheck(DIRS.bin);
