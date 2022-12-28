@@ -82,10 +82,7 @@ export class Aws extends ClientExecutable {
 				break;
 		}
 	}
-	// /quiet
-	// /passive
-	// /qn
-	// MSIExec /i [path_to_and_name_of_MSI] INSTALLDIR="[required_installation_folder_goes here]" [other arguments]
+
 	/**
 	 *
 	 * @returns list<string> : A list of common
