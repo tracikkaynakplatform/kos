@@ -1,0 +1,11 @@
+
+## test pod:
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-test
+spec:
+  containers:
+  - name: net-pod
+    # command: ["/bin/ash", "-c", "trap : TERM INT; sleep infinity & wait"]
+    image: praqma/network-multitool:extra    

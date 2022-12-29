@@ -1,0 +1,63 @@
+---
+## //TODO: change to statefulset ??
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sb-bench
+  labels:
+    app: sb-bench 
+spec:
+  replicas: 3
+  serviceName: "sb-bench"
+  selector:
+    matchLabels:
+      app: sb-bench
+  template:
+    metadata:
+      labels:
+        app: sb-bench
+        sidecar.istio.io/inject: "true"
+      annotations:
+        tr.nom.aob.sb-bench.placeholder: sb-bench-placeholder
+    spec:
+      containers:
+      - name: sb-bench
+        image: basakil/sb-bench:0.14
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MESSAGE
+          value: placeholder message..
+        - name: LOGGING_FILE_NAME
+          value: "/var/log/sb-bench/sb-bench.log"
+        volumeMounts:
+        - name: logs
+          mountPath: /var/log/sb-bench
+  volumeClaimTemplates:
+  - metadata:
+      name: logs
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      # storageClassName: "my-storage-class"
+      resources:
+        requests:
+          storage: 100Mi
+---
+### SVC:
+apiVersion: v1
+kind: Service
+metadata:
+  name: sb-bench
+  labels:
+    app: sb-bench
+spec:
+  clusterIP: None
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+  - name: metrics
+    port: 15020
+  selector:
+    app: sb-bench
+---
