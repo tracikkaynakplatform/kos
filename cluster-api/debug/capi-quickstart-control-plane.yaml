@@ -1,0 +1,97 @@
+apiVersion: controlplane.cluster.x-k8s.io/v1beta1
+kind: KubeadmControlPlane
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"controlplane.cluster.x-k8s.io/v1beta1","kind":"KubeadmControlPlane","metadata":{"annotations":{},"name":"capi-quickstart-control-plane","namespace":"default"},"spec":{"kubeadmConfigSpec":{"clusterConfiguration":{"apiServer":{"extraArgs":{"cloud-provider":"aws"}},"controllerManager":{"extraArgs":{"cloud-provider":"aws"}}},"initConfiguration":{"nodeRegistration":{"kubeletExtraArgs":{"cloud-provider":"aws"},"name":"{{ ds.meta_data.local_hostname }}"}},"joinConfiguration":{"nodeRegistration":{"kubeletExtraArgs":{"cloud-provider":"aws"},"name":"{{ ds.meta_data.local_hostname }}"}}},"machineTemplate":{"infrastructureRef":{"apiVersion":"infrastructure.cluster.x-k8s.io/v1beta2","kind":"AWSMachineTemplate","name":"capi-quickstart-control-plane"}},"replicas":3,"version":"v1.24.9"}}
+  creationTimestamp: "2022-12-29T07:53:54Z"
+  finalizers:
+  - kubeadm.controlplane.cluster.x-k8s.io
+  generation: 1
+  labels:
+    cluster.x-k8s.io/cluster-name: capi-quickstart
+  name: capi-quickstart-control-plane
+  namespace: default
+  ownerReferences:
+  - apiVersion: cluster.x-k8s.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Cluster
+    name: capi-quickstart
+    uid: 0b315141-80ec-4855-a87d-b00a240a2b44
+  resourceVersion: "125041"
+  uid: 956a72c6-7d82-47f9-894c-25a8e0dde3c1
+spec:
+  kubeadmConfigSpec:
+    clusterConfiguration:
+      apiServer:
+        extraArgs:
+          cloud-provider: aws
+      controllerManager:
+        extraArgs:
+          cloud-provider: aws
+      dns: {}
+      etcd: {}
+      networking: {}
+      scheduler: {}
+    format: cloud-config
+    initConfiguration:
+      localAPIEndpoint: {}
+      nodeRegistration:
+        kubeletExtraArgs:
+          cloud-provider: aws
+        name: '{{ ds.meta_data.local_hostname }}'
+    joinConfiguration:
+      discovery: {}
+      nodeRegistration:
+        kubeletExtraArgs:
+          cloud-provider: aws
+        name: '{{ ds.meta_data.local_hostname }}'
+  machineTemplate:
+    infrastructureRef:
+      apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+      kind: AWSMachineTemplate
+      name: capi-quickstart-control-plane
+      namespace: default
+    metadata: {}
+  replicas: 3
+  rolloutStrategy:
+    rollingUpdate:
+      maxSurge: 1
+    type: RollingUpdate
+  version: v1.24.9
+status:
+  conditions:
+  - lastTransitionTime: "2022-12-29T08:02:25Z"
+    status: "True"
+    type: Ready
+  - lastTransitionTime: "2022-12-29T07:59:15Z"
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2022-12-29T07:57:35Z"
+    status: "True"
+    type: CertificatesAvailable
+  - lastTransitionTime: "2022-12-29T08:03:26Z"
+    status: "True"
+    type: ControlPlaneComponentsHealthy
+  - lastTransitionTime: "2022-12-29T08:03:26Z"
+    status: "True"
+    type: EtcdClusterHealthy
+  - lastTransitionTime: "2022-12-29T08:01:58Z"
+    status: "True"
+    type: MachinesCreated
+  - lastTransitionTime: "2022-12-29T08:02:25Z"
+    status: "True"
+    type: MachinesReady
+  - lastTransitionTime: "2022-12-29T08:02:21Z"
+    status: "True"
+    type: Resized
+  initialized: true
+  observedGeneration: 1
+  ready: true
+  readyReplicas: 3
+  replicas: 3
+  selector: cluster.x-k8s.io/cluster-name=capi-quickstart,cluster.x-k8s.io/control-plane
+  unavailableReplicas: 0
+  updatedReplicas: 3
+  version: v1.24.9

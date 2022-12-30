@@ -28,7 +28,7 @@ test(`testing region listing via aws`, async () => {
 
   expect(regionList.length > 0).toBeTruthy();
 
-  // logger.debug(`regionList = ${JSON.stringify(regionList,null,'\t')}`);
+  logger.debug(`regionList = ${JSON.stringify(regionList,null,'\t')}`);
 });
 
 test(`testing keyPair listing via aws`, async () => {

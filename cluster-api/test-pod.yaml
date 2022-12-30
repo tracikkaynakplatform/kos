@@ -1,0 +1,24 @@
+
+## test pod:
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test
+spec:
+  nodeName: ${POD_NODE_NAME}
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet  
+  containers:
+  - name: net-pod
+    command: ["/bin/ash", "-c", "trap : TERM INT; sleep infinity & wait"]
+    image: praqma/network-multitool:extra    
+    volumeMounts:
+    - mountPath: /local-path-storage
+      name: local-path-storage
+  volumes:
+  - name: local-path-storage
+    hostPath:
+      # directory location on host
+      path: /local-path-storage
+      # this field is optional
+      type: Directory

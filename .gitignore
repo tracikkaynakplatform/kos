@@ -94,3 +94,7 @@ out/
 .cluster-api
 
 .vscode/
+
+## temporary kubeconfig files.. 
+##   Github complains when it sees RSA keys in these...
+*.kubeconfig

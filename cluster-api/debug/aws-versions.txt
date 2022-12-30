@@ -1,0 +1,720 @@
+
+> kos@1.0.0 test
+> NODE_ENV=test DEBUG=jest jest --forceExit --detectOpenHandles --useStderr --silent false --verbose false --runInBand "clusterawsadm"
+
+      2022-12-30T05:26:32.706Z [DEBUG] kos-node: imageList = {
+        "kind": "AWSAMIList",
+        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+        "metadata": {},
+        "items": [
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.25.4-1668679723",
+                                "creationTimestamp": "2022-11-17T10:30:04Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-04720f3eba15d63e6",
+                                "kubernetesVersion": "v1.25.4"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.25.3-1665727742",
+                                "creationTimestamp": "2022-10-14T06:29:54Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-09a84a500f65e8026",
+                                "kubernetesVersion": "v1.25.3"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.25.2-00-1664536044",
+                                "creationTimestamp": "2022-09-30T11:26:47Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0c850686ac98903e1",
+                                "kubernetesVersion": "v1.25.2"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.25.1-00-1663592692",
+                                "creationTimestamp": "2022-09-19T13:20:49Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0fae8ac01f4e7882a",
+                                "kubernetesVersion": "v1.25.1"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.25.0-00-1661334286",
+                                "creationTimestamp": "2022-08-24T10:04:49Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0929ae50c4e77b389",
+                                "kubernetesVersion": "v1.25.0"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.25.5-1671460675",
+                                "creationTimestamp": "2022-12-19T15:00:32Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0d2f1389541f77bb6",
+                                "kubernetesVersion": "v1.25.5"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.24.9-1671459377",
+                                "creationTimestamp": "2022-12-19T14:35:13Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-057693526376941fe",
+                                "kubernetesVersion": "v1.24.9"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.24.8-1668682017",
+                                "creationTimestamp": "2022-11-17T11:05:08Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-02a44695d351de6e7",
+                                "kubernetesVersion": "v1.24.8"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.24.7-1669108462",
+                                "creationTimestamp": "2022-11-22T09:34:21Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0f3a6dedbdb70e59b",
+                                "kubernetesVersion": "v1.24.7"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.24.6-1669106002",
+                                "creationTimestamp": "2022-11-22T08:50:46Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0de6019e0018d355f",
+                                "kubernetesVersion": "v1.24.6"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.24.5-1669105637",
+                                "creationTimestamp": "2022-11-22T08:47:00Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-03c721f549891e907",
+                                "kubernetesVersion": "v1.24.5"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.24.4-1669105118",
+                                "creationTimestamp": "2022-11-22T08:35:34Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-025b691eedb906bff",
+                                "kubernetesVersion": "v1.24.4"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.24.3-00-1657780786",
+                                "creationTimestamp": "2022-07-14T06:58:51Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-052e2d2d9b927c776",
+                                "kubernetesVersion": "v1.24.3"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.24.2-00-1655737457",
+                                "creationTimestamp": "2022-06-20T15:20:37Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0a546e37aa3b8e758",
+                                "kubernetesVersion": "v1.24.2"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.24.1-00-1655360753",
+                                "creationTimestamp": "2022-06-16T06:44:03Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-04e63be6d3d5b8ec7",
+                                "kubernetesVersion": "v1.24.1"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.24.0-00-1651650102",
+                                "creationTimestamp": "2022-05-04T08:02:44Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0086f7d347b66fc76",
+                                "kubernetesVersion": "v1.24.0"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.23.15-1671458160",
+                                "creationTimestamp": "2022-12-19T14:14:42Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0ad38426923dad807",
+                                "kubernetesVersion": "v1.23.15"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.23.14-1668683367",
+                                "creationTimestamp": "2022-11-17T11:30:41Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0aad54c33fdb66531",
+                                "kubernetesVersion": "v1.23.14"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.23.13-1668757548",
+                                "creationTimestamp": "2022-11-18T08:06:39Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-03eb608ae6519ae1e",
+                                "kubernetesVersion": "v1.23.13"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.23.12-1668759367",
+                                "creationTimestamp": "2022-11-18T08:37:36Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0865fd51cd03eaf87",
+                                "kubernetesVersion": "v1.23.12"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.23.11-1668760102",
+                                "creationTimestamp": "2022-11-18T08:50:07Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0bdc0b2c76bb6650c",
+                                "kubernetesVersion": "v1.23.11"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.23.10-1668764224",
+                                "creationTimestamp": "2022-11-18T09:58:22Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-057c142877d1d80c1",
+                                "kubernetesVersion": "v1.23.10"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.9-00-1657777230",
+                                "creationTimestamp": "2022-07-14T05:57:01Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0bfa52faa6cf5dd0c",
+                                "kubernetesVersion": "v1.23.9"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.8-00-1655736596",
+                                "creationTimestamp": "2022-06-20T15:13:33Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-010cf398892c2ee31",
+                                "kubernetesVersion": "v1.23.8"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.7-00-1655360276",
+                                "creationTimestamp": "2022-06-16T06:35:30Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0e7ac2102c05d3bc1",
+                                "kubernetesVersion": "v1.23.7"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.6-00-1650522418",
+                                "creationTimestamp": "2022-04-21T06:46:08Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0344d9b64e880a596",
+                                "kubernetesVersion": "v1.23.6"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.5-00-1647494584",
+                                "creationTimestamp": "2022-03-17T05:46:24Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0996b0b02abd216e0",
+                                "kubernetesVersion": "v1.23.5"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.4-00-1645165311",
+                                "creationTimestamp": "2022-02-18T06:44:57Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-06c7e210cbb96014b",
+                                "kubernetesVersion": "v1.23.4"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.3-00-1643275706",
+                                "creationTimestamp": "2022-01-27T09:46:37Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-03d95dc6e8a4dcbb5",
+                                "kubernetesVersion": "v1.23.3"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.2-00-1642652266",
+                                "creationTimestamp": "2022-01-20T04:35:53Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0ef37d3626f209a8e",
+                                "kubernetesVersion": "v1.23.2"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.1-00-1639680304",
+                                "creationTimestamp": "2021-12-16T19:03:52Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0bee01a40c73e7b18",
+                                "kubernetesVersion": "v1.23.1"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.23.0-00-1639671329",
+                                "creationTimestamp": "2021-12-16T16:37:42Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0e07351f68cf4dff3",
+                                "kubernetesVersion": "v1.23.0"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.22.17-1671461998",
+                                "creationTimestamp": "2022-12-19T15:21:58Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-09106ce38c5ccedac",
+                                "kubernetesVersion": "v1.22.17"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-v1.22.16-1671464259",
+                                "creationTimestamp": "2022-12-19T15:55:27Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0c4040f6624330114",
+                                "kubernetesVersion": "v1.22.16"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.15-00-1664533514",
+                                "creationTimestamp": "2022-09-30T10:42:29Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0cbd67e4b7f0a3d54",
+                                "kubernetesVersion": "v1.22.15"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.14-00-1663586970",
+                                "creationTimestamp": "2022-09-19T11:45:46Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0569df34b92285a64",
+                                "kubernetesVersion": "v1.22.14"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.13-00-1660830759",
+                                "creationTimestamp": "2022-08-18T14:12:48Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0365a2c5bb7d4bfe1",
+                                "kubernetesVersion": "v1.22.13"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.12-00-1657776857",
+                                "creationTimestamp": "2022-07-14T05:50:45Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0e8038f319fac566f",
+                                "kubernetesVersion": "v1.22.12"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.11-00-1655736240",
+                                "creationTimestamp": "2022-06-20T15:01:03Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0b6d38cac243e7377",
+                                "kubernetesVersion": "v1.22.11"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.10-00-1655358734",
+                                "creationTimestamp": "2022-06-16T06:11:41Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0a787950776fcde03",
+                                "kubernetesVersion": "v1.22.10"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.9-00-1650524332",
+                                "creationTimestamp": "2022-04-21T07:18:02Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0a2949075c91eb0e1",
+                                "kubernetesVersion": "v1.22.9"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.8-00-1647495311",
+                                "creationTimestamp": "2022-03-17T05:56:16Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0b5732e5f3e75abfe",
+                                "kubernetesVersion": "v1.22.8"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.7-00-1645168474",
+                                "creationTimestamp": "2022-02-18T07:35:27Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0d0e7b30368213a2c",
+                                "kubernetesVersion": "v1.22.7"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.6-00-1642712264",
+                                "creationTimestamp": "2022-01-20T21:19:09Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-07e2273b78430e157",
+                                "kubernetesVersion": "v1.22.6"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.5-00-1639685007",
+                                "creationTimestamp": "2021-12-16T20:24:36Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0bfe12fb80bbfb336",
+                                "kubernetesVersion": "v1.22.5"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.4-00-1637257990",
+                                "creationTimestamp": "2021-11-18T18:12:02Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-07c993e2ee98e0a57",
+                                "kubernetesVersion": "v1.22.4"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.3-00-1635965069",
+                                "creationTimestamp": "2021-11-03T19:01:38Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0e55fd47233299b03",
+                                "kubernetesVersion": "v1.22.3"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.2-00-1631820078",
+                                "creationTimestamp": "2021-09-16T19:36:10Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0cda2e2e7758de8e6",
+                                "kubernetesVersion": "v1.22.2"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.1-00-1631556616",
+                                "creationTimestamp": "2021-09-13T18:32:31Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-099ae586eb1972151",
+                                "kubernetesVersion": "v1.22.1"
+                        }
+                },
+                {
+                        "kind": "AWSAMI",
+                        "apiVersion": "ami.aws.infrastructure.cluster.x-k8s.io/v1beta1",
+                        "metadata": {
+                                "name": "capa-ami-ubuntu-20.04-1.22.0-00-1632753412",
+                                "creationTimestamp": "2021-09-27T14:55:48Z"
+                        },
+                        "spec": {
+                                "os": "ubuntu-20.04",
+                                "region": "eu-west-1",
+                                "imageID": "ami-0233b8acf57accc8a",
+                                "kubernetesVersion": "v1.22.0"
+                        }
+                }
+        ]
+      }
+
+
+Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        4.776s
+Ran all test suites matching /clusterawsadm/i.
+
+
