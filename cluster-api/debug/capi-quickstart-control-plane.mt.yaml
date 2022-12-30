@@ -1,0 +1,23 @@
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+kind: AWSMachineTemplate
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"infrastructure.cluster.x-k8s.io/v1beta2","kind":"AWSMachineTemplate","metadata":{"annotations":{},"name":"capi-quickstart-control-plane","namespace":"default"},"spec":{"template":{"spec":{"iamInstanceProfile":"control-plane.cluster-api-provider-aws.sigs.k8s.io","instanceType":"t3.large","sshKeyName":"kos"}}}}
+  creationTimestamp: "2022-12-29T07:53:54Z"
+  generation: 1
+  name: capi-quickstart-control-plane
+  namespace: default
+  ownerReferences:
+  - apiVersion: cluster.x-k8s.io/v1beta1
+    kind: Cluster
+    name: capi-quickstart
+    uid: 0b315141-80ec-4855-a87d-b00a240a2b44
+  resourceVersion: "95254"
+  uid: 1a934abd-4ef0-47ce-a095-ef78bc9755e4
+spec:
+  template:
+    spec:
+      iamInstanceProfile: control-plane.cluster-api-provider-aws.sigs.k8s.io
+      instanceType: t3.large
+      sshKeyName: kos

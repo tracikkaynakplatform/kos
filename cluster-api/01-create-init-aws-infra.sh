@@ -21,6 +21,8 @@ clusterctl init --infrastructure aws
 ## last minor of previous major: 1.24.9
 ## last minor of last major: 1.25.5
 
+## note that for now, aws provider is using Ubuntu 18.04.6 LTS images by default.
+
 clusterctl generate cluster capi-quickstart \
   --kubernetes-version v1.24.9 \
   --control-plane-machine-count=3 \
@@ -28,4 +30,5 @@ clusterctl generate cluster capi-quickstart \
   | kubectl apply -f -
 
 echo "completed aws cluster initialization. Wait for a few minutes for it to get launched."
+echo "you can use `kubectl get Kubeadmcontrolplane` to check readiness status of pods."
 echo "Note that, a CNI solution is still needed to make the nodes and controlplane ready."
