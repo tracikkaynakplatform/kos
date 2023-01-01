@@ -67,10 +67,10 @@ export default function ManagementClusterInfoPage() {
 	const nav = useNavigate();
 
 	/* Handlers */
-	const handleCopyClusterConfig = async () => {
+	const handleCopyClusterConfig = async (cluster) => {
 		async () => {
 			await navigator.clipboard.writeText(
-				await clusterctl.getClusterConfig(config, x.name)
+				await clusterctl.getClusterConfig(config, cluster.name)
 			);
 			snack("Kümenin kubeconfig içeriği panoya kopyalandı!", {
 				variant: "info",
@@ -78,22 +78,36 @@ export default function ManagementClusterInfoPage() {
 			});
 		};
 	};
-	const handleDeleteCluster = () => {
-		async () => {
-			modal.showModal(QuestionModal, {
-				yesButtonColor: "error",
-				message: `${x.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`,
-				yesButtonText: "Sil",
-				noButtonText: "Vazgeç",
+	const handleDeleteCluster = async (cluster) => {
+		modal.showModal(QuestionModal, {
+			yesButtonColor: "error",
+			message: `${cluster.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`,
+			yesButtonText: "Sil",
+			noButtonText: "Vazgeç",
 
-				onYesClick: async () => {
+			onYesClick: () => {
+				return new Promise(async (resolve, reject) => {
 					modal.closeModal();
-					snack(`"${x.name}" kümesi siliniyor`, {
+					snack(`"${cluster.name}" kümesi siliniyor`, {
 						variant: "info",
 						autoHideDuration: 2000,
 					});
 					try {
-						await kubectl.delete_(config, "cluster", x.name);
+						new Promise(async (res, rej) => {
+							try {
+								await kubectl.delete_(
+									config,
+									"cluster",
+									cluster.name
+								);
+								refreshClusters();
+								res();
+							} catch (err) {
+								rej(err);
+							}
+						}).catch((err) => {
+							throw err;
+						});
 						refreshClusters();
 					} catch (err) {
 						snack(err.message, {
@@ -101,10 +115,10 @@ export default function ManagementClusterInfoPage() {
 							autoHideDuration: 5000,
 						});
 					}
-				},
-				onNoClick: () => modal.closeModal(),
-			});
-		};
+				});
+			},
+			onNoClick: () => modal.closeModal(),
+		});
 	};
 	const handleDeleteManagementCluster = () => {
 		modal.showModal(QuestionModal, {
@@ -229,13 +243,17 @@ export default function ManagementClusterInfoPage() {
 											disabled={
 												x.status !== "Provisioned"
 											}
-											onClick={handleCopyClusterConfig}
+											onClick={() =>
+												handleCopyClusterConfig(x)
+											}
 										>
 											<CameraIcon />
 										</Button>
 										<Button
 											disabled={x.status === "Deleting"}
-											onClick={handleDeleteCluster}
+											onClick={() =>
+												handleDeleteCluster(x)
+											}
 										>
 											<DeleteIcon />
 										</Button>
