@@ -46,7 +46,7 @@ export class ClientExecutable {
 
 	/**
 	 *
-	 * @param {Any} response string representation of a json objecy
+	 * @param {Any} response string representation of a json object
 	 * @param {*} resolve function to call on positive results
 	 * @param {*} reject function to call on errors
 	 */
@@ -126,7 +126,7 @@ export class ClientExecutable {
 	async check({} = {}) {
 		return new Promise((resolve, reject) => {
 			try {
-				resolve(findInPath(this.name));
+				resolve(findInPath(`${this.name}${platform.exeExt}`));
 			} catch (err) {
 				access(this.path, constants.F_OK, (err) => {
 					if (err) return reject(err);

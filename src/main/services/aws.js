@@ -22,9 +22,15 @@ export class Aws extends ClientExecutable {
 				);
 				this.path = `${dirCheck(DIRS.bin)}/aws/dist/aws`;
 				break;
+
 			case "darwin":
 				super("https://awscli.amazonaws.com/AWSCLIV2.pkg", "aws");
 				this.path = `${dirCheck(DIRS.bin)}/aws/aws`;
+				break;
+
+			default:
+				super("", "aws");
+				this.path = "";
 				break;
 		}
 		this.awsconfig = awsconfig;
