@@ -11,10 +11,10 @@ import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 import { Loading } from "../components/Snackbars";
 import { envVariables } from "../providers/aws";
 
-function InputRow({ name, label, control }) {
+function InputRow({ name, label, control, fieldLabel }) {
 	return (
 		<div className="flex justify-between items-center">
-			<div className="w-72">{label}</div>
+			<div className="w-[20%]">{fieldLabel}:</div>
 			<InputText
 				rules={{
 					required: "Lütfen değer giriniz",
@@ -30,6 +30,7 @@ function InputRow({ name, label, control }) {
 export default function ManagementClusterConfigPage() {
 	const [supportedProviders, setProviders] = useState([]);
 	const [config, setConfig] = useState("");
+	const [warnings, setWarnings] = useState("");
 	const { handleSubmit, control, setValue, getValues } = useForm();
 	const { enqueueSnackbar: snack, closeSnackbar } = useCustomSnackbar();
 	const nav = useNavigate();
@@ -99,6 +100,15 @@ export default function ManagementClusterConfigPage() {
 				const [providerName, fieldName] = parseField(field);
 				const value =
 					currentConfig?.provider[providerName]?.[fieldName];
+				if (!value && (await env.getEnv(fieldName)))
+					setWarnings((old) => (
+						<>
+							{old}
+							{old && <br />}* {fieldName} isimli konfigürasyon
+							çevre değişkenlerinden alındı
+						</>
+					));
+
 				setValue(field, value || (await env.getEnv(fieldName)) || "");
 			}
 		})();
@@ -107,6 +117,16 @@ export default function ManagementClusterConfigPage() {
 	return (
 		<TempLayout>
 			<div className="h-28" />
+			{warnings && (
+				<div className="p-5 bg-yellow-400/40">
+					{warnings}
+					<br />
+					<br />
+					Bu konfigürasyonlar çevre değişkenlerinden alındı. Bu
+					ayarları KOS ile birlikte kullanmak için aşağıdaki kaydet
+					butonuna tıklayın.
+				</div>
+			)}
 			<div className="flex flex-col gap-5 p-5">
 				{supportedProviders.map((x, i) => {
 					let content;
@@ -123,6 +143,7 @@ export default function ManagementClusterConfigPage() {
 											key={i}
 											control={control}
 											name={"AWS_" + x.name}
+											fieldLabel={x.label}
 											label={x.name}
 										/>
 									))}
