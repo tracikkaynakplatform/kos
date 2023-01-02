@@ -42,22 +42,6 @@ export default function ManagementClustersPage() {
 				<AddIcon />
 			</Button>
 			<div className="flex flex-col">
-				<div className="flex items-center">
-					<TextField
-						sx={{
-							m: 3,
-							flexGrow: 1,
-							"& .MuiOutlinedInput-root": {
-								borderRadius: 25,
-							},
-						}}
-						label="Ara..."
-						variant="outlined"
-					/>
-					<Button className="w-16 h-16 mr-3 shadow-2xl" variant="fab">
-						<SearchIcon />
-					</Button>
-				</div>
 				<div className="flex flex-wrap gap-[12px] m-3">
 					{clusters.map((x, i) => (
 						<ManagementClusterCard
