@@ -34,6 +34,9 @@ export default function ManagementClustersPage() {
 
 	return (
 		<DashboardLayout>
+			<h1 className="w-full m-5 text-[30px] font-bold text-center">
+				Yönetim Kümeleri
+			</h1>
 			<Button
 				className="fixed left-auto top-auto bottom-5 right-5 m-0 h-16 w-16"
 				variant="fab"
@@ -42,15 +45,23 @@ export default function ManagementClustersPage() {
 				<AddIcon />
 			</Button>
 			<div className="flex flex-col">
-				<div className="flex flex-wrap gap-[12px] m-3">
-					{clusters.map((x, i) => (
-						<ManagementClusterCard
-							key={i}
-							href={`/cluster/${x.name}`}
-							{...x}
-						/>
-					))}
-				</div>
+				{clusters.length > 0 && clusters[0] != null ? (
+					<div className="flex flex-wrap gap-[12px] m-3">
+						{clusters.map((x, i) => (
+							<ManagementClusterCard
+								key={i}
+								href={`/cluster/${x.name}`}
+								{...x}
+							/>
+						))}
+					</div>
+				) : (
+					<div className="w-full m-5 text-[20px] italic text-center">
+						{clusters[0] == null
+							? "Hiç yönetim kümesi eklemediniz."
+							: "Yükleniyor..."}
+					</div>
+				)}
 			</div>
 		</DashboardLayout>
 	);
