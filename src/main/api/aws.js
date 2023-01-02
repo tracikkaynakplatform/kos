@@ -1,4 +1,4 @@
-import { Aws } from "../services/aws";
+import { Aws } from "../services/Aws";
 import { AwsConfig } from "../k8s/awsConfig";
 import { exportHelper } from "./exportHelper";
 

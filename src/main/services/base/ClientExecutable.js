@@ -1,7 +1,7 @@
 import { get as _get } from "request";
 import { access, chmodSync, constants } from "fs";
 import { chmod } from "fs";
-import { platform } from "./platform";
+import { platform } from "./Platform";
 import { findInPath } from "../../utils/find-in-path";
 import { downloadFile } from "../../utils/download-file";
 import { dirCheck, DIRS } from "../../utils/dir-check";

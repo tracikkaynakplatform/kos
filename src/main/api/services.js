@@ -1,8 +1,8 @@
 import { logger } from "../logger";
 import Kubectl from "../services/Kubectl";
 import Clusterctl from "../services/Clusterctl";
-import { Aws } from "../services/aws";
-import { Clusterawsadm } from "../services/clusterawsadm";
+import { Aws } from "../services/Aws";
+import { Clusterawsadm } from "../services/Clusterawsadm";
 import { exportHelper } from "./exportHelper";
 
 function getExeType(name) {

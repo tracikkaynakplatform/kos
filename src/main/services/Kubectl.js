@@ -1,10 +1,10 @@
-import { ClientExecutable } from "./base/client-executable";
+import { ClientExecutable } from "./base/ClientExecutable";
 import { execFile } from "child_process";
 import { get as _get } from "request";
 import { downloadFile } from "../utils/download-file";
 import { chmod } from "fs";
 import { KubeConfig } from "../k8s/KubeConfig";
-import { platform } from "./base/platform";
+import { platform } from "./base/Platform";
 
 /**
  * Options for kubectl

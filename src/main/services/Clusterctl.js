@@ -1,5 +1,5 @@
 import { execFile } from "child_process";
-import { ClientExecutable } from "./base/client-executable";
+import { ClientExecutable } from "./base/ClientExecutable";
 import { KubeConfig } from "../k8s/KubeConfig";
 import { logger } from "../logger";
 
