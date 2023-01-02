@@ -1,11 +1,11 @@
 import { execFile, execFileSync } from "child_process";
-import { ClientExecutable } from "./base/client-executable";
+import { ClientExecutable } from "./base/ClientExecutable";
 import { logger } from "../logger";
 import { downloadFile } from "../utils/download-file";
 import { dirCheck, DIRS } from "../utils/dir-check";
 import decompress from "decompress";
 import { renameSync, rmSync, unlinkSync, writeFileSync } from "fs";
-import { platform } from "./base/platform";
+import { platform } from "./base/Platform";
 
 /**
  * Represents aws (aws client) executable.

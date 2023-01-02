@@ -1,4 +1,4 @@
-import { Clusterawsadm } from "../services/clusterawsadm";
+import { Clusterawsadm } from "../services/Clusterawsadm";
 import { AwsConfig } from "../k8s/awsConfig";
 import { exportHelper } from "./exportHelper";
 
