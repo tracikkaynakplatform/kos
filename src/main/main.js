@@ -2,6 +2,56 @@ import { app, BrowserWindow, Menu } from "electron";
 import contextMenu from "electron-context-menu";
 import { initApis } from "./api";
 
+const mainMenuTemplate = [
+	{
+		label: "Dosya",
+		submenu: [
+			{
+				label: "Çıkış",
+				accelerator:
+					process.platform == "darwin" ? "Command+Q" : "Ctrl+Q",
+				role: "quit",
+			},
+		],
+	},
+	{
+		label: "Düzenle",
+		submenu: [
+			{
+				label: "Kes",
+				accelerator:
+					process.platform == "darwin" ? "Command+X" : "Ctrl+X",
+				role: "cut",
+			},
+			{
+				label: "Kopyala",
+				accelerator:
+					process.platform == "darwin" ? "Command+C" : "Ctrl+C",
+				role: "copy",
+			},
+			{
+				label: "Yapıştır",
+				accelerator:
+					process.platform == "darwin" ? "Command+V" : "Ctrl+V",
+				role: "paste",
+			},
+			{
+				label: "Hepsini Seç",
+				accelerator:
+					process.platform == "darwin" ? "Command+A" : "Ctrl+A",
+				role: "selectAll",
+			},
+		],
+	},
+];
+
+if (process.platform == "darwin") {
+	mainMenuTemplate.unshift({
+		label: app.getName(),
+		role: "TODO",
+	});
+}
+
 const createWindow = () => {
 	const mainWindow = new BrowserWindow({
 		width: 1000,
@@ -28,27 +78,6 @@ const createWindow = () => {
 	Menu.setApplicationMenu(mainMenu);
 };
 
-const mainMenuTemplate = [
-	{
-		label: "Menu",
-		submenu: [
-			{
-				label: "Çıkış",
-				accelerator:
-					process.platform == "darwin" ? "Command+Q" : "Ctrl+Q",
-				role: "quit",
-			},
-		],
-	},
-];
-
-if (process.platform == "darwin") {
-	mainMenuTemplate.unshift({
-		label: app.getName(),
-		role: "TODO",
-	});
-}
-
 if (require("electron-squirrel-startup")) app.quit();
 
 app.whenReady().then(() => {
@@ -56,9 +85,7 @@ app.whenReady().then(() => {
 });
 
 app.on("ready", createWindow);
+app.on("window-all-closed", () => app.quit());
 app.on("activate", () =>
 	BrowserWindow.getAllWindows().length === 0 ? createWindow() : null
-);
-app.on("window-all-closed", () =>
-	process.platform !== "darwin" ? app.quit() : null
 );
