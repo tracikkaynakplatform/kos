@@ -61,7 +61,12 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 			width={500}
 			{...props}
 		>
-			<InputSelect name="provider" control={control} items={providers} />
+			<InputSelect
+				defaultValue="Yükleniyor..."
+				name="provider"
+				control={control}
+				items={providers}
+			/>
 		</StepWizardWrapper>
 	);
 }
