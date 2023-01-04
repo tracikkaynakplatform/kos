@@ -4,9 +4,10 @@ import { chmod } from "fs";
 import { platform } from "./Platform";
 import { findInPath } from "../../utils/find-in-path";
 import { downloadFile } from "../../utils/download-file";
-import { dirCheck, DIRS } from "../../utils/dir-check";
+import { basePath, dirCheck, DIRS } from "../../utils/dir-check";
 import { execFile } from "child_process";
 import { logger } from "../../logger";
+
 /**
  * Represents common code for client executables, like kubectl, clusterctl ...
  */
@@ -109,6 +110,7 @@ export class ClientExecutable {
 				{
 					env: env,
 					encoding: "utf-8",
+					cwd: basePath,
 				},
 				(err, stdout) => {
 					if (err) return reject(err);
