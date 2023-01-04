@@ -68,15 +68,13 @@ export default function ManagementClusterInfoPage() {
 
 	/* Handlers */
 	const handleCopyClusterConfig = async (cluster) => {
-		async () => {
-			await navigator.clipboard.writeText(
-				await clusterctl.getClusterConfig(config, cluster.name)
-			);
-			snack("Kümenin kubeconfig içeriği panoya kopyalandı!", {
-				variant: "info",
-				autoHideDuration: 2000,
-			});
-		};
+		await navigator.clipboard.writeText(
+			await clusterctl.getClusterConfig(config, cluster.name)
+		);
+		snack("Kümenin kubeconfig içeriği panoya kopyalandı!", {
+			variant: "info",
+			autoHideDuration: 2000,
+		});
 	};
 	const handleDeleteCluster = async (cluster) => {
 		modal.showModal(QuestionModal, {

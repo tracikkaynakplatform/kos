@@ -22,7 +22,7 @@ export default function ManagementClusterCard({
 				<>
 					<div className="flex-grow p-1">
 						Desteklenen Altyapılar
-						<div className="flex flex-wrap gap-3 mt-3">
+						<div className="flex flex-wrap gap-1 mt-3">
 							{supportedProviders?.map((x, i) => (
 								<ProviderChip
 									key={i}
@@ -33,8 +33,8 @@ export default function ManagementClusterCard({
 						</div>
 					</div>
 					<hr />
-					<div className="p-2 overflow-y-auto">
-						<div>Kümeler</div>
+					<div>Kümeler</div>
+					<div className="p-2 flex gap-1 overflow-hidden">
 						{clusters?.length > 0 ? (
 							clusters?.map((x, i) => (
 								<ProviderChip
@@ -47,7 +47,7 @@ export default function ManagementClusterCard({
 							))
 						) : (
 							<div className="w-full text-center italic items-center font-sans">
-								Henüz küme oluşturulmamış...
+								Henüz küme oluşturmadınız...
 							</div>
 						)}
 					</div>
