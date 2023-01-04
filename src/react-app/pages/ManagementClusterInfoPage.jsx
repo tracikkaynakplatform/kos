@@ -29,6 +29,7 @@ import { Loading } from "../components/Snackbars";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 import { logger } from "../logger";
 import { Button, ProviderChip } from "../components/UI";
+import { handleErrorWithSnack } from "../errorHandler";
 
 const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -84,35 +85,28 @@ export default function ManagementClusterInfoPage() {
 			noButtonText: "Vazgeç",
 
 			onYesClick: () => {
-				return new Promise(async (resolve, reject) => {
-					modal.closeModal();
-					snack(`"${cluster.name}" kümesi siliniyor`, {
-						variant: "info",
-						autoHideDuration: 2000,
+				modal.closeModal();
+				snack(`"${cluster.name}" kümesi siliniyor`, {
+					variant: "info",
+					autoHideDuration: 2000,
+				});
+				handleErrorWithSnack(snack, async () => {
+					new Promise(async (res, rej) => {
+						try {
+							await kubectl.delete_(
+								config,
+								"cluster",
+								cluster.name
+							);
+							refreshClusters();
+							res();
+						} catch (err) {
+							rej(err);
+						}
+					}).catch((err) => {
+						throw err;
 					});
-					try {
-						new Promise(async (res, rej) => {
-							try {
-								await kubectl.delete_(
-									config,
-									"cluster",
-									cluster.name
-								);
-								refreshClusters();
-								res();
-							} catch (err) {
-								rej(err);
-							}
-						}).catch((err) => {
-							throw err;
-						});
-						refreshClusters();
-					} catch (err) {
-						snack(err.message, {
-							variant: "error",
-							autoHideDuration: 5000,
-						});
-					}
+					refreshClusters();
 				});
 			},
 			onNoClick: () => modal.closeModal(),
@@ -132,17 +126,12 @@ export default function ManagementClusterInfoPage() {
 					{ persist: true },
 					Loading
 				);
-				try {
+				await handleErrorWithSnack(snack, async () => {
 					await clusterConfig.deleteCluster(name);
 					nav("/management-clusters", {
 						replace: true,
 					});
-				} catch (err) {
-					logger.error(err.message);
-					snack("Bir hata oluştu!", {
-						variant: "error",
-					});
-				}
+				});
 				closeSnackbar(loading);
 			},
 			onNoClick: () => modal.closeModal(),
@@ -151,13 +140,11 @@ export default function ManagementClusterInfoPage() {
 
 	const refreshClusters = async () => {
 		let loading = snack("Kümeler yükleniyor", { persist: true }, Loading);
-		try {
+		await handleErrorWithSnack(snack, async () => {
 			const _config = await kubeConfig.loadManagementConfig(name);
 			await setConfig(_config);
 			await setClusters([...(await clusterConfig.getClusters(_config))]);
-		} catch (err) {
-			snack(err.message, { variant: "error", autoHideDuration: 5000 });
-		}
+		});
 		closeSnackbar(loading);
 	};
 

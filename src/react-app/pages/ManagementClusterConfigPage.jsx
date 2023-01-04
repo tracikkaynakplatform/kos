@@ -10,6 +10,7 @@ import { Button } from "../components/UI/Button";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
 import { Loading } from "../components/Snackbars";
 import { envVariables } from "../providers/aws";
+import { handleErrorWithSnack } from "../errorHandler";
 
 function InputRow({ name, label, control, fieldLabel }) {
 	return (
@@ -49,7 +50,7 @@ export default function ManagementClusterConfigPage() {
 			{ persist: true },
 			Loading
 		);
-		try {
+		await handleErrorWithSnack(snack, async () => {
 			const currentConfig =
 				(await clusterConfig.getClusterConfiguration(name)) ?? {};
 
@@ -64,10 +65,7 @@ export default function ManagementClusterConfigPage() {
 
 			await clusterConfig.setClusterConfiguration(name, currentConfig);
 			snack("Küme bilgileri kayıt edildi.", { variant: "info" });
-		} catch (err) {
-			logger.error(err.message);
-			snack("Bir hata oluştu!", { variant: "error" });
-		}
+		});
 		closeSnackbar(loading);
 	});
 
@@ -80,12 +78,14 @@ export default function ManagementClusterConfigPage() {
 				});
 				return;
 			}
-			const _config = await kubeConfig.loadManagementConfig(name);
-			const providers = await clusterConfig.getSupportedProviders(
-				_config
-			);
-			setConfig(_config);
-			setProviders(providers);
+			handleErrorWithSnack(snack, async () => {
+				const _config = await kubeConfig.loadManagementConfig(name);
+				const providers = await clusterConfig.getSupportedProviders(
+					_config
+				);
+				setConfig(_config);
+				setProviders(providers);
+			});
 		})();
 	}, []);
 
@@ -128,45 +128,51 @@ export default function ManagementClusterConfigPage() {
 				</div>
 			)}
 			<div className="flex flex-col gap-5 p-5">
-				{supportedProviders.map((x, i) => {
-					let content;
-					let providerName = providerNames[x];
-					let providerLogo = providerLogos[x];
+				{supportedProviders.length > 0 ? (
+					supportedProviders.map((x, i) => {
+						let content;
+						let providerName = providerNames[x];
+						let providerLogo = providerLogos[x];
 
-					switch (x) {
-						case PROVIDER_TYPE.AWS:
-						case PROVIDER_TYPE.AWS_EKS:
-							content = (
-								<div className="flex flex-col gap-3">
-									{envVariables.map((x, i) => (
-										<InputRow
-											key={i}
-											control={control}
-											name={"AWS_" + x.name}
-											fieldLabel={x.label}
-											label={x.name}
-										/>
-									))}
-								</div>
-							);
-							break;
-						case PROVIDER_TYPE.DOCKER:
-							return null;
-					}
-					return (
-						<div key={i} className="flex flex-col gap-5">
-							<h2 className="text-2xl font-sans flex gap-3 items-center">
-								<img
-									src={providerLogo}
-									className="rounded-full w-10 h-10"
-								/>
-								{providerName} yapılandırması
-							</h2>
-							{content}
-							<hr />
-						</div>
-					);
-				})}
+						switch (x) {
+							case PROVIDER_TYPE.AWS:
+							case PROVIDER_TYPE.AWS_EKS:
+								content = (
+									<div className="flex flex-col gap-3">
+										{envVariables.map((x, i) => (
+											<InputRow
+												key={i}
+												control={control}
+												name={"AWS_" + x.name}
+												fieldLabel={x.label}
+												label={x.name}
+											/>
+										))}
+									</div>
+								);
+								break;
+							case PROVIDER_TYPE.DOCKER:
+								return null;
+						}
+						return (
+							<div key={i} className="flex flex-col gap-5">
+								<h2 className="text-2xl font-sans flex gap-3 items-center">
+									<img
+										src={providerLogo}
+										className="rounded-full w-10 h-10"
+									/>
+									{providerName} yapılandırması
+								</h2>
+								{content}
+								<hr />
+							</div>
+						);
+					})
+				) : (
+					<div className="w-full text-center m-4">
+						Yapılandırılacak altyapı sağlayıcısı bulunmuyor.
+					</div>
+				)}
 				<Button
 					className="w-32 text-lg self-center"
 					onClick={handleSave}

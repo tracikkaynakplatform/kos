@@ -13,8 +13,8 @@ export const machineTypes = [
 	},
 ];
 
-export const kubernetesVersions = ["1.23.13", "1.24.7"];
-export const eksVersions = ["1.20.0", "1.21.0", "1.22.0", "1.23.0"];
+export const kubernetesVersions = ["v1.23.12", "v1.24.6", "v1.25.3", "v1.26.0"];
+export const eksVersions = ["1.22.0", "1.23.0", "1.24.0"];
 
 export const envVariables = [
 	{

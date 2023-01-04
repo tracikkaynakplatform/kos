@@ -6,6 +6,7 @@ import { kubeConfig, clusterConfig } from "../../../../api";
 import { StepWizardWrapper } from "../../../Steps";
 import { useForm } from "react-hook-form";
 import { InputSelect } from "../../../FormInputs";
+import { handleErrorWithSnack } from "../../../../errorHandler";
 
 export default function StepSelectProvider({ goToNamedStep, ...props }) {
 	const snack = useSnackbar().enqueueSnackbar;
@@ -16,34 +17,39 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 
 	return (
 		<StepWizardWrapper
-			onLoad={async () => {
-				let config = await kubeConfig.loadManagementConfig(
-					props.manClusterName
-				);
-				await wizard.updateData("config", config);
-				let prs = await clusterConfig.getSupportedProviders(config);
-				prs = prs.map((p) => {
-					switch (p) {
-						case PROVIDER_TYPE.DOCKER:
-							return {
-								label: "Kind - Docker",
-								value: "kindProviderConfig",
-							};
-						case PROVIDER_TYPE.DIGITAL_OCEAN:
-							return {
-								label: "DigitalOcean",
-								value: "digitalOceanSSHkey",
-							};
-						case PROVIDER_TYPE.AWS:
-							return {
-								label: "AWS - Amazon Web Services",
-								value: "selectAWSClusterType",
-							};
-					}
-				});
-				setProviders(prs);
-				if (prs[0]?.value) setValue("provider", prs[0].value);
-			}}
+			onLoad={() =>
+				handleErrorWithSnack(snack, async () => {
+					let config = await kubeConfig.loadManagementConfig(
+						props.manClusterName
+					);
+					await wizard.updateData("config", config);
+					let _providers = await clusterConfig.getSupportedProviders(
+						config
+					);
+					_providers = _providers.map((p) => {
+						switch (p) {
+							case PROVIDER_TYPE.DOCKER:
+								return {
+									label: "Kind - Docker",
+									value: "kindProviderConfig",
+								};
+							case PROVIDER_TYPE.DIGITAL_OCEAN:
+								return {
+									label: "DigitalOcean",
+									value: "digitalOceanSSHkey",
+								};
+							case PROVIDER_TYPE.AWS:
+								return {
+									label: "AWS - Amazon Web Services",
+									value: "selectAWSClusterType",
+								};
+						}
+					});
+					setProviders(_providers);
+					if (_providers[0]?.value)
+						setValue("provider", _providers[0].value);
+				})
+			}
 			onNextClick={handleSubmit((values) => {
 				if (
 					values?.provider === "" ||

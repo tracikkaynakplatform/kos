@@ -4,7 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 function SidebarButton({ to, icon: Icon, label, isActive }) {
 	const nav = useNavigate();
-	console.log(isActive);
 	return (
 		<li
 			className={`flex items-center gap-3 transition-all duration-300 hover:bg-gray-100 hover:cursor-pointer w-full p-3 ${
@@ -20,7 +19,6 @@ function SidebarButton({ to, icon: Icon, label, isActive }) {
 
 export default function DashboardLayout({ children }) {
 	const location = useLocation();
-	console.log(location);
 	return (
 		<div className="flex">
 			<div className="h-screen w-64 border-r-2 border-gray-200">
