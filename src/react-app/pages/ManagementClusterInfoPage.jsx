@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import {
 	Delete as DeleteIcon,
-	Upgrade as UpgradeIcon,
 	Camera as CameraIcon,
 	Add as AddIcon,
 	Replay as ReplayIcon,
@@ -27,7 +26,6 @@ import { TempLayout } from "../layouts";
 import { QuestionModal } from "../components/Modals";
 import { Loading } from "../components/Snackbars";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
-import { logger } from "../logger";
 import { Button, ProviderChip } from "../components/UI";
 import { handleErrorWithSnack } from "../errorHandler";
 
@@ -91,21 +89,10 @@ export default function ManagementClusterInfoPage() {
 					autoHideDuration: 2000,
 				});
 				handleErrorWithSnack(snack, async () => {
-					new Promise(async (res, rej) => {
-						try {
-							await kubectl.delete_(
-								config,
-								"cluster",
-								cluster.name
-							);
-							refreshClusters();
-							res();
-						} catch (err) {
-							rej(err);
-						}
-					}).catch((err) => {
-						throw err;
-					});
+					kubectl.delete_(config, "cluster", cluster.name);
+					await new Promise((res) =>
+						clearTimeout(setTimeout(() => res(), 1000))
+					);
 					refreshClusters();
 				});
 			},
