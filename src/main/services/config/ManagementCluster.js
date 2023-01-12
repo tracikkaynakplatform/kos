@@ -141,9 +141,12 @@ export default class ManagementCluster {
 							conf.split(".").slice(0, -1).join(".")
 						);
 						await manCluster.config.changePath(`${dir}/${conf}`);
-						await manCluster.getClusters();
-						await manCluster.getSupportedProviders();
-
+						try {
+							await manCluster.getClusters();
+							await manCluster.getSupportedProviders();
+						} catch (err) {
+							manCluster.connError = err.message;
+						}
 						clusterList.push(manCluster);
 					} catch (err) {
 						return reject(err);

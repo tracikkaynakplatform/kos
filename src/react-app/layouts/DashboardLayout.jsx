@@ -1,12 +1,14 @@
 import React from "react";
 import { Storage as StorageIcon } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-function SidebarButton({ to, icon: Icon, label }) {
+function SidebarButton({ to, icon: Icon, label, isActive }) {
 	const nav = useNavigate();
 	return (
 		<li
-			className="flex items-center gap-3 transition-all duration-300 hover:bg-gray-100 hover:cursor-pointer w-full p-3"
+			className={`flex items-center gap-3 transition-all duration-300 hover:bg-gray-100 hover:cursor-pointer w-full p-3 ${
+				isActive ? "bg-gray-100" : ""
+			}`}
 			onClick={() => nav(to, { replace: true })}
 		>
 			<Icon />
@@ -16,12 +18,14 @@ function SidebarButton({ to, icon: Icon, label }) {
 }
 
 export default function DashboardLayout({ children }) {
+	const location = useLocation();
 	return (
 		<div className="flex">
 			<div className="h-screen w-64 border-r-2 border-gray-200">
 				<ul className="pt-5 flex flex-col w-full items-center">
 					<SidebarButton
-						to="/"
+						to="/management-clusters"
+						isActive={location.pathname == "/management-clusters"}
 						icon={StorageIcon}
 						label="Yönetim Kümeleri"
 					/>

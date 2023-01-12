@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 import {
 	Delete as DeleteIcon,
-	Upgrade as UpgradeIcon,
 	Camera as CameraIcon,
 	Add as AddIcon,
 	Replay as ReplayIcon,
@@ -27,8 +26,8 @@ import { TempLayout } from "../layouts";
 import { QuestionModal } from "../components/Modals";
 import { Loading } from "../components/Snackbars";
 import { useCustomSnackbar } from "../hooks/useCustomSnackbar";
-import { logger } from "../logger";
 import { Button, ProviderChip } from "../components/UI";
+import { handleErrorWithSnack } from "../errorHandler";
 
 const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {
@@ -67,44 +66,38 @@ export default function ManagementClusterInfoPage() {
 	const nav = useNavigate();
 
 	/* Handlers */
-	const handleCopyClusterConfig = async () => {
-		async () => {
-			await navigator.clipboard.writeText(
-				await clusterctl.getClusterConfig(config, x.name)
-			);
-			snack("Kümenin kubeconfig içeriği panoya kopyalandı!", {
-				variant: "info",
-				autoHideDuration: 2000,
-			});
-		};
+	const handleCopyClusterConfig = async (cluster) => {
+		await navigator.clipboard.writeText(
+			await clusterctl.getClusterConfig(config, cluster.name)
+		);
+		snack("Kümenin kubeconfig içeriği panoya kopyalandı!", {
+			variant: "info",
+			autoHideDuration: 2000,
+		});
 	};
-	const handleDeleteCluster = () => {
-		async () => {
-			modal.showModal(QuestionModal, {
-				yesButtonColor: "error",
-				message: `${x.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`,
-				yesButtonText: "Sil",
-				noButtonText: "Vazgeç",
+	const handleDeleteCluster = async (cluster) => {
+		modal.showModal(QuestionModal, {
+			yesButtonColor: "error",
+			message: `${cluster.name} isimli kümeyi gerçekten silmek istiyor musunuz? (Bu işlem geri alınamaz)`,
+			yesButtonText: "Sil",
+			noButtonText: "Vazgeç",
 
-				onYesClick: async () => {
-					modal.closeModal();
-					snack(`"${x.name}" kümesi siliniyor`, {
-						variant: "info",
-						autoHideDuration: 2000,
-					});
-					try {
-						await kubectl.delete_(config, "cluster", x.name);
-						refreshClusters();
-					} catch (err) {
-						snack(err.message, {
-							variant: "error",
-							autoHideDuration: 5000,
-						});
-					}
-				},
-				onNoClick: () => modal.closeModal(),
-			});
-		};
+			onYesClick: () => {
+				modal.closeModal();
+				snack(`"${cluster.name}" kümesi siliniyor`, {
+					variant: "info",
+					autoHideDuration: 2000,
+				});
+				handleErrorWithSnack(snack, async () => {
+					kubectl.delete_(config, "cluster", cluster.name);
+					await new Promise((res) =>
+						clearTimeout(setTimeout(() => res(), 1000))
+					);
+					refreshClusters();
+				});
+			},
+			onNoClick: () => modal.closeModal(),
+		});
 	};
 	const handleDeleteManagementCluster = () => {
 		modal.showModal(QuestionModal, {
@@ -120,17 +113,12 @@ export default function ManagementClusterInfoPage() {
 					{ persist: true },
 					Loading
 				);
-				try {
+				await handleErrorWithSnack(snack, async () => {
 					await clusterConfig.deleteCluster(name);
 					nav("/management-clusters", {
 						replace: true,
 					});
-				} catch (err) {
-					logger.error(err.message);
-					snack("Bir hata oluştu!", {
-						variant: "error",
-					});
-				}
+				});
 				closeSnackbar(loading);
 			},
 			onNoClick: () => modal.closeModal(),
@@ -139,13 +127,11 @@ export default function ManagementClusterInfoPage() {
 
 	const refreshClusters = async () => {
 		let loading = snack("Kümeler yükleniyor", { persist: true }, Loading);
-		try {
+		await handleErrorWithSnack(snack, async () => {
 			const _config = await kubeConfig.loadManagementConfig(name);
 			await setConfig(_config);
 			await setClusters([...(await clusterConfig.getClusters(_config))]);
-		} catch (err) {
-			snack(err.message, { variant: "error", autoHideDuration: 5000 });
-		}
+		});
 		closeSnackbar(loading);
 	};
 
@@ -229,13 +215,17 @@ export default function ManagementClusterInfoPage() {
 											disabled={
 												x.status !== "Provisioned"
 											}
-											onClick={handleCopyClusterConfig}
+											onClick={() =>
+												handleCopyClusterConfig(x)
+											}
 										>
 											<CameraIcon />
 										</Button>
 										<Button
 											disabled={x.status === "Deleting"}
-											onClick={handleDeleteCluster}
+											onClick={() =>
+												handleDeleteCluster(x)
+											}
 										>
 											<DeleteIcon />
 										</Button>

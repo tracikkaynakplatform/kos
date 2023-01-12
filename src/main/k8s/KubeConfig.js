@@ -10,7 +10,7 @@ const tmpFileName = customAlphabet("1234567890abcdefghijklmnoprstuvyzqwx", 10);
  */
 export class KubeConfig {
 	/**
-	 * Instantiate a new KubeConfig object with a file name that has timestamp under `DIRS.config` directory.
+	 * Instantiate a new KubeConfig object with a file name under `DIRS.config` directory.
 	 */
 	constructor() {
 		/**

@@ -1,6 +1,6 @@
 import { env } from "process";
 import { accessSync, constants } from "fs";
-import { platform } from "../services/base/platform";
+import { platform } from "../services/base/Platform";
 
 /**
  * Searchs for `fileName` in the PATH environment variable.

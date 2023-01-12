@@ -4,9 +4,11 @@ import { StepWizardWrapper } from "../../../Steps";
 import { useForm } from "react-hook-form";
 import { InputText } from "../../../FormInputs";
 import { kubeConfig } from "../../../../api/";
+import { useLayout } from "../../../../hooks/useLayout";
 
 export default function StepKubeConfig(props) {
 	const wizard = useWizard();
+	const layout = useLayout();
 	const { handleSubmit, control, setValue } = useForm();
 	const _goto = props.goToNamedStep;
 
@@ -14,9 +16,11 @@ export default function StepKubeConfig(props) {
 		<StepWizardWrapper
 			stepName={props.stepName}
 			disableBack
-			onLoad={async () =>
-				setValue("config", await kubeConfig.defaultConfig())
-			}
+			onLoad={async () => {
+				layout.enableBack();
+
+				setValue("config", await kubeConfig.defaultConfig());
+			}}
 			onNextClick={handleSubmit(async (fields) => {
 				await wizard.updateData("config", fields.config);
 				_goto("connecting");

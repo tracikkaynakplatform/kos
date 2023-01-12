@@ -4,10 +4,12 @@ import { useWizard } from "../../../../hooks/useWizard";
 import { StepBaseLoading } from "../../../Steps";
 import { logger } from "../../../../logger";
 import { clusterConfig, kubectl } from "../../../../api";
+import { useLayout } from "../../../../hooks/useLayout";
 
 export default function StepConnecting(props) {
 	const [info, setInfo] = useState("");
 	const snack = useSnackbar().enqueueSnackbar;
+	const layout = useLayout();
 	const errSnack = (msg) => {
 		snack(msg, {
 			variant: "error",
@@ -26,6 +28,7 @@ export default function StepConnecting(props) {
 			disableNext
 			stepName={props.stepName}
 			onLoad={async () => {
+				layout.disableBack();
 				try {
 					let manName;
 					try {
@@ -62,6 +65,7 @@ export default function StepConnecting(props) {
 					logger.error(err.message);
 					errSnack("Bir hata oluştu");
 				}
+				layout.enableBack();
 			}}
 		/>
 	);

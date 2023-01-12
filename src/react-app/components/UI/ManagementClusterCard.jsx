@@ -8,6 +8,7 @@ export default function ManagementClusterCard({
 	clusters,
 	href,
 	supportedProviders,
+	connError,
 }) {
 	const nav = useNavigate();
 	return (
@@ -17,37 +18,45 @@ export default function ManagementClusterCard({
 		>
 			<div className="font-bold text-black text-xl">{name}</div>
 			<hr />
-			<div className="flex-grow p-1">
-				Desteklenen Altyapılar
-				<div className="flex flex-wrap gap-3 mt-3">
-					{supportedProviders?.map((x, i) => (
-						<ProviderChip
-							key={i}
-							name={providerNames[x]}
-							logo={providerLogos[x]}
-						/>
-					))}
-				</div>
-			</div>
-			<hr />
-			<div className="p-2 overflow-y-auto">
-				<div>Kümeler</div>
-				{clusters?.length > 0 ? (
-					clusters?.map((x, i) => (
-						<ProviderChip
-							key={i}
-							name={x.name}
-							logo={providerLogos[x.provider]}
-							href={x.href}
-							status={x.status}
-						/>
-					))
-				) : (
-					<div className="w-full text-center italic items-center font-sans">
-						Henüz küme oluşturulmamış...
+			{!!!connError ? (
+				<>
+					<div className="flex-grow p-1">
+						Desteklenen Altyapılar
+						<div className="flex flex-wrap gap-1 mt-3">
+							{supportedProviders?.map((x, i) => (
+								<ProviderChip
+									key={i}
+									name={providerNames[x]}
+									logo={providerLogos[x]}
+								/>
+							))}
+						</div>
 					</div>
-				)}
-			</div>
+					<hr />
+					<div>Kümeler</div>
+					<div className="p-2 flex gap-1 overflow-hidden">
+						{clusters?.length > 0 ? (
+							clusters?.map((x, i) => (
+								<ProviderChip
+									key={i}
+									name={x.name}
+									logo={providerLogos[x.provider]}
+									href={x.href}
+									status={x.status}
+								/>
+							))
+						) : (
+							<div className="w-full text-center italic items-center font-sans">
+								Henüz küme oluşturmadınız...
+							</div>
+						)}
+					</div>
+				</>
+			) : (
+				<div className="w-full text-center italic items-center font-sans">
+					Yönetim kümesi ile bağlantı kurulamadı.
+				</div>
+			)}
 		</div>
 	);
 }

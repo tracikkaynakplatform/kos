@@ -1,7 +1,8 @@
 import { execFile } from "child_process";
-import { ClientExecutable } from "./base/client-executable";
+import { ClientExecutable } from "./base/ClientExecutable";
 import { KubeConfig } from "../k8s/KubeConfig";
 import { logger } from "../logger";
+import { basePath } from "../utils/dir-check";
 
 /**
  * Wrapper class for clusterctl command line tool.
@@ -44,6 +45,7 @@ export default class Clusterctl extends ClientExecutable {
 						KUBECONFIG: this.config.path,
 						...env,
 					},
+					cwd: basePath,
 					encoding: "utf-8",
 				},
 				(err, stdout) => {
