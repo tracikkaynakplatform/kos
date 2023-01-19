@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useSnackbar } from "notistack";
 import { useWizard } from "../../../../hooks/useWizard";
-import { PROVIDER_TYPE } from "../../../../providers";
 import { StepWizardWrapper } from "../../../Steps";
 import { useForm } from "react-hook-form";
-import { InputSelect } from "../../../FormInputs";
+import { InputRadioGroup } from "../../../FormInputs";
 
-export default function StepSelectVersion({ goToNamedStep, ...props }) {
-	const [versions, setVersions] = useState([]);
+export default function StepSelectUpgradeType({ goToNamedStep, ...props }) {
 	const wizard = useWizard();
 	const { handleSubmit, control } = useForm();
 	const snack = useSnackbar().enqueueSnackbar;
@@ -18,19 +16,18 @@ export default function StepSelectVersion({ goToNamedStep, ...props }) {
 			disableBack
 			onLoad={async () => {}}
 			onNextClick={handleSubmit(async (fields) => {
-				_goto("applyTemplates");
+				console.log(fields);
+				_goto("selectVersion");
 			})}
-			title="Yükseltme bilgilerini girin"
-			fields={{
-				kubVersion: {
-					title: "Kubernetes Sürümü",
-					type: "select",
-					items: versions,
-				},
-			}}
+			title="Yükseltilecek makina bilgisi"
+			text="Küme üzerindeki yükseltmek istediğiniz makina tipini giriniz"
 			{...props}
 		>
-			<InputSelect name="kubVersion" control={control} items={versions} />
+			<InputRadioGroup
+				name="machineType"
+				control={control}
+				options={["Worker Node", "Control Plane"]}
+			/>
 		</StepWizardWrapper>
 	);
 }
