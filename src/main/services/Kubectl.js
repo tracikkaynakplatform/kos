@@ -15,6 +15,15 @@ import { platform } from "./base/Platform";
  */
 
 /**
+ * Version object.
+ * @typedef		{Object}			VersionObject
+ * @property	{Number}			major
+ * @property	{Number}			minor
+ * @property	{Number}			patch
+ * @property	{String}			gitVersion
+ */
+
+/**
  * Wrapper class for kubectl command line tool.
  */
 export default class Kubectl extends ClientExecutable {
@@ -79,6 +88,28 @@ export default class Kubectl extends ClientExecutable {
 				resolve(this.path);
 			});
 		});
+	}
+
+	/**
+	 * Gets server (cluster) or client (kubectl) verions.
+	 * @param	{'server'|'client'} 		_of	Object version that you want to get.
+	 * @returns {Promise<VersionObject>}
+	 */
+	async version(_of = "server") {
+		const output = JSON.parse(await this.exec(["version", "-o", "json"]));
+		const createVersionObject = (x) => ({
+			major: parseInt(x.major),
+			minor: parseInt(x.minor),
+			patch: parseInt(x.gitVersion.split(".")[2]),
+			gitVersion: x.gitVersion,
+		});
+		if (_of === "client") {
+			return createVersionObject(output.clientVersion);
+		} else if (_of === "server") {
+			return createVersionObject(output.serverVersion);
+		} else {
+			throw "Unknown argument: " + _of;
+		}
 	}
 
 	/**
