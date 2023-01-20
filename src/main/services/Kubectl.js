@@ -1,10 +1,21 @@
 import { ClientExecutable } from "./base/ClientExecutable";
-import { execFile } from "child_process";
 import { get as _get } from "request";
 import { downloadFile } from "../utils/download-file";
 import { chmod } from "fs";
 import { KubeConfig } from "../k8s/KubeConfig";
 import { platform } from "./base/Platform";
+
+/**
+ * Resource types of Kubernetes
+ * @enum {String}
+ */
+export const ResourceType = {
+	Cluster: "cluster",
+	Nodes: "nodes",
+	Pods: "pods",
+	KubeadmControlPlane: "KubeadmControlPlane",
+	MachineDeployment: "MachineDeployment",
+};
 
 /**
  * Options for kubectl
@@ -21,6 +32,12 @@ import { platform } from "./base/Platform";
  * @property	{Number}			minor
  * @property	{Number}			patch
  * @property	{String}			gitVersion
+ * Options for `kubectl patch`
+ * @typedef		{Object}			PatchOptions
+ * @property	{'json'|'normal'}				outputType
+ * @property	{'merge'|'json'|'strategic'}	type
+ * @property	{String|Object}					patch
+ * @property	{String}						patchFile
  */
 
 /**
@@ -162,6 +179,38 @@ export default class Kubectl extends ClientExecutable {
 		return await this.#parseOutput(
 			await this.exec(this.#parseOptions(["apply", "-f", file], options)),
 			options
+		);
+	}
+
+	/**
+	 * Performs `kubectl patch` command and return its output.
+	 * @param {String}			resource
+	 * @param {ResourceType}	resourceName
+	 * @param {PatchOptions}	options
+	 */
+	async patch(resource, resourceName, options) {
+		const parseOptions = this.#parseOptions(
+			["patch", resource, resourceName],
+			options
+		);
+
+		if (options?.type) {
+			parseOptions.push("--type", options.type);
+		}
+
+		if (options?.patch) {
+			parseOptions.push("-p");
+			if (typeof options.patch === "object") {
+				parseOptions.push(JSON.stringify(options.patch));
+			} else {
+				parseOptions.push(options.patch);
+			}
+		} else if (options?.patchFile) {
+			parseOptions.push("--patch-file", options.patchFile);
+		}
+		return await this.#parseOutput(
+			await this.exec(parseOptions),
+			parseOptions
 		);
 	}
 }
