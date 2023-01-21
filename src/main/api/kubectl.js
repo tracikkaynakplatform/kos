@@ -4,7 +4,7 @@ import { KubeConfig } from "../k8s/KubeConfig";
 import Kubectl from "../services/Kubectl";
 import { exportHelper } from "./exportHelper";
 
-async function execKube(config, callback) {
+export async function execKube(config, callback) {
 	let result = null;
 	let kctl = new Kubectl();
 

@@ -3,6 +3,10 @@ import fs from "fs";
 import { KubeConfig } from "../k8s/KubeConfig";
 import { dirCheck, DIRS } from "../utils/dir-check";
 import { exportHelper } from "./exportHelper";
+import { loadManagementConfig } from "./kubeConfig";
+import { ResourceType } from "../services/Kubectl";
+import { execKube } from "./kubectl";
+import { Task } from "../tasks/task";
 
 export async function getManagementClusters() {
 	return await ManagementCluster.getManagementClusters();
@@ -101,6 +105,66 @@ export async function deleteCluster(managementClusterName) {
 	}
 }
 
+export function upgradeControlPlane({
+	managementClusterName,
+	clusterName,
+	toVersion,
+}) {
+	const parseTask = (x) => ({
+		done: x.done,
+		finish: x.finish,
+		status: x.status,
+		value: x.value,
+		cancel: x.canceled,
+		error: x.error?.message,
+	});
+
+	if (this.task) {
+		const task = parseTask(this.task);
+
+		if (task.finish) {
+			this.task = undefined;
+		}
+
+		return task;
+	}
+
+	this.task = new Task([
+		async (t) => {
+			t.changeStatus("Yönetim kümesi config dosyası alınıyor");
+			return await loadManagementConfig(managementClusterName);
+		},
+		async (t, values) => {
+			t.changeStatus("Cluster kaynağı alınıyor");
+			return await execKube(
+				values[0],
+				async (kctl) =>
+					await kctl.get(ResourceType.Cluster, clusterName, {
+						outputType: "json",
+					})
+			);
+		},
+		async (t, values) => {
+			t.changeStatus("Küme versiyonu yamalanıyor");
+			return await execKube(
+				values[0],
+				async (kctl) =>
+					await kctl.patch(
+						ResourceType.KubeadmControlPlane,
+						values[1].spec.controlPlaneRef.name,
+						{
+							patch: { spec: { version: toVersion } },
+							type: "merge",
+						}
+					)
+			);
+		},
+	]);
+
+	this.task.run();
+	return parseTask(this.task);
+}
+
 export default [
 	exportHelper("getManagementClusters", getManagementClusters),
 	exportHelper("getSupportedProviders", getSupportedProviders),
@@ -110,4 +174,5 @@ export default [
 	exportHelper("setClusterConfiguration", setClusterConfiguration),
 	exportHelper("isNameValid", isNameValid),
 	exportHelper("deleteCluster", deleteCluster),
+	exportHelper("upgradeControlPlane", upgradeControlPlane),
 ];
