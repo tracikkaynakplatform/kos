@@ -1,3 +1,4 @@
+import React from "react";
 import { Controller } from "react-hook-form";
 import {
 	Typography,
@@ -7,25 +8,35 @@ import {
 	FormControlLabel,
 } from "@mui/material";
 
-export default function InputRadioGroup({ name, control, options, ...other }) {
+export default function InputRadioGroup({
+	name,
+	control,
+	options,
+	defaultValue,
+	...other
+}) {
 	return (
 		<Controller
 			name={name}
 			control={control}
+			defaultValue={defaultValue}
 			render={({ field, fieldState: { error } }) => (
 				<div>
 					<RadioGroup {...field} row {...other}>
 						{options.map((option) => (
-							<FormControlLabel
+							<div
 								key={option?.value ?? option}
-								value={option?.value ?? option}
-								control={<Radio />}
-								label={
-									<Typography variant="caption">
-										{option?.label ?? option}
-									</Typography>
-								}
-							/>
+								style={{
+									display: "flex",
+									alignItems: "center",
+									gap: "5px",
+								}}
+							>
+								<Radio value={option?.value ?? option} />
+								<Typography>
+									{option?.label ?? option}
+								</Typography>
+							</div>
 						))}
 					</RadioGroup>
 
