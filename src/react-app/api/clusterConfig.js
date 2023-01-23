@@ -43,6 +43,18 @@ export async function deleteCluster(managementClusterName) {
 	return await clusterConfigAPI.deleteCluster(managementClusterName);
 }
 
+export async function upgradeControlPlane({
+	managementClusterName,
+	clusterName,
+	toVersion,
+}) {
+	return await clusterConfigAPI.upgradeControlPlane(
+		managementClusterName,
+		clusterName,
+		toVersion
+	);
+}
+
 export default {
 	getManagementClusters,
 	getSupportedProviders,
@@ -52,4 +64,5 @@ export default {
 	setClusterConfiguration,
 	isNameValid,
 	deleteCluster,
+	upgradeControlPlane,
 };
