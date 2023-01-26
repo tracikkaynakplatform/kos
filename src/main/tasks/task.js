@@ -20,6 +20,17 @@ export class Task {
 		this.canceled = true;
 	}
 
+	toPlainObject() {
+		return {
+			done: this.done,
+			finish: this.finish,
+			status: this.status,
+			value: this.value,
+			cancel: this.canceled,
+			error: this.error?.message,
+		};
+	}
+
 	async run() {
 		this.reset();
 		const values = [];
