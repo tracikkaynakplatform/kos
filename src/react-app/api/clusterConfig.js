@@ -55,6 +55,18 @@ export async function upgradeControlPlane({
 	);
 }
 
+export async function upgradeWorkerNode({
+	managementClusterName,
+	clusterName,
+	toVersion,
+}) {
+	return await clusterConfigAPI.upgradeWorkerNode(
+		managementClusterName,
+		clusterName,
+		toVersion
+	);
+}
+
 export default {
 	getManagementClusters,
 	getSupportedProviders,
@@ -65,4 +77,5 @@ export default {
 	isNameValid,
 	deleteCluster,
 	upgradeControlPlane,
+	upgradeWorkerNode,
 };

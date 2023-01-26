@@ -105,22 +105,87 @@ export async function deleteCluster(managementClusterName) {
 	}
 }
 
+export function upgradeWorkerNode({
+	managementClusterName,
+	clusterName,
+	toVersion,
+}) {
+	if (this.task) {
+		const task = this.task.toPlainObject();
+
+		if (task.finish) {
+			this.task = undefined;
+		}
+
+		return task;
+	}
+	this.task = new Task([
+		async (t) => {
+			t.changeStatus("Yönetim kümesi config dosyası alınıyor");
+			return await loadManagementConfig(managementClusterName);
+		},
+		async (t, values) => {
+			t.changeStatus("Kümenin makina bilgileri alınıyor");
+			return await execKube(values[0], async (kctl) => {
+				return await kctl.get(ResourceType.Machine, "", {
+					label: [
+						`cluster.x-k8s.io/cluster-name=${clusterName}`,
+						"!cluster.x-k8s.io/control-plane",
+					],
+					outputType: "json",
+				});
+			});
+		},
+		async (t, values) => {
+			t.changeStatus("MachineDeployment kaynakları bulunuyor");
+			const machines = values[1]?.items;
+			const deployments = new Set();
+			for (const machine of machines) {
+				const deploymentName =
+					machine.metadata.labels["cluster.x-k8s.io/deployment-name"];
+				deployments.add(deploymentName);
+			}
+			return deployments;
+		},
+		async (t, values) => {
+			const deployments = values[2];
+			for (const deployment of deployments) {
+				t.changeStatus(`${deployment} yamalanıyor`);
+				await execKube(
+					values[0],
+					async (kctl) =>
+						await kctl.patch(
+							ResourceType.MachineDeployment,
+							deployment,
+							{
+								patch: {
+									spec: {
+										template: {
+											spec: {
+												version: toVersion,
+											},
+										},
+									},
+								},
+								type: "merge",
+							}
+						)
+				);
+			}
+		},
+	]);
+
+	this.task.run();
+	return this.task.toPlainObject();
+}
+
 export function upgradeControlPlane({
 	managementClusterName,
 	clusterName,
 	toVersion,
 }) {
-	const parseTask = (x) => ({
-		done: x.done,
-		finish: x.finish,
-		status: x.status,
-		value: x.value,
-		cancel: x.canceled,
-		error: x.error?.message,
-	});
-
 	if (this.task) {
-		const task = parseTask(this.task);
+		const task = this.task.toPlainObject();
 
 		if (task.finish) {
 			this.task = undefined;
@@ -162,7 +227,7 @@ export function upgradeControlPlane({
 	]);
 
 	this.task.run();
-	return parseTask(this.task);
+	return this.task.toPlainObject();
 }
 
 export default [
@@ -175,4 +240,5 @@ export default [
 	exportHelper("isNameValid", isNameValid),
 	exportHelper("deleteCluster", deleteCluster),
 	exportHelper("upgradeControlPlane", upgradeControlPlane),
+	exportHelper("upgradeWorkerNode", upgradeWorkerNode),
 ];

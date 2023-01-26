@@ -15,6 +15,7 @@ export const ResourceType = {
 	Pods: "pods",
 	KubeadmControlPlane: "KubeadmControlPlane",
 	MachineDeployment: "MachineDeployment",
+	Machine: "machines",
 };
 
 /**
@@ -64,7 +65,13 @@ export default class Kubectl extends ClientExecutable {
 	#parseOptions(args, options) {
 		let _args = [...args];
 		if (options?.outputType === "json") _args.push("-o", "json");
-		if (options?.label) args.push("-l", options.label);
+		if (options?.label) {
+			if (typeof options.label == "string") {
+				_args.push("-l", options.label);
+			} else {
+				options.label.forEach((x) => _args.push("-l", x));
+			}
+		}
 		if (options?.allNamespaces) _args.push("-A");
 		return _args;
 	}
