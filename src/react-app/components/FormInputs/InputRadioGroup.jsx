@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import React from "react";
+=======
+>>>>>>> upgrade-wizard
 import { Controller } from "react-hook-form";
 import {
 	Typography,
@@ -8,6 +11,7 @@ import {
 	FormControlLabel,
 } from "@mui/material";
 
+<<<<<<< HEAD
 export default function InputRadioGroup({
 	name,
 	control,
@@ -15,15 +19,22 @@ export default function InputRadioGroup({
 	defaultValue,
 	...other
 }) {
+=======
+export default function InputRadioGroup({ name, control, options, ...other }) {
+>>>>>>> upgrade-wizard
 	return (
 		<Controller
 			name={name}
 			control={control}
+<<<<<<< HEAD
 			defaultValue={defaultValue}
+=======
+>>>>>>> upgrade-wizard
 			render={({ field, fieldState: { error } }) => (
 				<div>
 					<RadioGroup {...field} row {...other}>
 						{options.map((option) => (
+<<<<<<< HEAD
 							<div
 								key={option?.value ?? option}
 								style={{
@@ -37,6 +48,18 @@ export default function InputRadioGroup({
 									{option?.label ?? option}
 								</Typography>
 							</div>
+=======
+							<FormControlLabel
+								key={option?.value ?? option}
+								value={option?.value ?? option}
+								control={<Radio />}
+								label={
+									<Typography variant="caption">
+										{option?.label ?? option}
+									</Typography>
+								}
+							/>
+>>>>>>> upgrade-wizard
 						))}
 					</RadioGroup>
 
