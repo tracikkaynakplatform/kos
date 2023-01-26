@@ -21,8 +21,8 @@ export default function DashboardLayout({ children }) {
 	const location = useLocation();
 	return (
 		<div className="flex">
-			<div className="h-screen w-64 border-r-2 border-gray-200">
-				<ul className="pt-5 flex flex-col w-full items-center">
+			<div className="h-[98vh] border-r-2 border-gray-200">
+				<ul className="pt-5 flex flex-col w-64 items-center">
 					<SidebarButton
 						to="/management-clusters"
 						isActive={location.pathname == "/management-clusters"}
@@ -31,7 +31,7 @@ export default function DashboardLayout({ children }) {
 					/>
 				</ul>
 			</div>
-			<div className="flex flex-col flex-grow h-screen">{children}</div>
+			<div className="flex flex-col flex-grow h-full">{children}</div>
 		</div>
 	);
 }
