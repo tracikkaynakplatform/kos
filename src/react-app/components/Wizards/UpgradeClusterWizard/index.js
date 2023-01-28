@@ -1,19 +1,15 @@
 import React, { useEffect } from "react";
 import { Box } from "@mui/material";
 import { useWizard, WizardProvider } from "../../../hooks/useWizard";
-import {
-	StepApplyTemplates,
-	StepEnd,
-	StepGetClusterInfo,
-	StepSelectVersion,
-} from "./Steps";
+import { StepApplyTemplates, StepEnd, StepSelectVersion } from "./Steps";
 import StepWizard from "../../../lib/react-step-wizard";
+import StepSelectUpgradeType from "./Steps/StepSelectUpgradeType";
 
 function Content({ onFinish, onError }) {
 	const wizard = useWizard();
 
 	useEffect(() => {
-		wizard.setStepName("getClusterInfo");
+		wizard.setStepName("selectUpgradeType");
 	}, []);
 
 	return (
@@ -23,7 +19,7 @@ function Content({ onFinish, onError }) {
 			}}
 			transitions={{}}
 		>
-			<StepGetClusterInfo onError={onError} stepName="getClusterInfo" />
+			<StepSelectUpgradeType stepName="selectUpgradeType" />
 			<StepSelectVersion stepName="selectVersion" />
 			<StepApplyTemplates stepName="applyTemplates" />
 			<StepEnd onFinish={onFinish} stepName="end" />

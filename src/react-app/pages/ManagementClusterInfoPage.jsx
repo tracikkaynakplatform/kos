@@ -17,6 +17,7 @@ import {
 	Add as AddIcon,
 	Replay as ReplayIcon,
 	Edit as EditIcon,
+	Upgrade as UpgradeIcon,
 } from "@mui/icons-material";
 import { clusterConfig, kubeConfig, kubectl, clusterctl } from "../api";
 import { providerNames, providerLogos } from "../providers";
@@ -98,6 +99,9 @@ export default function ManagementClusterInfoPage() {
 			},
 			onNoClick: () => modal.closeModal(),
 		});
+	};
+	const handleUpgradeCluster = async (cluster) => {
+		nav(`/upgrade-cluster/${name}/${cluster.name}`);
 	};
 	const handleDeleteManagementCluster = () => {
 		modal.showModal(QuestionModal, {
@@ -220,6 +224,16 @@ export default function ManagementClusterInfoPage() {
 											}
 										>
 											<CameraIcon />
+										</Button>
+										<Button
+											disabled={
+												x.status !== "Provisioned"
+											}
+											onClick={() =>
+												handleUpgradeCluster(x)
+											}
+										>
+											<UpgradeIcon />
 										</Button>
 										<Button
 											disabled={x.status === "Deleting"}
