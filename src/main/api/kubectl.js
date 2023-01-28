@@ -123,24 +123,18 @@ export function getMachineDeploymentObject({namespace="default", cluster_name, r
 
 }
 
-export async function getMachineDeployments({namespace="default", cluster_name}) {
+export async function getMachineDeployments(config, {namespace="default", cluster_name}) {
 	let machines = [];
 
-	machines = await execKube(config, async (kctl) => {
-		return await kctl.get(...args);
-	});
-		
-	(async () => {
-		machines = await kctl.get(ResourceType.Machine, "", {
-			label: [
-				`cluster.x-k8s.io/cluster-name=${clusterName}`,
-				"!cluster.x-k8s.io/control-plane",
-			],
-			outputType: "json",
-		});	
-	})();
+	// TODO: namespace is not used, yet..
 
+	let machinesStr = await get(config, "MachineDeployment", "", {
+		outputType: `jsonpath='{$.items[?(@.spec.clusterName=="${cluster_name}")].metadata.name}'`,
+	});	
+	
+	machines = machinesStr.split(' ');
 
+	return machines;
 }
 
 /////
@@ -151,4 +145,6 @@ export default [
 	exportHelper("apply", apply),
 	exportHelper("applyFile", applyFile),
 	exportHelper("delete_", delete_),
+
+	exportHelper("getMachineDeployments", getMachineDeployments),
 ];
