@@ -64,15 +64,16 @@ export async function apply(config, yaml, ...args) {
 //	 cluster_name: "name of the cluster: eg: capi-quickstart",
 //   resource_name: "name of the subject, if there is many of them. Null for controlplane.."
 // }
-//
-// versioning_info object (returned and filtered):
-// replicas: 3: number (last applied/set value..)
-// version: v1.25.5: string (last applied/set value..)
-// rolloutStrategy:   ## kept for future rollout progress testing..
-//   rollingUpdate:
-// 	  maxSurge: 1
-//    maxUnavailable: 0
-//   type: RollingUpdate
+// 
+// spec:
+//   versioning_info object (returned and filtered):
+//   replicas: 3: number (last applied/set value..)
+//   version: v1.25.5: string (last applied/set value..)
+//   rolloutStrategy:   ## kept for future rollout progress testing..
+//     rollingUpdate:
+// 	    maxSurge: 1
+//      maxUnavailable: 0
+//     type: RollingUpdate
 // status:
 //   version: v1.24.9: string (min version for controlPlane, nil in workloadPlanes)
 //   observedGeneration: 2: number (increased with each patch/apply)
@@ -80,22 +81,24 @@ export async function apply(config, yaml, ...args) {
 //   updatedReplicas: 3: number (will be 1,2,3 for a 3 node *Plane, ==replicas in a stable one)
 
 // returns tristate: true, false or nil (unknown)
+//   returns true, if it is (almost) sure a rollout is in progress. 
+//   a null return may also mean a no-rollout (esp. for machinedeployments).
 export function isRolloutInProgress(versioning_info) {
 	if ( versioning_info.status.version && 
-		   versioning_info.status.version != versioning_info.version) {
+		   versioning_info.status.version != versioning_info.spec.version) {
 
 		// upgrading controlPlane:
 		return true;
 	}
 
-	if ( versioning_info.status.updatedReplicas < versioning_info.replicas ) {
+	if ( versioning_info.status.updatedReplicas < versioning_info.spec.replicas ) {
 		// any rolling update on *Plane:
 		return true;
 	}
 
-	if ( versioning_info.status.updatedReplicas == versioning_info.replicas &&
+	if ( versioning_info.status.updatedReplicas == versioning_info.spec.replicas &&
 			 versioning_info.status.version && 
-			 versioning_info.status.version == versioning_info.version
+			 versioning_info.status.version == versioning_info.spec.version
 		 ) {
 		
 		// nothing on controlPlane
@@ -107,20 +110,25 @@ export function isRolloutInProgress(versioning_info) {
 	return null;
 }
 
-export function getControlPlaneVersionInfo({namespace="default", cluster_name}) {
+export async function getControlPlaneVersionInfo(config, {namespace="default", cluster_name}) {
+	let resource_name = await get(config, "Cluster", cluster_name, {
+		outputType: 'json',
+	});
+	resource_name = resource_name.spec.controlPlaneRef.name;
 
+	let resource =  await get(config, "KubeadmControlPlane", resource_name, {
+		outputType: 'json',
+	});
+
+	return resource;
 }
 
-export function getMachineDeploymentVersionInfo({namespace="default", cluster_name, resource_name}) {
+export async function getMachineDeploymentVersionInfo(config, {namespace="default", resource_name}) {
+	let resource =  await get(config, "MachineDeployment", resource_name, {
+		outputType: 'json',
+	});
 
-}
-
-export function getControlPlaneObject({namespace="default", cluster_name}) {
-
-}
-
-export function getMachineDeploymentObject({namespace="default", cluster_name, resource_name}) {
-
+	return resource;
 }
 
 export async function getMachineDeployments(config, {namespace="default", cluster_name}) {
@@ -147,4 +155,7 @@ export default [
 	exportHelper("delete_", delete_),
 
 	exportHelper("getMachineDeployments", getMachineDeployments),
+	exportHelper("getMachineDeploymentVersionInfo", getMachineDeploymentVersionInfo),
+	exportHelper("getControlPlaneVersionInfo", getControlPlaneVersionInfo),
+	exportHelper("isRolloutInProgress", isRolloutInProgress),
 ];
