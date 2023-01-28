@@ -48,11 +48,11 @@ export async function upgradeControlPlane({
 	clusterName,
 	toVersion,
 }) {
-	return await clusterConfigAPI.upgradeControlPlane(
+	return await clusterConfigAPI.upgradeControlPlane({
 		managementClusterName,
 		clusterName,
-		toVersion
-	);
+		toVersion,
+	});
 }
 
 export async function upgradeWorkerNode({
@@ -60,11 +60,11 @@ export async function upgradeWorkerNode({
 	clusterName,
 	toVersion,
 }) {
-	return await clusterConfigAPI.upgradeWorkerNode(
+	return await clusterConfigAPI.upgradeWorkerNode({
 		managementClusterName,
 		clusterName,
-		toVersion
-	);
+		toVersion,
+	});
 }
 
 export default {

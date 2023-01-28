@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+	overflow: hidden;
+}
+
 a {
 	color: rgb(47, 83, 243);
 }
