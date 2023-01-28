@@ -9,25 +9,10 @@ export default function StepEnd({ onFinish, ...props }) {
 			onNextClick={async () => {
 				onFinish?.();
 			}}
+			title="Yükseltme tamamlandı"
+			text="Küme yükseltme işlemi başarıyla sonuçlandı. Kümenin yükseltme durumuyla ilgili bilgiyi detay sayfasından alabilirsiniz."
+			width={400}
 			{...props}
-		>
-			<Typography
-				sx={{
-					fontSize: "20px",
-					fontWeight: "bold",
-					pb: 2,
-					pt: 2,
-				}}
-			>
-				Yükseltme tamamlandı
-			</Typography>
-			<div className="flex justify-center items-center flex-col gap-3 w-[500px] mb-[10px]">
-				<Typography>
-					Küme yükseltme işlemi başarıyla sonuçlandı. Kümenin
-					yükseltme durumuyla ilgili bilgiyi detay sayfasından
-					alabilirsiniz.
-				</Typography>
-			</div>
-		</StepWizardWrapper>
+		/>
 	);
 }

@@ -101,6 +101,7 @@ export default function ManagementClusterInfoPage() {
 		});
 	};
 	const handleUpgradeCluster = async (cluster) => {
+		nav(`/upgrade-cluster/${name}/${cluster.name}`);
 	};
 	const handleDeleteManagementCluster = () => {
 		modal.showModal(QuestionModal, {

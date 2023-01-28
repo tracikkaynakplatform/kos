@@ -16,17 +16,28 @@ export default function StepSelectUpgradeType({ goToNamedStep, ...props }) {
 			disableBack
 			onLoad={async () => {}}
 			onNextClick={handleSubmit(async (fields) => {
-				console.log(fields);
+				wizard.updateData("updateType", fields.machineType);
 				_goto("selectVersion");
 			})}
 			title="Yükseltilecek makina bilgisi"
 			text="Küme üzerindeki yükseltmek istediğiniz makina tipini giriniz"
+			width={400}
 			{...props}
 		>
 			<InputRadioGroup
 				name="machineType"
 				control={control}
-				options={["Worker Node", "Control Plane"]}
+				defaultValue="worker"
+				options={[
+					{
+						label: "Worker",
+						value: "worker",
+					},
+					{
+						label: "Control Plane",
+						value: "controlPlane",
+					},
+				]}
 			/>
 		</StepWizardWrapper>
 	);

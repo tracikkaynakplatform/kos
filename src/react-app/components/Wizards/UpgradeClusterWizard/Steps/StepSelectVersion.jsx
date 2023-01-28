@@ -15,19 +15,31 @@ export default function StepSelectVersion({ goToNamedStep, ...props }) {
 
 	return (
 		<StepWizardWrapper
-			disableBack
-			onLoad={async () => {}}
+			onLoad={async () => {
+				// TODO: Load Kubernetes versions dynamically.
+				setVersions([
+					"v1.24.3",
+					"v1.24.4",
+					"v1.24.5",
+					"v1.24.6",
+					"v1.25.3",
+					"v1.25.4",
+					"v1.25.5",
+					"v1.25.6",
+				]);
+			}}
+			onBackClick={() => {
+				_goto("selectUpgradeType");
+			}}
 			onNextClick={handleSubmit(async (fields) => {
+				if (fields.kubVersion === "") {
+					snack("Lütfen bir versiyon seçiniz", { variant: "error" });
+					return;
+				}
+				wizard.updateData("toVersion", fields.kubVersion);
 				_goto("applyTemplates");
 			})}
 			title="Yükseltme bilgilerini girin"
-			fields={{
-				kubVersion: {
-					title: "Kubernetes Sürümü",
-					type: "select",
-					items: versions,
-				},
-			}}
 			{...props}
 		>
 			<InputSelect name="kubVersion" control={control} items={versions} />
