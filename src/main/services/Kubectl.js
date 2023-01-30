@@ -64,7 +64,7 @@ export default class Kubectl extends ClientExecutable {
 
 	#parseOptions(args, options) {
 		let _args = [...args];
-		if (options?.outputType === "json") _args.push("-o", "json");
+		if (options?.outputType.startsWith("json")) _args.push("-o", options.outputType);
 		if (options?.label) {
 			if (typeof options.label == "string") {
 				_args.push("-l", options.label);

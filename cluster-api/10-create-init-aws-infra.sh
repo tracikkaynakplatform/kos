@@ -15,13 +15,16 @@ if [ $? -ne 0 ]; then
   $SCRIPT_PATH/clusterawsadm-install.sh
 fi
 
-clusterawsadm bootstrap iam create-cloudformation-stack
+# clusterawsadm bootstrap iam create-cloudformation-stack
 clusterctl init --infrastructure aws
 ## last minor of 2 previous major: 1.23.15
 ## last minor of previous major: 1.24.9
 ## last minor of last major: 1.25.5
 
 ## note that for now, aws provider is using Ubuntu 18.04.6 LTS images by default.
+sleep 4
+
+### //TODO: looks for EC2 key named `kos` in that region.
 
 clusterctl generate cluster capi-quickstart \
   --kubernetes-version v1.24.9 \
