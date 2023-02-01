@@ -37,6 +37,17 @@ export async function isRolloutInProgress(versioning_info) {
 	return await kubectlAPI.isRolloutInProgress(versioning_info);
 }
 
+export async function getPossibleControlPlaneVersions(config, clusterName) {
+	return await kubectlAPI.getPossibleControlPlaneVersions(
+		config,
+		clusterName
+	);
+}
+
+export async function getPossibleWorkerVersions(config, clusterName) {
+	return await kubectlAPI.getPossibleWorkerVersions(config, clusterName);
+}
+
 export default {
 	get,
 	delete_,
@@ -47,4 +58,6 @@ export default {
 	getMachineDeploymentVersionInfo,
 	getControlPlaneVersionInfo,
 	isRolloutInProgress,
+	getPossibleControlPlaneVersions,
+	getPossibleWorkerVersions,
 };

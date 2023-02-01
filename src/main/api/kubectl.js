@@ -1,8 +1,10 @@
 import { writeFileSync } from "original-fs";
 import tmp from "tmp";
 import { KubeConfig } from "../k8s/KubeConfig";
-import Kubectl from "../services/Kubectl";
+import Kubectl, { ResourceType } from "../services/Kubectl";
 import { exportHelper } from "./exportHelper";
+import { Task } from "../tasks/task";
+import { patches } from "../kubernetesVersions";
 
 export async function execKube(config, callback) {
 	let result = null;
@@ -159,7 +161,70 @@ export async function getMachineDeployments(
 	return machines;
 }
 
-/////
+function filterVersions(supportedMinors, version) {
+	const versions = [];
+	for (const v of supportedMinors) {
+		if (v < 24) continue;
+		if (patches[v]) {
+			for (const patch of patches[v]) {
+				const versionText = `${version[0]}.${v}.${patch}`;
+				if (version.join(".") != versionText)
+					versions.push(versionText);
+			}
+		}
+	}
+	return versions;
+}
+
+export async function getPossibleWorkerVersions(config, clusterName) {
+	const info = await getControlPlaneVersionInfo(config, {
+		cluster_name: clusterName,
+	});
+	const machines = await getMachineDeployments(config, {
+		cluster_name: clusterName,
+	});
+	const machineDeployment = await getMachineDeploymentVersionInfo(config, {
+		resource_name: machines[0],
+	});
+
+	const version = info?.spec.version.split(".");
+	return {
+		current: machineDeployment?.spec.template.spec.version,
+		versions: filterVersions(
+			[
+				parseInt(version[1]),
+				parseInt(version[1]) - 1,
+				parseInt(version[1]) - 2,
+			],
+			version
+		),
+	};
+}
+
+export async function getPossibleControlPlaneVersions(config, clusterName) {
+	const machines = await getMachineDeployments(config, {
+		cluster_name: clusterName,
+	});
+	const info = await getMachineDeploymentVersionInfo(config, {
+		resource_name: machines[0],
+	});
+	const controlPlane = await getControlPlaneVersionInfo(config, {
+		cluster_name: clusterName,
+	});
+
+	const version = info?.spec.template.spec.version.split(".");
+	return {
+		current: controlPlane?.spec.version,
+		versions: filterVersions(
+			[
+				parseInt(version[1]),
+				parseInt(version[1]) + 1,
+				parseInt(version[1]) + 2,
+			],
+			version
+		),
+	};
+}
 
 export default [
 	exportHelper("get", get),
@@ -175,4 +240,10 @@ export default [
 	),
 	exportHelper("getControlPlaneVersionInfo", getControlPlaneVersionInfo),
 	exportHelper("isRolloutInProgress", isRolloutInProgress),
+
+	exportHelper(
+		"getPossibleControlPlaneVersions",
+		getPossibleControlPlaneVersions
+	),
+	exportHelper("getPossibleWorkerVersions", getPossibleWorkerVersions),
 ];
