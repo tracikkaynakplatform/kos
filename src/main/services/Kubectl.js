@@ -70,7 +70,12 @@ export default class Kubectl extends ClientExecutable {
 			if (typeof options.label == "string") {
 				_args.push("-l", options.label);
 			} else {
-				options.label.forEach((x) => _args.push("-l", x));
+				let labelQuery = "";
+				for (let i = 0; i < options.label?.length; i++) {
+					labelQuery += options.label[i];
+					if (i != options.label.length - 1) labelQuery += ",";
+				}
+				_args.push("-l", labelQuery);
 			}
 		}
 		if (options?.allNamespaces) _args.push("-A");
