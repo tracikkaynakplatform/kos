@@ -16,7 +16,7 @@ export default function StepSelectUpgradeType({ goToNamedStep, ...props }) {
 			disableBack
 			onLoad={async () => {}}
 			onNextClick={handleSubmit(async (fields) => {
-				wizard.updateData("updateType", fields.machineType);
+				wizard.updateData("upgradeType", fields.machineType);
 				_goto("selectVersion");
 			})}
 			title="Yükseltilecek makina bilgisi"
