@@ -18,10 +18,33 @@ export async function currentContext(config) {
 	return await kubectlAPI.currentContext(config);
 }
 
+export async function getMachineDeployments(config, params) {
+	return await kubectlAPI.getMachineDeployments(config, params ?? {});
+}
+
+export async function getMachineDeploymentVersionInfo(config, params) {
+	return await kubectlAPI.getMachineDeploymentVersionInfo(
+		config,
+		params ?? {}
+	);
+}
+
+export async function getControlPlaneVersionInfo(config, params) {
+	return await kubectlAPI.getControlPlaneVersionInfo(config, params ?? {});
+}
+
+export async function isRolloutInProgress(versioning_info) {
+	return await kubectlAPI.isRolloutInProgress(versioning_info);
+}
+
 export default {
 	get,
 	delete_,
 	currentContext,
 	apply,
 	applyFile,
+	getMachineDeployments,
+	getMachineDeploymentVersionInfo,
+	getControlPlaneVersionInfo,
+	isRolloutInProgress,
 };

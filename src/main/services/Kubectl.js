@@ -34,7 +34,7 @@ export const ResourceType = {
  * @property	{Number}			patch
  * @property	{String}			gitVersion
  * Options for `kubectl patch`
- * @typedef		{Object}			PatchOptions
+ * @typedef		{Object}						PatchOptions
  * @property	{'json'|'normal'}				outputType
  * @property	{'merge'|'json'|'strategic'}	type
  * @property	{String|Object}					patch
@@ -64,7 +64,8 @@ export default class Kubectl extends ClientExecutable {
 
 	#parseOptions(args, options) {
 		let _args = [...args];
-		if (options?.outputType.startsWith("json")) _args.push("-o", options.outputType);
+		if (options?.outputType?.startsWith("json"))
+			_args.push("-o", options.outputType);
 		if (options?.label) {
 			if (typeof options.label == "string") {
 				_args.push("-l", options.label);
@@ -83,14 +84,11 @@ export default class Kubectl extends ClientExecutable {
 
 	async #getVersion() {
 		return new Promise((resolve, reject) => {
-			_get(
-				"https://dl.k8s.io/release/stable.txt",
-				(error, response, body) => {
-					if (error) return reject(error);
-					this._version = body;
-					resolve(true);
-				}
-			);
+			_get("https://dl.k8s.io/release/stable.txt", (error, _, body) => {
+				if (error) return reject(error);
+				this._version = body;
+				resolve(true);
+			});
 		});
 	}
 

@@ -41,20 +41,20 @@ export async function applyFile(config, file, ...args) {
 export async function apply(config, yaml, ...args) {
 	return new Promise(async (resolve, reject) => {
 		let kctl = new Kubectl();
+		const file = tmp.fileSync();
 		try {
 			await KubeConfig.tempConfig(kctl.config, config, async () => {
-				const file = tmp.fileSync();
 				writeFileSync(file.name, yaml, { encoding: "utf-8" });
 				let result = await kctl.apply(file.name, ...args);
 				file.removeCallback();
 				resolve(result);
 			});
 		} catch (err) {
+			file.removeCallback();
 			reject(err);
 		}
 	});
 }
-
 
 // *Plane = ControlPlane OR WorkloadPlane..
 //
@@ -64,7 +64,7 @@ export async function apply(config, yaml, ...args) {
 //	 cluster_name: "name of the cluster: eg: capi-quickstart",
 //   resource_name: "name of the subject, if there is many of them. Null for controlplane.."
 // }
-// 
+//
 // spec:
 //   versioning_info object (returned and filtered):
 //   replicas: 3: number (last applied/set value..)
@@ -81,66 +81,80 @@ export async function apply(config, yaml, ...args) {
 //   updatedReplicas: 3: number (will be 1,2,3 for a 3 node *Plane, ==replicas in a stable one)
 
 // returns tristate: true, false or nil (unknown)
-//   returns true, if it is (almost) sure a rollout is in progress. 
+//   returns true, if it is (almost) sure a rollout is in progress.
 //   a null return may also mean a no-rollout (esp. for machinedeployments).
 export function isRolloutInProgress(versioning_info) {
-	if ( versioning_info.status.version && 
-		   versioning_info.status.version != versioning_info.spec.version) {
-
+	if (
+		versioning_info.status.version &&
+		versioning_info.status.version != versioning_info.spec.version
+	) {
 		// upgrading controlPlane:
 		return true;
 	}
 
-	if ( versioning_info.status.updatedReplicas < versioning_info.spec.replicas ) {
+	if (
+		versioning_info.status.updatedReplicas < versioning_info.spec.replicas
+	) {
 		// any rolling update on *Plane:
 		return true;
 	}
 
-	if ( versioning_info.status.updatedReplicas == versioning_info.spec.replicas &&
-			 versioning_info.status.version && 
-			 versioning_info.status.version == versioning_info.spec.version
-		 ) {
-		
+	if (
+		versioning_info.status.updatedReplicas ==
+			versioning_info.spec.replicas &&
+		versioning_info.status.version &&
+		versioning_info.status.version == versioning_info.spec.version
+	) {
 		// nothing on controlPlane
 		return false;
 	}
 
-	// could not determine... 
+	// could not determine...
 	//   Still, WorkloadPlane is probably not in a rollout progress..
 	return null;
 }
 
-export async function getControlPlaneVersionInfo(config, {namespace="default", cluster_name}) {
+export async function getControlPlaneVersionInfo(
+	config,
+	{ namespace = "default", cluster_name }
+) {
 	let resource_name = await get(config, "Cluster", cluster_name, {
-		outputType: 'json',
+		outputType: "json",
 	});
 	resource_name = resource_name.spec.controlPlaneRef.name;
 
-	let resource =  await get(config, "KubeadmControlPlane", resource_name, {
-		outputType: 'json',
+	let resource = await get(config, "KubeadmControlPlane", resource_name, {
+		outputType: "json",
 	});
 
 	return resource;
 }
 
-export async function getMachineDeploymentVersionInfo(config, {namespace="default", resource_name}) {
-	let resource =  await get(config, "MachineDeployment", resource_name, {
-		outputType: 'json',
+export async function getMachineDeploymentVersionInfo(
+	config,
+	{ namespace = "default", resource_name }
+) {
+	let resource = await get(config, "MachineDeployment", resource_name, {
+		outputType: "json",
 	});
 
 	return resource;
 }
 
-export async function getMachineDeployments(config, {namespace="default", cluster_name}) {
+export async function getMachineDeployments(
+	config,
+	{ namespace = "default", cluster_name }
+) {
 	let machines = [];
 
 	// TODO: namespace is not used, yet..
 
 	let machinesStr = await get(config, "MachineDeployment", "", {
 		outputType: `jsonpath='{$.items[?(@.spec.clusterName=="${cluster_name}")].metadata.name}'`,
-	});	
-	
-	machines = machinesStr.split(' ');
+	});
+
+	machines = machinesStr.split(" ");
+	machines = machines.map((x) => x.slice(1, -1));
 
 	return machines;
 }
@@ -155,7 +169,10 @@ export default [
 	exportHelper("delete_", delete_),
 
 	exportHelper("getMachineDeployments", getMachineDeployments),
-	exportHelper("getMachineDeploymentVersionInfo", getMachineDeploymentVersionInfo),
+	exportHelper(
+		"getMachineDeploymentVersionInfo",
+		getMachineDeploymentVersionInfo
+	),
 	exportHelper("getControlPlaneVersionInfo", getControlPlaneVersionInfo),
 	exportHelper("isRolloutInProgress", isRolloutInProgress),
 ];
