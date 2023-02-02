@@ -34,7 +34,7 @@ export const ResourceType = {
  * @property	{Number}			patch
  * @property	{String}			gitVersion
  * Options for `kubectl patch`
- * @typedef		{Object}			PatchOptions
+ * @typedef		{Object}						PatchOptions
  * @property	{'json'|'normal'}				outputType
  * @property	{'merge'|'json'|'strategic'}	type
  * @property	{String|Object}					patch
@@ -64,12 +64,18 @@ export default class Kubectl extends ClientExecutable {
 
 	#parseOptions(args, options) {
 		let _args = [...args];
-		if (options?.outputType.startsWith("json")) _args.push("-o", options.outputType);
+		if (options?.outputType?.startsWith("json"))
+			_args.push("-o", options.outputType);
 		if (options?.label) {
 			if (typeof options.label == "string") {
 				_args.push("-l", options.label);
 			} else {
-				options.label.forEach((x) => _args.push("-l", x));
+				let labelQuery = "";
+				for (let i = 0; i < options.label?.length; i++) {
+					labelQuery += options.label[i];
+					if (i != options.label.length - 1) labelQuery += ",";
+				}
+				_args.push("-l", labelQuery);
 			}
 		}
 		if (options?.allNamespaces) _args.push("-A");
@@ -83,14 +89,11 @@ export default class Kubectl extends ClientExecutable {
 
 	async #getVersion() {
 		return new Promise((resolve, reject) => {
-			_get(
-				"https://dl.k8s.io/release/stable.txt",
-				(error, response, body) => {
-					if (error) return reject(error);
-					this._version = body;
-					resolve(true);
-				}
-			);
+			_get("https://dl.k8s.io/release/stable.txt", (error, _, body) => {
+				if (error) return reject(error);
+				this._version = body;
+				resolve(true);
+			});
 		});
 	}
 

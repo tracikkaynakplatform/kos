@@ -1,7 +1,6 @@
 import React from "react";
 import { Controller } from "react-hook-form";
 import {
-	Typography,
 	Radio,
 	RadioGroup,
 	FormHelperText,
@@ -24,19 +23,12 @@ export default function InputRadioGroup({
 				<div>
 					<RadioGroup {...field} row {...other}>
 						{options.map((option) => (
-							<div
+							<FormControlLabel
 								key={option?.value ?? option}
-								style={{
-									display: "flex",
-									alignItems: "center",
-									gap: "5px",
-								}}
-							>
-								<Radio value={option?.value ?? option} />
-								<Typography>
-									{option?.label ?? option}
-								</Typography>
-							</div>
+								label={option?.label ?? option}
+								value={option?.value ?? option}
+								control={<Radio />}
+							/>
 						))}
 					</RadioGroup>
 

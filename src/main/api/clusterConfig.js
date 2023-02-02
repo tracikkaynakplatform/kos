@@ -126,7 +126,7 @@ export function upgradeWorkerNode({
 		},
 		async (t, values) => {
 			t.changeStatus("Kümenin makina bilgileri alınıyor");
-			return await execKube(values[0], async (kctl) => {
+			const machines = await execKube(values[0], async (kctl) => {
 				return await kctl.get(ResourceType.Machine, "", {
 					label: [
 						`cluster.x-k8s.io/cluster-name=${clusterName}`,
@@ -135,6 +135,9 @@ export function upgradeWorkerNode({
 					outputType: "json",
 				});
 			});
+			if (!machines?.items || machines?.items?.length == 0)
+				throw new Error("Makina bilgileri bulunamadı");
+			return machines;
 		},
 		async (t, values) => {
 			t.changeStatus("MachineDeployment kaynakları bulunuyor");
@@ -229,7 +232,6 @@ export function upgradeControlPlane({
 	this.task.run();
 	return this.task.toPlainObject();
 }
-
 
 export default [
 	exportHelper("getManagementClusters", getManagementClusters),
