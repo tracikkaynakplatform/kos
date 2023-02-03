@@ -4,8 +4,9 @@ Note: put a minus inside item selector, prior to constructing a task for it..
 - [x] Upon selecting (clicking) the management cluster, a yellow notification appears on the bottom left of the window and disappears instantly.
     managementclusterinfo
 - [ ] AWS settings should be applied first, before creating any cluster and this info is not available to the end user.
+    +LOWPRI
   - [ ] no info if the datum is valid.
-  - [ ] default region should be pre-selected in create cluster dialogue.
+  - [x] default region should be pre-selected in create cluster dialogue.
     - [ ] Err for 2 etcd nodes is not available.
 - [ ] button tooltips (in cluster selection, ...etc screen) are not available..
 - [ ] there's no edit cluster dialogue (to add/remove nodes)...
@@ -16,3 +17,9 @@ Note: put a minus inside item selector, prior to constructing a task for it..
 - [ ] num of external ip per region !!
 - [ ] should invoke refresh, in cluster-list screen, while deleting ...etc.
     +LOWPRI
+
+
+- [ ] add button stays at the bottom-right in src/react-app/pages/ManagementClustersPage.jsx. Could not fiz it via changing its order !
+    +UIUNITY
+- [*] CircularProgress is not displaying ??
+       it is still compiling front-end code in the background.

@@ -2,6 +2,9 @@ import { app, BrowserWindow, Menu } from "electron";
 import contextMenu from "electron-context-menu";
 import { initApis } from "./api";
 
+// import { progressBar } from "electron-progressbar"
+// global.ProgressBar = progressBar;
+
 const mainMenuTemplate = [
 	{
 		label: "Dosya",
@@ -58,6 +61,7 @@ const createWindow = () => {
 		height: 1000,
 		webPreferences: {
 			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+			// devTools: !app.isPackaged, // => disabled explicit setting, below..
 		},
 	});
 	contextMenu({
