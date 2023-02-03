@@ -8,8 +8,9 @@ Note: put a minus inside item selector, prior to constructing a task for it..
   - [ ] no info if the datum is valid.
   - [x] default region should be pre-selected in create cluster dialogue.
     - [x] Err for 2 etcd nodes is not available.
-- [ ] button tooltips (in cluster selection, ...etc screen) are not available..
+- [x] button tooltips (in cluster selection, ...etc screen) are not available..
 - [ ] there's no edit cluster dialogue (to add/remove nodes)...
+    +HARDWORK
 - [ ] control plane should come pre-selected on upgrade dialogue..
 - [ ] cluster-create,  
 - [ ] cannot close cni dialogue, when in progress..

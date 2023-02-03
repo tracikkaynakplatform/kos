@@ -10,6 +10,7 @@ import {
 	Typography,
 	styled,
 	tableCellClasses,
+	Tooltip,
 } from "@mui/material";
 import {
 	Delete as DeleteIcon,
@@ -225,34 +226,44 @@ export default function ManagementClusterInfoPage() {
 											justifyContent: "center",
 										}}
 									>
-										<Button
-											disabled={
-												x.status !== "Provisioned"
-											}
-											onClick={() =>
-												handleCopyClusterConfig(x)
-											}
-										>
-											<CameraIcon />
-										</Button>
-										<Button
-											disabled={
-												x.status !== "Provisioned"
-											}
-											onClick={() =>
-												handleUpgradeCluster(x)
-											}
-										>
-											<UpgradeIcon />
-										</Button>
-										<Button
-											disabled={x.status === "Deleting"}
-											onClick={() =>
-												handleDeleteCluster(x)
-											}
-										>
-											<DeleteIcon />
-										</Button>
+
+										<Tooltip title="kubeconfig'i kopyala">
+											<Button
+												disabled={
+													x.status !== "Provisioned"
+												}
+												onClick={() =>
+													handleCopyClusterConfig(x)
+												}
+											>
+												<CameraIcon />
+											</Button>
+										</Tooltip>
+
+										<Tooltip title="upgrade / downgrade et">
+											<Button
+												disabled={
+													x.status !== "Provisioned"
+												}
+												onClick={() =>
+													handleUpgradeCluster(x)
+												}
+											>
+												<UpgradeIcon />
+											</Button>
+										</Tooltip>
+
+										<Tooltip title="Sil">
+											<Button
+												disabled={x.status === "Deleting"}
+												onClick={() =>
+													handleDeleteCluster(x)
+												}
+											>
+												<DeleteIcon />
+											</Button>
+										</Tooltip>
+
 									</StyledTableCell>
 								</TableRow>
 							))}
