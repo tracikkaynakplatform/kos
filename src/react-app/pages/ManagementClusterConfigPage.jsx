@@ -64,9 +64,10 @@ export default function ManagementClusterConfigPage() {
 			}
 
 			await clusterConfig.setClusterConfiguration(name, currentConfig);
-			snack("Küme bilgileri kayıt edildi.", { variant: "info" });
+			snack("Küme bilgileri kayıt edildi.", { variant: "info", autoHideDuration: 4000 });
 		});
-		closeSnackbar(loading);
+		setTimeout( () => closeSnackbar(loading), 1000);
+		// closeSnackbar(loading);
 	});
 
 	useEffect(() => {

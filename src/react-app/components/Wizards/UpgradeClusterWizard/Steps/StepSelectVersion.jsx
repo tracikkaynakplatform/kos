@@ -78,7 +78,7 @@ export default function StepSelectVersion({ goToNamedStep, ...props }) {
 					fields.kubVersion === "Yükleniyor..." ||
 					fields.kubVersion === "Yok"
 				) {
-					snack("Lütfen bir versiyon seçiniz", { variant: "error" });
+					snack("Lütfen bir versiyon seçiniz", { variant: "error", autoHideDuration: 4000 });
 					return;
 				}
 				wizard.updateData("toVersion", fields.kubVersion);

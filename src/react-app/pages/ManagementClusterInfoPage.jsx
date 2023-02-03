@@ -79,10 +79,11 @@ export default function ManagementClusterInfoPage() {
 			);
 			snack("Kümenin kubeconfig içeriği panoya kopyalandı!", {
 				variant: "info",
-				autoHideDuration: 2000,
+				autoHideDuration: 4000,
 			});
 		} catch (err) {}
-		closeSnackbar(copying);
+		setTimeout( () => closeSnackbar(copying), 1000);
+		// closeSnackbar(copying);
 	};
 	const handleDeleteCluster = async (cluster) => {
 		modal.showModal(QuestionModal, {
@@ -95,7 +96,7 @@ export default function ManagementClusterInfoPage() {
 				modal.closeModal();
 				snack(`"${cluster.name}" kümesi siliniyor`, {
 					variant: "info",
-					autoHideDuration: 2000,
+					autoHideDuration: 4000,
 				});
 				handleErrorWithSnack(snack, async () => {
 					kubectl.delete_(config, "cluster", cluster.name);
@@ -131,20 +132,21 @@ export default function ManagementClusterInfoPage() {
 						replace: true,
 					});
 				});
-				closeSnackbar(loading);
+				setTimeout( () => closeSnackbar(loading), 1000);
+				// closeSnackbar(loading);
 			},
 			onNoClick: () => modal.closeModal(),
 		});
 	};
 
 	const refreshClusters = async () => {
-		let loading = snack("Kümeler yükleniyor", { persist: true }, Loading);
+		let loading = snack("Kümeler yükleniyor", { persist: true, autoHideDuration: 4000 }, Loading);
 		await handleErrorWithSnack(snack, async () => {
 			const _config = await kubeConfig.loadManagementConfig(name);
 			await setConfig(_config);
 			await setClusters([...(await clusterConfig.getClusters(_config))]);
 		});
-		closeSnackbar(loading);
+		setTimeout( () => closeSnackbar(loading), 1000);
 	};
 
 	useEffect(() => {

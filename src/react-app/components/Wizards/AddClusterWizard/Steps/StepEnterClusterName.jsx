@@ -30,12 +30,12 @@ export default function StepEnterClusterName(props) {
 					} else {
 						snack(
 							"Bu isimde bir küme zaten mevcut! Başka bir isim girmeyi deneyin",
-							{ variant: "error" }
+							{ variant: "error", autoHideDuration: 4000 }
 						);
 					}
 				} catch (err) {
 					logger.error(err.message);
-					snack("Bir hata oluştu!", { variant: "error" });
+					snack("Bir hata oluştu!", { variant: "error", autoHideDuration: 4000 });
 				}
 			})}
 			onBackClick={() => {
