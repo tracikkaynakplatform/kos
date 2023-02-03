@@ -55,7 +55,7 @@ export default function StepSelectProvider({ goToNamedStep, ...props }) {
 					values?.provider === "" ||
 					values?.provider === "Yükleniyor..."
 				) {
-					snack("Lütfen bir sağlayıcı seçin", { variant: "error" });
+					snack("Lütfen bir sağlayıcı seçin", { variant: "error", autoHideDuration: 4000 });
 					return;
 				}
 				_goto(values.provider);

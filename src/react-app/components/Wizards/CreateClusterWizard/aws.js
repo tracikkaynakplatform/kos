@@ -73,5 +73,6 @@ export async function getAWSInfo(managementClusterName, region) {
 			"ec2",
 			region ?? credentials.AWS_REGION
 		),
+		credentials_region: credentials.AWS_REGION,
 	};
 }

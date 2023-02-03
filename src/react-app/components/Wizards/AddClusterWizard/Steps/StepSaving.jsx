@@ -49,7 +49,7 @@ export default function StepSaving(props) {
 					_goto("end");
 				} catch (err) {
 					logger.error(err.message);
-					snack("Bir hata oluştu!", { variant: "error" });
+					snack("Bir hata oluştu!", { variant: "error", autoHideDuration: 4000 });
 				}
 			}}
 			width={400}

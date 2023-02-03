@@ -9,6 +9,7 @@ import { checkAWSCli, checkConfig, getAWSInfo } from "../aws";
 import { logger } from "../../../../logger";
 import { useSnackbar } from "notistack";
 import { useModal } from "../../../../hooks/useModal";
+import { info } from "autoprefixer";
 
 export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 	const [regions, setRegions] = useState(["Yükleniyor..."]);
@@ -30,9 +31,11 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 			);
 			if (!info) return;
 
+			// console.log(`credentials_region = ${info.credentials_region}`);
+
 			if (!region) {
 				setRegions(info.regions);
-				setValue("region", info.regions[0]);
+				setValue("region", info.credentials_region ?? info.regions[0]);
 			}
 
 			setSshKeys(info.sshKeys?.map((x) => x.KeyName));
@@ -101,7 +104,27 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 						}}
 					/>
 				</Grid>
+
+
 				<Grid item xs={6}>
+					<InputSelect
+						name="masterCount"
+						control={control}
+						label="Control Plane adedi"
+						items={["1", "3", "5", "7"]}
+						defaultValue={1}
+						// componentProps={{ type: "number" }}
+						rules={{
+							required: "Control Plane adedi giriniz",
+							min: {
+								value: 1,
+								message: "Control Plane adedi giriniz",
+							},
+						}}
+					/>
+				</Grid>
+
+				{/* <Grid item xs={6}>
 					<InputText
 						name="masterCount"
 						control={control}
@@ -116,7 +139,8 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 							},
 						}}
 					/>
-				</Grid>
+				</Grid> */}
+
 				<Grid item xs={6}>
 					<InputText
 						name="workerCount"
@@ -188,7 +212,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 						control={control}
 						label="Bölge"
 						items={regions}
-						defaultValue={regions[0]}
+						defaultValue={ info.credentials_region ?? regions[0]}
 						rules={{
 							required: "Bölge giriniz",
 							onChange: async (e, val = e.target.value) => {
