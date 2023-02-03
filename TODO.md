@@ -12,10 +12,13 @@ Note: put a minus inside item selector, prior to constructing a task for it..
 - [ ] there's no edit cluster dialogue (to add/remove nodes)...
     +HARDWORK
 - [x] control plane should come pre-selected on upgrade dialogue..
-- [ ] cluster-create,  
 - [ ] cannot close cni dialogue, when in progress..
         in slow regions ?? may not be able to pass to cni stage
-- [ ] num of external ip per region !!
+    +HARDWORK
+        need to split cni installation from cluster setup. 
+- [ ] num of external ip per region (problen) !! 
+       => is also not available to used.
+    +LOWPRI
 - [ ] should invoke refresh, in cluster-list screen, while deleting ...etc.
     +LOWPRI
 
