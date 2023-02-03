@@ -7,7 +7,7 @@ Note: put a minus inside item selector, prior to constructing a task for it..
     +LOWPRI
   - [ ] no info if the datum is valid.
   - [x] default region should be pre-selected in create cluster dialogue.
-    - [ ] Err for 2 etcd nodes is not available.
+    - [x] Err for 2 etcd nodes is not available.
 - [ ] button tooltips (in cluster selection, ...etc screen) are not available..
 - [ ] there's no edit cluster dialogue (to add/remove nodes)...
 - [ ] control plane should come pre-selected on upgrade dialogue..

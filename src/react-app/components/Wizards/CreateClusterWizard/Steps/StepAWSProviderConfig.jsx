@@ -104,7 +104,27 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 						}}
 					/>
 				</Grid>
+
+
 				<Grid item xs={6}>
+					<InputSelect
+						name="masterCount"
+						control={control}
+						label="Control Plane adedi"
+						items={["1", "3", "5", "7"]}
+						defaultValue={1}
+						// componentProps={{ type: "number" }}
+						rules={{
+							required: "Control Plane adedi giriniz",
+							min: {
+								value: 1,
+								message: "Control Plane adedi giriniz",
+							},
+						}}
+					/>
+				</Grid>
+
+				{/* <Grid item xs={6}>
 					<InputText
 						name="masterCount"
 						control={control}
@@ -119,7 +139,8 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 							},
 						}}
 					/>
-				</Grid>
+				</Grid> */}
+
 				<Grid item xs={6}>
 					<InputText
 						name="workerCount"
