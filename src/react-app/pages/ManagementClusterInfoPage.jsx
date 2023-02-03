@@ -240,7 +240,7 @@ export default function ManagementClusterInfoPage() {
 											</Button>
 										</Tooltip>
 
-										<Tooltip title="upgrade / downgrade et">
+										<Tooltip title="upgrade / downgrade">
 											<Button
 												disabled={
 													x.status !== "Provisioned"

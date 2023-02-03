@@ -27,15 +27,15 @@ export default function StepSelectUpgradeType({ goToNamedStep, ...props }) {
 			<InputRadioGroup
 				name="machineType"
 				control={control}
-				defaultValue="worker"
+				defaultValue="controlPlane"
 				options={[
-					{
-						label: "Worker",
-						value: "worker",
-					},
 					{
 						label: "Control Plane",
 						value: "controlPlane",
+					},					
+					{
+						label: "Workers",
+						value: "worker",
 					},
 				]}
 			/>

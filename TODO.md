@@ -11,7 +11,7 @@ Note: put a minus inside item selector, prior to constructing a task for it..
 - [x] button tooltips (in cluster selection, ...etc screen) are not available..
 - [ ] there's no edit cluster dialogue (to add/remove nodes)...
     +HARDWORK
-- [ ] control plane should come pre-selected on upgrade dialogue..
+- [x] control plane should come pre-selected on upgrade dialogue..
 - [ ] cluster-create,  
 - [ ] cannot close cni dialogue, when in progress..
         in slow regions ?? may not be able to pass to cni stage
