@@ -59,11 +59,13 @@ const createWindow = () => {
 	const mainWindow = new BrowserWindow({
 		width: 1000,
 		height: 1000,
+		title: `KOS ${app.getVersion()}`,
 		webPreferences: {
 			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
 			// devTools: !app.isPackaged, // => disabled explicit setting, below..
 		},
 	});
+	
 	contextMenu({
 		window: mainWindow,
 		labels: {
