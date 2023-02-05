@@ -1,7 +1,7 @@
 {
   "name": "kos",
   "productName": "kos",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Kubernetes Orkestrasyon Sistemi",
   "main": ".webpack/main",
   "scripts": {

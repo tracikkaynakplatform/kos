@@ -96,9 +96,7 @@ export class ClientExecutable {
 		logger.debug(
 			`Executing -> ${path} ${_args.join(" ")} ${
 				env && env != {}
-					? `with ${Object.keys(env ?? {}).map(
-							(x) => `${x}=${env[x]}`
-					  )} environment variables`
+					? `with *REDACTED* environment variables`
 					: ""
 			}`
 		);
