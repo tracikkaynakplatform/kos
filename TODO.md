@@ -24,7 +24,7 @@ Note: put a minus inside item selector, prior to constructing a task for it..
 - [ ] cluster initialization (for docker and aws) on the mgmt cluster
     +HARDWORK +LOWPRI
 - [x] add version to window title
-
+- [x] redact environment variables' outputs.
 
 - [ ] add button stays at the bottom-right in src/react-app/pages/ManagementClustersPage.jsx. Could not fiz it via changing its order !
     +UIUNITY
