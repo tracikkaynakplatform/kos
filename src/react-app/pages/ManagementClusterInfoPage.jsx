@@ -113,6 +113,9 @@ export default function ManagementClusterInfoPage() {
 	const handleUpgradeCluster = async (cluster) => {
 		nav(`/upgrade-cluster/${name}/${cluster.name}`);
 	};
+	const handleEditCluster = async (cluster) => {
+		nav(`/edit-cluster/${name}/${cluster.name}`);
+	};	
 	const handleDeleteManagementCluster = () => {
 		modal.showModal(QuestionModal, {
 			yesButtonColor: "error",
@@ -234,6 +237,19 @@ export default function ManagementClusterInfoPage() {
 												}
 												onClick={() =>
 													handleCopyClusterConfig(x)
+												}
+											>
+												<CameraIcon />
+											</Button>
+										</Tooltip>
+
+										<Tooltip title="düzenle">
+											<Button
+												disabled={
+													x.status !== "Provisioned"
+												}
+												onClick={() =>
+													handleEditCluster(x)
 												}
 											>
 												<CameraIcon />

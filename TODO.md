@@ -25,6 +25,7 @@ Note: put a minus inside item selector, prior to constructing a task for it..
     +HARDWORK +LOWPRI
 - [x] add version to window title
 - [x] redact environment variables' outputs.
+- [ ] button colors should be switched, in cluster delete dialogue.
 
 - [ ] add button stays at the bottom-right in src/react-app/pages/ManagementClustersPage.jsx. Could not fiz it via changing its order !
     +UIUNITY
