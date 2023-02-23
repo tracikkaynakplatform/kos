@@ -57,8 +57,8 @@ if (process.platform == "darwin") {
 
 const createWindow = () => {
 	const mainWindow = new BrowserWindow({
-		width: 1000,
-		height: 1000,
+		width: process.env.NODE_ENV === "development" ? 1400 : 1000,
+		height: 800,
 		title: `KOS v${app.getVersion()}`,
 		webPreferences: {
 			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,

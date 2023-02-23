@@ -6,6 +6,7 @@ import StepKindCreateCluster from "./StepKindCreateCluster";
 import StepKindProviderConfig from "./StepKindProviderConfig";
 import StepSelectAWSClusterType from "./StepSelectAWSClusterType";
 import StepSelectProvider from "./StepSelectProvider";
+import StepFetchWorkloadCluster from "./StepFetchWorkloadCluster";
 
 export {
 	StepAddClusterComplete,
@@ -16,4 +17,5 @@ export {
 	StepKindProviderConfig,
 	StepSelectAWSClusterType,
 	StepSelectProvider,
+	StepFetchWorkloadCluster,
 };

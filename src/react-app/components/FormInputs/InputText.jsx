@@ -3,6 +3,7 @@ import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 
 export default function InputText({
+	disabled = false,
 	name,
 	defaultValue = "",
 	size,
@@ -23,6 +24,7 @@ export default function InputText({
 				return (
 					<TextField
 						{...others}
+						disabled={disabled}
 						fullWidth
 						label={label}
 						size={size}

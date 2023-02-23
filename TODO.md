@@ -31,3 +31,5 @@ Note: put a minus inside item selector, prior to constructing a task for it..
     +UIUNITY
 - [*] CircularProgress is not displaying ??
        it is still compiling front-end code in the background.
+- [ ] Assuming the `default` namespace all along?? May produce or set own (single) ns?
+- [ ] handling multiple machineDeployments for a single cluster

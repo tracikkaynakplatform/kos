@@ -10,17 +10,20 @@ import {
 	StepKindProviderConfig,
 	StepSelectAWSClusterType,
 	StepSelectProvider,
+	StepFetchWorkloadCluster,
 } from "./Steps";
 import StepWizard from "../../../lib/react-step-wizard";
 
 function Content({ onFinish }) {
 	const wizard = useWizard();
 
+	const isEdit = wizard.clusterName  ? true : false;
+
 	useEffect(() => {
-		wizard.setStepName("selectProvider");
+		wizard.setStepName(isEdit ? "fetchWorkloadCluster" : "selectProvider");
 	}, []);
 
-	const isEdit = wizard.clusterName  ? true : false;
+	
 	console.log(`wizard.clusterName = ${wizard.clusterName} .`);
 	return (
 		<div>
@@ -47,12 +50,21 @@ function Content({ onFinish }) {
 					stepName="addClusterComplete"
 					onFinish={onFinish}
 				/>
-			
+			 
 			</StepWizard>
 		}
 		{ isEdit &&
-			<div>Edit Cluster....</div>
-			
+				<StepWizard
+				onStepChange={(stats) => wizard.setStepName(stats.activeStepName)}
+				transitions={{}}
+				>				
+					<StepFetchWorkloadCluster
+						manClusterName={wizard.manClusterName}
+						clusterName={wizard.clusterName}
+						stepName="fetchWorkloadCluster"
+					/>
+					<StepAWSProviderConfig stepName="AWSProviderConfig" />
+				</StepWizard>
 		}
 		</div>
 	);

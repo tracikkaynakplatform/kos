@@ -5,7 +5,7 @@ export async function handleErrorWithSnack(snack, func, onError, callback) {
 		await func?.();
 	} catch (err) {
 		logger.error(err.message);
-		snack("Bir hata oluştu. " + err.message.slice(0, 200) + "...", {
+		snack("Hata: " + err.message.slice(0, 200) + "...", {
 			variant: "error",
 			autoHideDuration: 4000,
 		});

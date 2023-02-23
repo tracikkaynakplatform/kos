@@ -18,11 +18,12 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 	const { handleSubmit, control, setValue } = useForm();
 	const modal = useModal();
 	const wizard = useWizard();
+	const isEdit = wizard.data.clusterInfo ? true : false;
 
-	const updateOptions = async (region) => {
+	const reloadForm = async (region) => {
 		try {
 			if (!(await checkAWSCli(goToNamedStep, modal))) return;
-
+			// console.log(`wizard.data = \n${JSON.stringify(wizard.data, null, 2)}`);
 			const info = await checkConfig(
 				goToNamedStep,
 				modal,
@@ -59,8 +60,11 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 					regions[0] === "Yükleniyor..." ||
 					sshKeys[0] === "Yükleniyor..."
 				)
-					await updateOptions();
+					await reloadForm();
 			}}
+
+			disableBack={isEdit}
+
 			onBackClick={() => {
 				goToNamedStep("selectAWSClusterType");
 			}}
@@ -77,6 +81,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 			<Grid container spacing={1}>
 				<Grid item xs={6}>
 					<InputText
+						disabled={isEdit}
 						name="clusterName"
 						control={control}
 						label="Küme adı"
@@ -91,6 +96,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 				</Grid>
 				<Grid item xs={6}>
 					<InputSelect
+						disabled={isEdit}
 						name="kubVersion"
 						control={control}
 						label="Kubernetes versiyonu"
@@ -159,6 +165,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 				</Grid>
 				<Grid item xs={6}>
 					<InputSelect
+						disabled={isEdit}
 						name="sshKeyName"
 						control={control}
 						label="SSH anahtar adı"
@@ -176,6 +183,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 
 				<Grid item xs={6}>
 					<InputSelect
+						disabled={isEdit}
 						name="workerMachineType"
 						control={control}
 						label="Worker makina tipi"
@@ -193,6 +201,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 				<Grid item xs={6}>
 					<InputSelect
 						name="masterMachineType"
+						disabled={isEdit}
 						control={control}
 						label="Control Plane makina tipi"
 						items={machineTypes.map((x) => x.name)}
@@ -208,6 +217,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 
 				<Grid item xs={6}>
 					<InputSelect
+						disabled={isEdit}
 						name="region"
 						control={control}
 						label="Bölge"
@@ -218,7 +228,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 							onChange: async (e, val = e.target.value) => {
 								await setSshKeys(["Yükleniyor..."]);
 								setValue("sshKeyName", "Yükleniyor...");
-								await updateOptions(val);
+								await reloadForm(val);
 							},
 							validate: (x) =>
 								x != "Yükleniyor..." ? true : "Bölge giriniz",
