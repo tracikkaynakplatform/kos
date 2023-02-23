@@ -12,39 +12,55 @@ import { useModal } from "../../../../hooks/useModal";
 import { info } from "autoprefixer";
 
 export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
-	const [regions, setRegions] = useState(["Yükleniyor..."]);
-	const [sshKeys, setSshKeys] = useState(["Yükleniyor..."]);
+
+	const UITexts = {
+		Loading : 'Yükleniyor...',
+		ErrCheckProvider : "Bir hata oluştu! Altyapı sağlayıcısının yapılandırmasını kontrol edin.",
+	}
+	Object.freeze(UITexts);
+
+	const [regions, setRegions] = useState([UITexts.Loading]);
+	const [sshKeys, setSshKeys] = useState([UITexts.Loading]);
+	const [k8sVersions, setK8sVersions] = useState(kubernetesVersions);
+
 	const snack = useSnackbar().enqueueSnackbar;
 	const { handleSubmit, control, setValue } = useForm();
 	const modal = useModal();
 	const wizard = useWizard();
-	const isEdit = wizard.data.clusterInfo ? true : false;
+	const clusterInfo = wizard.data.clusterInfo;
+	const isEdit = clusterInfo ? true : false;
+
 
 	const reloadForm = async (region) => {
 		try {
-			if (!(await checkAWSCli(goToNamedStep, modal))) return;
-			// console.log(`wizard.data = \n${JSON.stringify(wizard.data, null, 2)}`);
-			const info = await checkConfig(
-				goToNamedStep,
-				modal,
-				wizard.manClusterName,
-				region ?? regions[0]
-			);
-			if (!info) return;
+			_reloadNew(region);
 
-			// console.log(`credentials_region = ${info.credentials_region}`);
+			if (isEdit) {
+				const info = await checkConfig(
+					goToNamedStep,
+					modal,
+					wizard.manClusterName,
+					region ?? regions[0]
+				);
 
-			if (!region) {
-				setRegions(info.regions);
-				setValue("region", info.credentials_region ?? info.regions[0]);
+				setValue('clusterName', clusterInfo.cluster.metadata.name);
+				setValue('region', clusterInfo.infrastructure.spec.region);
+				setValue('sshKeyName', clusterInfo.infrastructure.spec.sshKeyName);
+
+				if (! kubernetesVersions.includes(clusterInfo.controlPlane.spec.version)) {
+					setK8sVersions([clusterInfo.controlPlane.spec.version, ...kubernetesVersions]);
+				}
+				setValue('kubVersion', clusterInfo.controlPlane.spec.version);
+
+				setValue('masterCount', clusterInfo.controlPlane.spec.replicas);
+				setValue('workerCount', clusterInfo.machineDeployments[0].spec.replicas);
+			} else {
+				
 			}
-
-			setSshKeys(info.sshKeys?.map((x) => x.KeyName));
-			setValue("sshKeyName", info.sshKeys[0]?.KeyName ?? "");
 		} catch (err) {
 			logger.error(err.message);
 			snack(
-				"Bir hata oluştu! Altyapı sağlayıcısının yapılandırmasını kontrol edin.",
+				UITexts.ErrCheckProvider,
 				{
 					variant: "error",
 					autoHideDuration: 5000,
@@ -53,12 +69,34 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 		}
 	};
 
+	const _reloadNew = async (region) => {
+		if (!(await checkAWSCli(goToNamedStep, modal))) return;
+		// console.log(`wizard.data = \n${JSON.stringify(wizard.data, null, 2)}`);
+		const info = await checkConfig(
+			goToNamedStep,
+			modal,
+			wizard.manClusterName,
+			region ?? regions[0]
+		);
+		if (!info) return;
+
+		// console.log(`credentials_region = ${info.credentials_region}`);
+
+		if (!region) {
+			setRegions(info.regions);
+			setValue("region", info.credentials_region ?? info.regions[0]);
+		}
+
+		setSshKeys(info.sshKeys?.map((x) => x.KeyName));
+		setValue("sshKeyName", info.sshKeys[0]?.KeyName ?? "");
+	}
+
 	return (
 		<StepWizardWrapper
 			onLoad={async () => {
 				if (
-					regions[0] === "Yükleniyor..." ||
-					sshKeys[0] === "Yükleniyor..."
+					regions[0] === UITexts.Loading ||
+					sshKeys[0] === UITexts.Loading
 				)
 					await reloadForm();
 			}}
@@ -100,7 +138,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 						name="kubVersion"
 						control={control}
 						label="Kubernetes versiyonu"
-						items={kubernetesVersions}
+						items={k8sVersions}
 						rules={{
 							required: "Versiyon giriniz",
 							minLength: {
@@ -174,7 +212,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 						rules={{
 							required: "SSH anahtarını seçiniz",
 							validate: (x) =>
-								x != "Yükleniyor..."
+								x != UITexts.Loading
 									? true
 									: "SSH anahtarını seçiniz",
 						}}
@@ -226,12 +264,12 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 						rules={{
 							required: "Bölge giriniz",
 							onChange: async (e, val = e.target.value) => {
-								await setSshKeys(["Yükleniyor..."]);
-								setValue("sshKeyName", "Yükleniyor...");
+								await setSshKeys([UITexts.Loading]);
+								setValue("sshKeyName", UITexts.Loading);
 								await reloadForm(val);
 							},
 							validate: (x) =>
-								x != "Yükleniyor..." ? true : "Bölge giriniz",
+								x != UITexts.Loading ? true : "Bölge giriniz",
 						}}
 					/>
 				</Grid>

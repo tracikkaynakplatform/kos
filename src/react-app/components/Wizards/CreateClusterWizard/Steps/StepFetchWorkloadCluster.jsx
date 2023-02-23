@@ -77,11 +77,16 @@ export default function StepFetchWorkloadCluster({ goToNamedStep, ...props }) {
 	};
 
 	const baseOnload = async () => {
-		let cluster, controlPlane, machineDeployments, machineDeployment0;
+		const clusterInfo = {
+			'cluster': null,
+			'controlPlane' : null,
+			'infrastructure': null,
+			'machineDeployments' : []
+		}		
 		try {
 			// layout.disableBack();
 			console.log(`props = \n${JSON.stringify(props, null, 2)}`);
-			let clusterName = props.clusterName;
+			const clusterName = props.clusterName;
 			await wizard.updateData("clusterName", clusterName);
 
 			setInfo(
@@ -101,53 +106,53 @@ export default function StepFetchWorkloadCluster({ goToNamedStep, ...props }) {
 			
 
 			// fetch cluster
-			cluster = await getKubeResource('cluster', clusterName); //TODO: namespace
+			clusterInfo.cluster = await getKubeResource('cluster', clusterName); //TODO: namespace
 
 			// fetch controlplane
-			controlPlane = await getKubeResource(
-				cluster.spec.controlPlaneRef.kind, 
-				cluster.spec.controlPlaneRef.name,
-				cluster.spec.controlPlaneRef.namespace);
+			clusterInfo.controlPlane = await getKubeResource(
+				clusterInfo.cluster.spec.controlPlaneRef.kind, 
+				clusterInfo.cluster.spec.controlPlaneRef.name,
+				clusterInfo.cluster.spec.controlPlaneRef.namespace);
 
 			setProgress(40);
 			
 
 			// fetch machineDeployments:
 			// TODO: handle multiple machineDeployments
+			let machineDeployments;
 			try {
 				machineDeployments = await kubectl.getMachineDeployments(
 					config,
-					{"namespace": cluster?.metadata?.namespace, "cluster_name" : clusterName}
+					{"namespace": clusterInfo.cluster?.metadata?.namespace, "cluster_name" : clusterName}
 				);
 			} catch (err) {
 				throw {name: 'ClientInvocationError', message: `${UITexts.ClientInvocationError}: ${err.message}`};
 			}
 			console.log(`machineDeployments = \n${JSON.stringify(machineDeployments, null, 2)}`);
 			if (machineDeployments?.length <= 0) 
-				{ throw new Error(`E-MDL ${UITexts.ClientInvocationError}`); }
+				{ throw new Error(`E-MachineDeploymentList ${UITexts.ClientInvocationError}`); }
 
 			setProgress(60);
 			
 
-			machineDeployment0 = await getKubeResource(
+			clusterInfo.machineDeployments.push( await getKubeResource(
 				'MachineDeployment',
 				machineDeployments[0],
-				cluster.spec.controlPlaneRef.namespace
-			);
+				clusterInfo.cluster.spec.controlPlaneRef.namespace
+			) );
 			
 			setProgress(80);
 			
+			clusterInfo.infrastructure = await getKubeResource(
+				clusterInfo.cluster.spec.infrastructureRef.kind, 
+				clusterInfo.cluster.spec.infrastructureRef.name,
+				clusterInfo.cluster.spec.infrastructureRef.namespace);
 
-			let clusterInfo = {
-				'cluster': cluster,
-				'controlPlane' : controlPlane,
-				'machineDeployments' : [machineDeployment0]
-			}
-
+			//done..
+			wizard.updateData('clusterInfo' , clusterInfo);
 			setInfo(UITexts.LoadedClusterData);
 
 			setProgress(100);
-			wizard.updateData('clusterInfo' , clusterInfo);
 			
 			setTimeout(() => {
 				_goto("AWSProviderConfig");
