@@ -59,11 +59,13 @@ export async function upgradeWorkerNode({
 	managementClusterName,
 	clusterName,
 	toVersion,
+	newNodeCount,
 }) {
 	return await clusterConfigAPI.upgradeWorkerNode({
 		managementClusterName,
 		clusterName,
 		toVersion,
+		newNodeCount,
 	});
 }
 

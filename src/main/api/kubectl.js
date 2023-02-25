@@ -40,6 +40,13 @@ export async function applyFile(config, file, ...args) {
 	});
 }
 
+export async function patch(config, ...args) {
+	return await execKube(config, async (kctl) => {
+		return await kctl.patch(...args);
+	});
+}
+
+
 export async function apply(config, yaml, ...args) {
 	return new Promise(async (resolve, reject) => {
 		let kctl = new Kubectl();
@@ -230,6 +237,7 @@ export default [
 	exportHelper("get", get),
 	exportHelper("currentContext", currentContext),
 	exportHelper("apply", apply),
+	exportHelper("patch", patch),
 	exportHelper("applyFile", applyFile),
 	exportHelper("delete_", delete_),
 

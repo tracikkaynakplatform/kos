@@ -109,6 +109,7 @@ export function upgradeWorkerNode({
 	managementClusterName,
 	clusterName,
 	toVersion,
+	newNodeCount,
 }) {
 	if (this.task) {
 		const task = this.task.toPlainObject();
@@ -150,32 +151,58 @@ export function upgradeWorkerNode({
 			}
 			return deployments;
 		},
-		async (t, values) => {
-			const deployments = values[2];
-			for (const deployment of deployments) {
-				t.changeStatus(`${deployment} yamalanıyor`);
-				await execKube(
-					values[0],
-					async (kctl) =>
-						await kctl.patch(
-							ResourceType.MachineDeployment,
-							deployment,
-							{
-								patch: {
-									spec: {
-										template: {
-											spec: {
-												version: toVersion,
+		... toVersion ? [
+			async (t, values) => {
+				const deployments = values[2];
+				for (const deployment of deployments) {
+					t.changeStatus(`${deployment} yamalanıyor`);
+					await execKube(
+						values[0],
+						async (kctl) =>
+							await kctl.patch(
+								ResourceType.MachineDeployment,
+								deployment,
+								{
+									patch: {
+										spec: {
+											template: {
+												spec: {
+													version: toVersion,
+												},
 											},
 										},
 									},
-								},
-								type: "merge",
-							}
-						)
-				);
+									type: "merge",
+								}
+							)
+					);
+				}
 			}
-		},
+		] : [],
+		... newNodeCount ? [
+			async (t, values) => {
+				const deployments = values[2];
+				for (const deployment of deployments) {
+					t.changeStatus(`${deployment} yamalanıyor`);
+					await execKube(
+						values[0],
+						async (kctl) =>
+							await kctl.patch(
+								ResourceType.MachineDeployment,
+								deployment,
+								{
+									patch: {
+										spec: {
+											replicas: newNodeCount
+										},
+									},
+									type: "merge",
+								}
+							)
+					);
+				}
+			}
+		] : [],
 	]);
 
 	this.task.run();
@@ -186,6 +213,7 @@ export function upgradeControlPlane({
 	managementClusterName,
 	clusterName,
 	toVersion,
+	newNodeCount,
 }) {
 	if (this.task) {
 		const task = this.task.toPlainObject();

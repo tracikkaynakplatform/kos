@@ -29,7 +29,6 @@ export default function StepFetchWorkloadCluster({ goToNamedStep, ...props }) {
 		ClientInvocationError: 'Kümeye erişim hatası',
 		ClientInvocationResultError: 'Kümeye erişim sonucu hatası'
 	}
-
 	Object.freeze(UITexts);
 
   const onErr = async (err) => {
