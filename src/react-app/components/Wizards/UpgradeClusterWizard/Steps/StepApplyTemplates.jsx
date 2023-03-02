@@ -36,6 +36,7 @@ export default function StepApplyTemplates({ goToNamedStep, ...props }) {
 							managementClusterName: wizard.manClusterName,
 							clusterName: wizard.clusterName,
 							toVersion: wizard.data.toVersion,
+							newNodeCount: null, //TODO: will not be used, probably.. remove soon.
 						})).finish
 					) {
 						if (info != operation.status) setInfo(operation.status);
