@@ -10,6 +10,10 @@ export async function apply(config, yaml, options) {
 	return await kubectlAPI.apply(config, yaml, options);
 }
 
+export async function patch(config, resource, name, options) {
+	return await kubectlAPI.patch(config, resource, name, options);
+}
+
 export async function applyFile(config, file, options) {
 	return await kubectlAPI.applyFile(config, file, options);
 }
@@ -53,6 +57,7 @@ export default {
 	delete_,
 	currentContext,
 	apply,
+	patch,
 	applyFile,
 	getMachineDeployments,
 	getMachineDeploymentVersionInfo,

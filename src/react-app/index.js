@@ -13,6 +13,7 @@ import {
 	ManagementClusterConfigPage,
 	UpgradeClusterPage,
 	DownloadExecutables,
+	EditClusterPage,
 } from "./pages";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -53,6 +54,11 @@ root.render(
 						path="/upgrade-cluster/:manClusterName/:clusterName"
 						exact
 						element={<UpgradeClusterPage />}
+					/>
+					<Route
+						path="/edit-cluster/:manClusterName/:clusterName"
+						exact
+						element={<EditClusterPage />}
 					/>
 				</Routes>
 			</HashRouter>

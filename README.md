@@ -8,8 +8,8 @@ It requires a proper management cluster (formed using cluster-api). See [cluster
 - [+] manage (add/remove) management clusters (for personal use).
 - [+] add/delete clusters
 - [ ] update clusters (add/remove machines)
-- [ ] upgrade clusters (version upgrades)
-- [ ] fetch kubeconfig and open cluster management services/apps (kubernetes dashboard or lens).
+- [+] upgrade clusters (version upgrades)
+- [*] fetch kubeconfig and open cluster management services/apps (kubernetes dashboard or lens).
 
 
 # Supported providers (backends):

@@ -5,6 +5,7 @@ import ManagementClusterInfoPage from "./ManagementClusterInfoPage";
 import ManagementClusterConfigPage from "./ManagementClusterConfigPage";
 import UpgradeClusterPage from "./UpgradeClusterPage";
 import DownloadExecutables from "./DownloadExecutables";
+import EditClusterPage from "./EditClusterPage";
 
 export {
 	AddClusterPage,
@@ -14,4 +15,5 @@ export {
 	ManagementClusterConfigPage,
 	UpgradeClusterPage,
 	DownloadExecutables,
+	EditClusterPage,
 };

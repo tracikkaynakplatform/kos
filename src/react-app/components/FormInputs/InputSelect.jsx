@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 
 export default function InputSelect({
+	disabled = false,
 	name,
 	defaultValue = "",
 	control,
@@ -25,7 +26,7 @@ export default function InputSelect({
 				return (
 					<FormControl fullWidth error={!!error}>
 						<InputLabel>{label}</InputLabel>
-						<Select {...field} label={label}>
+						<Select disabled={disabled} {...field} label={label}>
 							{items.map((p, i) => {
 								let label, value;
 								if (typeof p === "string") {
