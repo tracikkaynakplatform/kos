@@ -10,6 +10,8 @@ import { logger } from "../../../../logger";
 import { useSnackbar } from "notistack";
 import { useModal } from "../../../../hooks/useModal";
 import { info } from "autoprefixer";
+import { clusterctl, kubeConfig, kubectl } from "../../../../api";
+
 
 export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 
@@ -91,6 +93,24 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 		setValue("sshKeyName", info.sshKeys[0]?.KeyName ?? "");
 	}
 
+	const doUpgrade = async (upgradeFunction, {k8sVersion = null, nodeCount = null}) => {
+		//TODO: implement.. Should call `kubectl pathch` from here..?
+	};
+
+	const onFormSubmit = async (form) => {
+		for (let field of Object.keys(form)) {
+			await wizard.updateData(field, form[field]);
+		}
+		wizard.updateData("type", "ec2");
+		if (isEdit) {
+			//TODO: compare old and new versions, and call doUpgrade.
+			//TODO: 		then show a simple dialog about completion status.
+			//TODO: 		ne next step may be here... wizard can be terminated, after.
+		} else {
+			goToNamedStep("AWSCreateCluster");
+		}
+	};
+
 	return (
 		<StepWizardWrapper
 			onLoad={async () => {
@@ -106,12 +126,7 @@ export default function StepAWSProviderConfig({ goToNamedStep, ...props }) {
 			onBackClick={() => {
 				goToNamedStep("selectAWSClusterType");
 			}}
-			onNextClick={handleSubmit(async (fields) => {
-				for (let field of Object.keys(fields))
-					await wizard.updateData(field, fields[field]);
-				wizard.updateData("type", "ec2");
-				goToNamedStep("AWSCreateCluster");
-			})}
+			onNextClick={handleSubmit(onFormSubmit)}
 			title="AWS Küme Bilgileri"
 			width={500}
 			{...props}

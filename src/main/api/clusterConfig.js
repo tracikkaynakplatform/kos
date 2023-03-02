@@ -191,11 +191,7 @@ export function upgradeWorkerNode({
 								ResourceType.MachineDeployment,
 								deployment,
 								{
-									patch: {
-										spec: {
-											replicas: newNodeCount
-										},
-									},
+									patch: { spec: { replicas: newNodeCount }, },
 									type: "merge",
 								}
 							)
