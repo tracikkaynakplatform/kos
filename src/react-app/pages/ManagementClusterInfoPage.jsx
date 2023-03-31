@@ -83,7 +83,7 @@ export default function ManagementClusterInfoPage() {
 				autoHideDuration: 4000,
 			});
 		} catch (err) {}
-		setTimeout( () => closeSnackbar(copying), 1000);
+		setTimeout(() => closeSnackbar(copying), 1000);
 		// closeSnackbar(copying);
 	};
 	const handleDeleteCluster = async (cluster) => {
@@ -115,7 +115,7 @@ export default function ManagementClusterInfoPage() {
 	};
 	const handleEditCluster = async (cluster) => {
 		nav(`/edit-cluster/${name}/${cluster.name}`);
-	};	
+	};
 	const handleDeleteManagementCluster = () => {
 		modal.showModal(QuestionModal, {
 			yesButtonColor: "error",
@@ -136,7 +136,7 @@ export default function ManagementClusterInfoPage() {
 						replace: true,
 					});
 				});
-				setTimeout( () => closeSnackbar(loading), 1000);
+				setTimeout(() => closeSnackbar(loading), 1000);
 				// closeSnackbar(loading);
 			},
 			onNoClick: () => modal.closeModal(),
@@ -144,13 +144,17 @@ export default function ManagementClusterInfoPage() {
 	};
 
 	const refreshClusters = async () => {
-		let loading = snack("Kümeler yükleniyor", { persist: true, autoHideDuration: 4000 }, Loading);
+		let loading = snack(
+			"Kümeler yükleniyor",
+			{ persist: true, autoHideDuration: 4000 },
+			Loading
+		);
 		await handleErrorWithSnack(snack, async () => {
 			const _config = await kubeConfig.loadManagementConfig(name);
 			await setConfig(_config);
 			await setClusters([...(await clusterConfig.getClusters(_config))]);
 		});
-		setTimeout( () => closeSnackbar(loading), 1000);
+		setTimeout(() => closeSnackbar(loading), 1000);
 	};
 
 	useEffect(() => {
@@ -229,8 +233,7 @@ export default function ManagementClusterInfoPage() {
 											justifyContent: "center",
 										}}
 									>
-
-										<Tooltip title="kubeconfig'i kopyala">
+										<Tooltip title="Kubeconfig'i Kopyala">
 											<Button
 												disabled={
 													x.status !== "Provisioned"
@@ -243,7 +246,7 @@ export default function ManagementClusterInfoPage() {
 											</Button>
 										</Tooltip>
 
-										<Tooltip title="düzenle">
+										<Tooltip title="Düzenle">
 											<Button
 												disabled={
 													x.status !== "Provisioned"
@@ -252,11 +255,11 @@ export default function ManagementClusterInfoPage() {
 													handleEditCluster(x)
 												}
 											>
-												<CameraIcon />
+												<EditIcon />
 											</Button>
 										</Tooltip>
 
-										<Tooltip title="upgrade / downgrade">
+										<Tooltip title="Upgrade / Downgrade">
 											<Button
 												disabled={
 													x.status !== "Provisioned"
@@ -271,7 +274,9 @@ export default function ManagementClusterInfoPage() {
 
 										<Tooltip title="Sil">
 											<Button
-												disabled={x.status === "Deleting"}
+												disabled={
+													x.status === "Deleting"
+												}
 												onClick={() =>
 													handleDeleteCluster(x)
 												}
@@ -279,7 +284,6 @@ export default function ManagementClusterInfoPage() {
 												<DeleteIcon />
 											</Button>
 										</Tooltip>
-
 									</StyledTableCell>
 								</TableRow>
 							))}

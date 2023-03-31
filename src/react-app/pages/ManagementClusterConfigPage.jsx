@@ -29,7 +29,7 @@ function InputRow({ name, label, control, fieldLabel }) {
 }
 
 export default function ManagementClusterConfigPage() {
-	const [supportedProviders, setProviders] = useState([]);
+	const [supportedProviders, setSupportedProviders] = useState([]);
 	const [config, setConfig] = useState("");
 	const [warnings, setWarnings] = useState("");
 	const { handleSubmit, control, setValue, getValues } = useForm();
@@ -64,9 +64,12 @@ export default function ManagementClusterConfigPage() {
 			}
 
 			await clusterConfig.setClusterConfiguration(name, currentConfig);
-			snack("Küme bilgileri kayıt edildi.", { variant: "info", autoHideDuration: 4000 });
+			snack("Küme bilgileri kayıt edildi.", {
+				variant: "info",
+				autoHideDuration: 4000,
+			});
 		});
-		setTimeout( () => closeSnackbar(loading), 1000);
+		setTimeout(() => closeSnackbar(loading), 1000);
 		// closeSnackbar(loading);
 	});
 
@@ -85,7 +88,8 @@ export default function ManagementClusterConfigPage() {
 					_config
 				);
 				setConfig(_config);
-				setProviders(providers);
+				setSupportedProviders(providers);
+				console.log(providers);
 			});
 		})();
 	}, []);
@@ -153,7 +157,15 @@ export default function ManagementClusterConfigPage() {
 								);
 								break;
 							case PROVIDER_TYPE.DOCKER:
-								return null;
+								return (
+									<div
+										key={i}
+										className="w-full text-center m-4"
+									>
+										Yapılandırılacak herhangi bir ayar
+										bulunmuyor.
+									</div>
+								);
 						}
 						return (
 							<div key={i} className="flex flex-col gap-5">
