@@ -1,123 +1,70 @@
 {
-  "name": "kos",
-  "productName": "kos",
-  "version": "0.3.3",
-  "description": "Kubernetes Orkestrasyon Sistemi",
-  "main": ".webpack/main",
-  "scripts": {
-    "start": "electron-forge start",
-    "test": "NODE_ENV=test DEBUG=jest jest --forceExit --detectOpenHandles --useStderr --silent false --verbose false --runInBand",
-    "test_old": "NODE_ENV=test jest",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
-  },
-  "keywords": [],
-  "author": {
-    "name": "KOS group"
-  },
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "electron_forge"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ],
-      "plugins": [
-        [
-          "@electron-forge/plugin-webpack",
-          {
-            "devContentSecurityPolicy": "default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;",
-            "mainConfig": "./webpack.main.config.js",
-            "renderer": {
-              "config": "./webpack.renderer.config.js",
-              "entryPoints": [
-                {
-                  "html": "./src/react-app/public/index.html",
-                  "js": "./src/main/renderer.js",
-                  "name": "main_window",
-                  "preload": {
-                    "js": "./src/main/preload.js"
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      ]
-    }
-  },
-
-  "devDependencies": {
-    "@babel/core": "^7.19.6",
-    "@babel/preset-env": "^7.19.4",
-    "@babel/preset-react": "^7.18.6",
-    "@electron-forge/cli": "^6.0.0-beta.64",
-    "@electron-forge/maker-deb": "^6.0.0-beta.64",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.64",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.64",
-    "@electron-forge/maker-zip": "^6.0.0-beta.64",
-    "@electron-forge/plugin-webpack": "6.0.0-beta.64",
-    "@vercel/webpack-asset-relocator-loader": "1.7.0",
-    "autoprefixer": "^10.4.13",
-    "babel-jest": "^29.2.1",
-    "babel-loader": "^8.2.5",
-    "css-loader": "^6.0.0",
-    "electron": "19.0.7",
-    "jest-electron": "^0.1.12",
-    "node-loader": "^2.0.0",
-    "postcss": "^8.4.19",
-    "postcss-loader": "^7.0.1",
-    "style-loader": "^3.0.0",
-    "tailwindcss": "^3.2.4"
-  },
-
-  "dependencies": {
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
-    "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.10.2",
-    "@mui/styled-engine-sc": "^5.10.1",
-    "@reduxjs/toolkit": "^1.8.5",
-    "apexcharts": "^3.35.5",
-    "classnames": "^2.3.2",
-    "decompress": "^4.2.1",
-    "electron-context-menu": "^3.6.1",
-    "electron-squirrel-startup": "^1.0.0",
-    "file-loader": "^6.2.0",
-    "js-yaml": "^4.1.0",
-    "logplease-es5": "^0.5.0",
-    "nanoid": "^4.0.0",
-    "notistack": "^2.0.5",
-    "react": "^18.2.0",
-    "react-apexcharts": "^1.4.0",
-    "react-dom": "^18.2.0",
-    "react-hook-form": "^7.39.4",
-    "react-icons": "^4.4.0",
-    "react-redux": "^8.0.2",
-    "react-router-dom": "^6.3.0",
-    "request": "^2.88.2",
-    "styled-components": "^5.3.5",
-    "tmp": "^0.2.1"
-  }
+	"name": "kos",
+	"productName": "kos",
+	"version": "0.3.3",
+	"description": "Kubernetes Orchestration System",
+	"main": ".webpack/main",
+	"scripts": {
+		"start": "electron-forge start",
+		"package": "electron-forge package",
+		"make": "electron-forge make",
+		"publish": "electron-forge publish",
+		"lint": "eslint --ext .ts,.tsx ."
+	},
+	"keywords": [],
+	"author": {
+		"name": "Muhammed H. Karamuk",
+		"email": "mkaramuk2002@gmail.com"
+	},
+	"license": "GPL v3",
+	"devDependencies": {
+		"@electron-forge/cli": "^6.1.1",
+		"@electron-forge/maker-deb": "^6.1.1",
+		"@electron-forge/maker-rpm": "^6.1.1",
+		"@electron-forge/maker-squirrel": "^6.1.1",
+		"@electron-forge/maker-zip": "^6.1.1",
+		"@electron-forge/plugin-webpack": "^6.1.1",
+		"@iconify/react": "^4.1.0",
+		"@types/react": "^18.0.33",
+		"@types/react-dom": "^18.0.11",
+		"@types/tmp": "^0.2.3",
+		"@typescript-eslint/eslint-plugin": "^5.0.0",
+		"@typescript-eslint/parser": "^5.0.0",
+		"@vercel/webpack-asset-relocator-loader": "1.7.3",
+		"autoprefixer": "^10.4.14",
+		"css-loader": "^6.7.3",
+		"electron": "24.0.0",
+		"eslint": "^8.0.1",
+		"eslint-plugin-import": "^2.25.0",
+		"fork-ts-checker-webpack-plugin": "^7.2.13",
+		"node-loader": "^2.0.0",
+		"postcss": "^8.4.21",
+		"postcss-loader": "^7.2.4",
+		"style-loader": "^3.3.2",
+		"tailwindcss": "^3.3.1",
+		"ts-loader": "^9.2.2",
+		"ts-node": "^10.0.0",
+		"typescript": "~4.5.4"
+	},
+	"dependencies": {
+		"@headlessui/react": "^1.7.13",
+		"@hookform/resolvers": "^3.0.1",
+		"@types/decompress": "^4.2.4",
+		"@types/follow-redirects": "^1.14.1",
+		"decompress": "^4.2.1",
+		"electron-squirrel-startup": "^1.0.0",
+		"follow-redirects": "^1.15.2",
+		"lowdb": "^6.0.1",
+		"nanoid": "^4.0.2",
+		"path-to-regexp": "^6.2.1",
+		"react": "^18.2.0",
+		"react-circular-progressbar": "^2.1.0",
+		"react-dom": "^18.2.0",
+		"react-hook-form": "^7.43.9",
+		"react-router-dom": "^6.10.0",
+		"react-toastify": "^9.1.2",
+		"swr": "^2.1.3",
+		"yup": "^1.0.2",
+		"zustand": "^4.3.7"
+	}
 }

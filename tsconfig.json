@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"target": "ES6",
+		"allowJs": false,
+		"module": "commonjs",
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"noImplicitAny": false,
+		"strict": true,
+		"sourceMap": true,
+		"baseUrl": ".",
+		"outDir": "dist",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"paths": {
+			"kos/*": ["src/main/*"],
+			"kos-fe/*": ["src/react-app/*"],
+			"kos-shared/*": ["src/shared/*"],
+			"lib/*": ["src/react-app/lib/*"],
+			"*": ["node_modules/*"]
+		},
+		"jsx": "react-jsx"
+	},
+	"include": ["src/**/*"]
+}
