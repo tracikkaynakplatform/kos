@@ -1,7 +1,3 @@
-# Deprecated
-
-This repository has incomplete code with bugs. New main repository of KOS project at [here](https://github.com/mkaramuk/kos)
-
 # KOS
 
 KOS (Kubernetes Orchestration System) Project is a set of client/server utilities aimed at easing (multiple) kubernetes cluster generation and management. It utilizes the [cluster-api](https://cluster-api.sigs.k8s.io/) project for this purpose and supports all of its provider backends (Docker, AWS, //TODO: Openstack, Azure, GCP, ...). It provides a UI via [electronjs](https://www.electronjs.org/).
